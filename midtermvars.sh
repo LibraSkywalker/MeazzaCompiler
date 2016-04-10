@@ -1,1 +1,1 @@
-export CCHK=java -classpath ../lib/*.jar main.main
+export CCHK=java -classpath ./lib/*.jar main.main
