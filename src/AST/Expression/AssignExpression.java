@@ -1,39 +1,36 @@
 package AST.Expression;
 
-import SymbolTable.VariableSymbol;
+import SymbolContainer.VariableSymbol;
 
-import static main.main.globalScope;
 
 /**
  * Created by Bill on 2016/4/4.
  */
 public class AssignExpression extends BinaryExpression{
 
-    @Override
-    public boolean set(){
-        type = leftExpression.type;
-        dimension = leftExpression.dimension - leftExpression.stage;
-        stage = 0;
-        if ((dimension > 0 || !type().buildIn()) &&
-                rightExpression.type == globalScope.getType(" "))
-            return true;
-        return  (type == rightExpression.type) &&
-                (dimension == rightExpression.dimension - rightExpression.stage);
+    public void set(){
+        properties.setProperties(leftExpression.properties);
     }
 
-    public void getLeft(VariableSymbol now){
-        lvalue nowAction = new lvalue();
-        nowAction.getElement(now);
+    public void setLeft(VariableSymbol now){
+        SymbolElement nowAction = new SymbolElement();
+        nowAction.setElement(now);
         leftExpression = nowAction;
+        nowAction.parentAction = this;
     }
 
-    public void getValue(Object value){
-        leftExpression.getValue(value);
-    }
-
-    public String check(){
-        if (!(leftExpression instanceof lvalue)) return "Assigned expression need lvalue on the left of the operator";
-        if (!set()) return "Type mismatch "+ leftExpression.type().name() + " " + rightExpression.type().name();
-        else  return "";
+    public boolean check(){
+        if (leftExpression == null || rightExpression == null) return false;
+        if (leftExpression instanceof SymbolElement &&
+            ((SymbolElement)leftExpression).lvalue ||
+            leftExpression instanceof DotElement &&
+            ((DotElement)leftExpression).lvalue ||
+            leftExpression instanceof StageExpression &&
+            ((StageExpression) leftExpression).lvalue) {
+                set();
+                return  leftExpression.accept(rightExpression);
+        }
+        System.err.println("Assigned expression need lvalueExpression on the left of the operator");
+        return false;
     }
 }

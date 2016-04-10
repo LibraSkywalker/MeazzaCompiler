@@ -1,27 +1,20 @@
 package AST.Expression;
-
-import static main.main.globalScope;
-
 /**
  * Created by Bill on 2016/4/4.
  */
 public class BitExpression extends BinaryExpression{
-    public BitExpression(){
-        dimension = 0;
-        type = globalScope.getType("int");
+    public BitExpression(){}
+
+    public void set() {
+        setProperties("int");
     }
 
-    @Override
-    boolean set() {
+    public boolean check(){
+        if (!leftExpression.accept("int") || !rightExpression.accept("int")){
+            System.err.println("There should be integer expression beside the Bit operator");
+            return false;
+        }
+        set();
         return true;
-    }
-
-    public String check(){
-        if (leftExpression.type == type &&
-                rightExpression.type == type &&
-                leftExpression.dimension - leftExpression.stage == 0 &&
-                rightExpression.dimension - rightExpression.stage == 0)
-            return "";
-        return "There should be integer expression beside the Bit operator";
     }
 }

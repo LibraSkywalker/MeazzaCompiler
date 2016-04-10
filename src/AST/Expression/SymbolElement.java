@@ -1,51 +1,59 @@
 package AST.Expression;
 
-import SymbolTable.VariableSymbol;
+import SymbolContainer.FuncSymbol;
+import SymbolContainer.Symbol;
+import SymbolContainer.VariableSymbol;
 
 import java.util.ArrayList;
 
-import static main.main.globalScope;
-
 /**
- * Created by Bill on 2016/4/6.
+ * Created by Bill on 2016/4/10.
  */
-public abstract class SymbolElement extends UnaryExpression{
+public class SymbolElement extends ExpressionAction{
     VariableSymbol element;
-
-    ArrayList<ExpressionAction> stageValue;
-    ArrayList<ExpressionAction> dimensionValue;
-
+    boolean lvalue;
     public SymbolElement(){
-        dimension = stage = 0;
-        stageValue = new ArrayList<>();
-        dimensionValue = new ArrayList<>();
+        lvalue = false;
+        element = null;
     }
 
-    public void getElement(VariableSymbol now){
-        element = now;
-        if (now == null) return;
-        dimension = now.dimension();
-        type = now.type();
+    public SymbolElement(VariableSymbol nowElement){
+        element = nowElement;
+        properties = nowElement.getProperties().clone();
+        lvalue = !(nowElement instanceof FuncSymbol);
     }
 
-    public void set(SymbolElement now){
-        type = now.type;
-        dimension = now.dimension;
-        element = now.element;
+    public void setElement(VariableSymbol nowElement){
+        element = nowElement;
+        properties = nowElement.getProperties().clone();
+        lvalue = !(nowElement instanceof FuncSymbol);
     }
 
-    public int stage(){return stage;}
+    public void set(){}
 
-    public boolean addStage(ExpressionAction now){
-        stage++;
-        if (now.type() != globalScope.getType("int")) return false;
-        stageValue.add(now);
+    public boolean check(){return element != null;}
+
+    public boolean checkParameter(ExpressionAction now,Integer i){
+        if (element instanceof FuncSymbol){
+            VariableSymbol nowParameter = ((FuncSymbol) element).findParameter(i);
+            if (!nowParameter.accept(now)){
+                System.err.println("Parameter "+ i.toString() + " type mismatch");
+                return false;
+            }
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean checkParameter(int maxIndex){
+        if (maxIndex < ((FuncSymbol) element).parameterSize()){
+            System.err.println("too few parameters exist");
+            return false;
+        }
+        if (maxIndex > ((FuncSymbol) element).parameterSize()){
+            System.err.println("too many parameters exist");
+            return false;
+        }
         return true;
-    }
-
-
-
-    public VariableSymbol element(){
-        return element;
     }
 }

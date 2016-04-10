@@ -6,16 +6,6 @@ UNSIGNED : 'unsigned' ;
 
 CLASS : 'class';
 
-VAR_TYPE : 'short'
-         | 'char'
-         | 'int'
-         | 'double'
-         | 'long'
-         | 'long long'
-         | 'long double'
-         | 'string'
-         ;
-
 STRING : 'string' ;
 
 INT_POST : 'LL' | 'UL' ;
@@ -38,7 +28,6 @@ CHAR_DATA : [\'] (CCHAR | Translate) [\'];
 
 STRING_DATA: [\"] ( SCHAR | Translate)* [\"];
 
-VOID : 'void';
 
 fragment
 CCHAR : ~['\\\r\n];
@@ -74,9 +63,7 @@ type : type_name array* ;
 
 array : '['']';
 
-type_name : VAR_TYPE
-          | ID
-          ;
+type_name : ID;
 
 const_expression : INT_DATA (INT_POST)?
                  | FLOAT_DATA
@@ -87,7 +74,7 @@ const_expression : INT_DATA (INT_POST)?
                  | STRING_DATA
                  ;
 
-func_declaration: (type | 'void') ID'('parameters?')' compound_statement;
+func_declaration: (type | op = 'void') ID'('parameters?')' compound_statement;
 
 parameters : parameter (',' parameter)* ;
 
@@ -116,10 +103,9 @@ normal_statement : expression? ';' ;
 expression : const_expression
            | ID
            | <assoc = left> ID fop = '(' (expression(',' expression)*)? fop = ')'
+           | <assoc = left> expression op = '.' expression
            | <assoc = left> expression (op = '[' expression']')+
            | <assoc = left> uop = 'new' (type_name) ('[' expression ']')* array*
-           | <assoc = left> expression op = '.' sop = 'size()'
-           | <assoc = left> expression op = '.' expression
            | <assoc = left> oop = '(' expression ')'
            | <assoc = right> uop = ('-' | '~' | '!') expression
            | <assoc = right> expression uop = ('++' | '--')

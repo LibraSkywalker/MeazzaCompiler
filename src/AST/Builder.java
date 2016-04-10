@@ -1,80 +1,70 @@
 package AST;
 
-import antlr.MeazzaBaseVisitor;
-import SymbolTable.*;
-import org.antlr.v4.runtime.tree.ErrorNode;
+import SymbolContainer.*;
 
-import static main.main.globalScope;
+import static AST.ASTControler.putFunc;
+import static AST.ASTControler.putReserved;
+import static AST.ASTControler.putType;
+
 
 /**
  * Created by Bill on 2016/4/3.
  */
-public class Builder extends MeazzaBaseVisitor<String> {
+public class Builder {
     public Builder(){
-        globalScope.putType("int").admin();
-        globalScope.putType("double").admin();
-        globalScope.putType("char").admin();
-        globalScope.putType("string").admin();
-        globalScope.putType("void").admin();
-        globalScope.putType("bool").admin();
-        globalScope.putType("class").admin();
-        globalScope.putType(" ").admin();
+        putReserved("class");
+        putReserved("new");
+        putReserved("break");
+        putReserved("continue");
+        putReserved("return");
+        putReserved("if");
+        putReserved("for");
+        putReserved("while");
+        putReserved("true");
+        putReserved("false");
+        putReserved("null");
+        putType("int","noMember").setPrimitive();
+        putType("double","noMember").setPrimitive();
+        putType("char","noMember").setPrimitive();
+        putType("void","noMember").setPrimitive();
+        putType("bool","noMember").setPrimitive();
+        putType("@null","noMember").setPrimitive();
 
-        TypeSymbol string = globalScope.getType("string");
-        TypeSymbol Int = globalScope.getType("int") ;
-
-        globalScope.putFunc("print").admin();
-
-        FuncSymbol print = globalScope.getFunc("print");
-        print.setType(globalScope.getType("void"));
-        print.addParameter("str").setType(string);
-
-        globalScope.putFunc("println").admin();
-
-        FuncSymbol println = globalScope.getFunc("println");
-        println.setType(globalScope.getType("void"));
-        println.addParameter("str").setType(string);
-
-        globalScope.putFunc("getString").admin();
-        globalScope.getFunc("getString").setType(string);
-
-        globalScope.putFunc("size").admin();
-        globalScope.getFunc("size").setType(Int);
-
-        globalScope.putFunc("getInt").admin();
-        globalScope.getFunc("getInt").setType(Int);
-
-        globalScope.putFunc("toString").admin();
-
-        FuncSymbol toString = globalScope.getFunc("toString");
-        toString.setType(string);
-        toString.addParameter("x").setType(Int);
-
-        string.resolvedFunc("length");
-
-        string.resolvedFunc("ord");
-
-        string.resolvedFunc("substring");
-        string.resolvedFunc("parseInt");
-
-        string.classMembers.getFunc("length").setType(Int);
-        FuncSymbol ord = string.classMembers.getFunc("ord");
-        ord.setType(Int);
-        ord.addParameter("x").setType(Int);
-
-        string.classMembers.getFunc("parseInt").setType(Int);
-
-        FuncSymbol subString = string.classMembers.getFunc("substring");
-
-        subString.setType(string);
-        subString.addParameter("x").setType(Int);
-        subString.addParameter("y").setType(Int);
+        TypeSymbol string = putType("string").setPrimitive();
 
 
-    }
+        FuncSymbol print = putFunc("print").setPrimitive();
 
-    @Override
-    public String visitErrorNode(ErrorNode node) {
-        return "Gramma error exists!";
+        print.setProperties("void");
+        print.addParameter("str").setProperties("string");
+
+        FuncSymbol println = putFunc("println").setPrimitive();
+        println.setProperties("void");
+        println.addParameter("str").setProperties("string");
+
+        putFunc("getString").setPrimitive().setProperties("string");
+
+        putFunc("size").setPrimitive().setProperties("string");
+
+        putFunc("getInt").setPrimitive().setProperties("int");
+
+        FuncSymbol toString = putFunc("toString").setPrimitive();
+        toString.setProperties("string");;
+        toString.addParameter("x").setProperties("int");
+
+        string.resolvedFunc("length").setProperties("int");
+
+        FuncSymbol ord = string.resolvedFunc("ord");
+        ord.setProperties("int");
+        ord.addParameter("x").setProperties("int");
+
+        FuncSymbol subString = string.resolvedFunc("substring");
+
+        string.resolvedFunc("parseInt").setProperties("int");
+
+        subString.setProperties("string");
+        subString.addParameter("x").setProperties("int");
+        subString.addParameter("y").setProperties("int");
+
     }
 }

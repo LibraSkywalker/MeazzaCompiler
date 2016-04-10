@@ -1,439 +1,372 @@
 package AST;
 
 import AST.Expression.*;
-import AST.Statment.ForStatment;
-import AST.Statment.IfStatment;
+import AST.Statment.BranchStatment;
 import AST.Statment.JumpStatment;
-import AST.Statment.WhileStatment;
-import SymbolTable.*;
+import AST.Statment.LoopStatment;
+import SymbolContainer.*;
 import antlr.MeazzaBaseVisitor;
 import antlr.MeazzaParser;
 import java.lang.String;
 
-import static main.main.*;
+import static AST.ASTControler.*;
 
 /**
  * Created by Bill on 2016/4/5.
  */
-public class SecondVisitor extends MeazzaBaseVisitor<String>{
+public class SecondVisitor extends MeazzaBaseVisitor<Object>{
     @Override
-    public String visitClass_declaration(MeazzaParser.Class_declarationContext ctx) {
-        TypeSymbol nowClass =globalScope.getType(ctx.ID().getText());
-        assert (nowClass != null) ;
+    public Boolean visitClass_declaration(MeazzaParser.Class_declarationContext ctx) {
+        boolean flag = true;
+        TypeSymbol nowClass = getType(ctx.ID().getText());
         for(MeazzaParser.Raw_declarationContext x : ctx.raw_declaration()){
-            String now ;
-            if (x.type().type_name().ID() == null){
-                now = x.type().type_name().VAR_TYPE().getText();
-            }
-            else {
-                now = x.type().type_name().ID().getText();
-            }
-            TypeSymbol nowType = globalScope.getType(now) ;
+            String nowType = x.type().type_name().getText();
             VariableSymbol nowSymbol = nowClass.resolvedMember(x.ID().getText());
-            if (nowSymbol == null) return "Variable creation failed in " + ctx.ID().getText();
-            nowSymbol.setType(nowType);
-            nowSymbol.setDimension(x.type().array().size());
+            if (nowSymbol == null) {
+                flag = false;
+                System.err.println("Variable" + x.ID().getText() + " definition failed in " + ctx.ID().getText());
+                tagPos(ctx);
+            }
+            else if (nowSymbol.setProperties(nowType,x.type().array().size())){
+                flag = false;
+                System.err.println("Undefined type: "+ nowType + "exists");
+                tagPos(ctx);
+            }
+            else if (nowSymbol.check()){
+                flag = false;
+                System.err.println("The type of a variable cannot be void");
+                tagPos(ctx);
+            }
         }
-        return "";
+        return flag;
     }
 
     @Override
-    public String visitProg(MeazzaParser.ProgContext ctx) {
+    public Boolean visitProg(MeazzaParser.ProgContext ctx) {
+        boolean flag = true;
         for (MeazzaParser.Class_declarationContext x : ctx.class_declaration()) {
-            String Error = visitClass_declaration(x);
-            if (!(Error.equals(""))) return Error;
+            if(!visitClass_declaration(x)){
+                flag = false;
+            };
         }
         for (int i = 0; i < ctx.getChildCount(); i++) {
             if (ctx.getChild(i) instanceof MeazzaParser.Class_declarationContext) continue;
-            String Error = visit(ctx.getChild(i));
-            if(!Error.equals("")) return Error;
+            if (!(Boolean) visit(ctx.getChild(i))) flag = false;
         }
-        return "";
+
+        if (getFunc("main") == null) {
+            System.err.println("Warning: There's no main function in the program");
+            return flag;
+        }
+
+        if (!getFunc("main").accept("int")){
+            System.err.println("The type of main isn't valid");
+            return false;
+        }
+
+        addAction(new SymbolElement(getFunc("main"))) ;
+        return flag;
     }
 
     @Override
-    public String visitVar_declaration(MeazzaParser.Var_declarationContext ctx) {
-        String now = ctx.type().type_name().getText();
-        TypeSymbol nowType = globalScope.getType(now);
-        if (nowType == null) return "Undefined Type:" + now + "exist";
-        if (nowType == globalScope.getType("void")) return "A Variable cannot have the void type";
-        now = ctx.ID().getText();
-        VariableSymbol nowVariable = currentScope.putVar(now);
-        if (nowVariable == null) return "Unable to define variable:" + now;
-        nowVariable.setDimension(ctx.type().array().size());
-        nowVariable.setType(nowType);
+    public Boolean visitVar_declaration(MeazzaParser.Var_declarationContext ctx) {
+        VariableSymbol nowVariable = putVar(ctx.ID().getText());
+        String nowType = ctx.type().type_name().getText();
+        boolean flag = true;
+        if (nowVariable == null){
+            flag = false;
+            System.err.println("Variable" + ctx.ID().getText() + " definition failed");
+            tagPos(ctx);
+        }
+        else if (!nowVariable.setProperties(nowType,ctx.type().array().size())){
+            flag = false;
+            System.err.println("Undefined Type: " + nowType + " exists");
+            tagPos(ctx);
+        }
+        else if (!nowVariable.check()){
+            flag = false;
+            tagPos(ctx);
+        }
+
+        if (ctx.expression() == null) return flag;
+
         AssignExpression nowAction = new AssignExpression();
-        nowAction.getLeft(nowVariable);
-        if (ctx.expression() != null) {
-            currentScope.actionList.add(currentAction);
-            String Error = visitExpression(ctx.expression());
-            if (!Error.equals("")) return Error;
-            nowAction.getRight(currentAction);
-            currentAction = nowAction;
-            return nowAction.check();
+        nowAction.setLeft(nowVariable);
+        nowAction.setRight(visitExpression(ctx.expression()));
+
+        if (!nowAction.check()){
+            tagPos(ctx);
+            return false;
         }
-        return "";
+
+        addAction(nowAction);
+
+        return flag;
     }
 
-    private String BinaryDefault(MeazzaParser.ExpressionContext ctx,BinaryExpression nowAction){
-        String Error = visitExpression(ctx.expression(0));
-        if (!Error.equals("")) return Error;
-        nowAction.getLeft(currentAction);
-        currentAction = currentAction.parentAction = nowAction;
-
-        Error = visitExpression(ctx.expression(1));
-        if (!Error.equals("")) return Error;
-        nowAction.getRight(currentAction);
-        currentAction = currentAction.parentAction = nowAction;
-
-        return "";
+    private ExpressionAction BinaryDefault(MeazzaParser.ExpressionContext ctx,BinaryExpression nowAction){
+        if (!nowAction.setLeft(visitExpression(ctx.expression(0)))) return null;
+        if (!nowAction.setRight(visitExpression(ctx.expression(1)))) return null;
+        return nowAction;
     }
 
     @Override
-    public String visitExpression(MeazzaParser.ExpressionContext ctx) {
+    public ExpressionAction visitExpression(MeazzaParser.ExpressionContext ctx) {
         if (ctx.op != null){
             String now = ctx.op.getText();
             if (now.equals("=")) {
                 AssignExpression nowAction = new AssignExpression();
-                String Error = BinaryDefault(ctx,nowAction);
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                return nowAction.check();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                return nowAction.check() ? nowAction : null;
             }
             if (now.equals("||") || now.equals("&&")){
                 LogicExpression nowAction = new LogicExpression();
-                String Error = BinaryDefault(ctx,nowAction);
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
                 nowAction.getOperator(now);
-                return nowAction.check();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                return nowAction.check() ? nowAction : null;
             }
             if (now.equals("|") || now.equals("&") || now.equals("^") || now.equals("<<") || now.equals(">>")){
                 BitExpression nowAction = new BitExpression();
-                String Error = BinaryDefault(ctx,nowAction);
-                if (!Error.equals("")) return  Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
                 nowAction.getOperator(now);
-                return  nowAction.check();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                return nowAction.check() ? nowAction : null;
             }
             if (now.equals("==")|| now.equals("!=") || now.equals(">") ||
                 now.equals(">=")|| now.equals("<=") || now.equals("<") ){
                 EqualExpression nowAction = new EqualExpression();
-                String Error = BinaryDefault(ctx,nowAction) ;
-                if (!Error.equals("")) return  Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
                 nowAction.getOperator(now);
-                return  nowAction.check();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                return nowAction.check() ? nowAction : null;
             }
             if (now.equals("[")){
-                String Error = visitExpression(ctx.expression(0));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                SymbolElement nowAction;
-                if (currentAction instanceof lvalue){
-                    nowAction = new lvalue();
-                }
-                else if (currentAction instanceof FunctionCall){
-                    nowAction = new FunctionCall();
-                }
-                else return "stage requirement is illegal";
-
-                nowAction.set((SymbolElement)currentAction);
-                //System.out.println(nowAction.type().name());
+                StageExpression nowAction = new StageExpression();
+                nowAction.setPreviousAction(visitExpression(ctx.expression(0)));
+                if (!nowAction.check()) return null;
                 for (int i = 1; i < ctx.expression().size(); i++) {
-                    Error = visitExpression(ctx.expression(i));
-                    if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                    //System.out.println(((ExpressionAction) currentAction).type().name());
-                    if (!nowAction.addStage((ExpressionAction) currentAction))
-                        return "There should be an int Expression inside the stage :" + ((Integer)ctx.getStart().getLine()).toString();
-                    currentAction.parentAction = nowAction;
+                    if (!nowAction.addStage(visitExpression(ctx.expression(i)))) return null;
                 }
-
-                if (nowAction.stage() > nowAction.dimension()) return "To much stage were required";
-                currentAction = nowAction;
-                //System.out.println(nowAction.type().name());
-                return "";
+                return nowAction;
             }
             if (now.equals(".")) {
-                String Error = visitExpression(ctx.expression(0));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-
-                else if (ctx.sop != null){
-                    if (((ExpressionAction)currentAction).dimension() == 0) return "cannot use size on non-array type";
-                    FunctionCall nowAction = new FunctionCall();
-                    nowAction.getElement(globalScope.getFunc("size"));
-                    currentAction = nowAction;
-                    return "";
-                }
-
-                Scope prevScope = currentScope;
-                currentScope = ((ExpressionAction)currentAction).type().classMembers;
-                Error = visitExpression(ctx.expression(1));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-
-                //System.out.println(currentAction.getClass());
-                if (currentAction instanceof lvalue) {
-                    if (!currentScope.contains(((lvalue) currentAction).element()))
-                        return "illegal suffix exist, such variable isn't in the type";
-                    lvalue nowAction = new lvalue();
-                    nowAction.getElement(((lvalue) currentAction).element());
-                    currentAction = currentAction.parentAction = nowAction;
-                } else if (currentAction instanceof FunctionCall) {
-                    if (!currentScope.contains(((FuncSymbol) ((FunctionCall) currentAction).element())))
-                        return "illegal suffix exist, such function isn't in the type";
-                    FunctionCall nowAction = new FunctionCall();
-                    nowAction.getElement(((FunctionCall) currentAction).element());
-                    currentAction = currentAction.parentAction =  nowAction;
-                } else return "illegal suffix exist, suffix should be the classMember of the required type:";
-                currentScope = prevScope;
-                return "";
+                DotElement nowAction = new DotElement();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                if (!nowAction.check()) return null;
+                return nowAction.check() ? nowAction : null;
             }
             if (now.equals("+") || now.equals("-") || now.equals("*") || now.equals("/") || now.equals("%"))
             {
                 CalcExpression nowAction = new CalcExpression();
-                String Error = BinaryDefault(ctx,nowAction);
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
                 nowAction.getOperator(now);
-                return nowAction.check();
+                if (BinaryDefault(ctx,nowAction) == null) return null;
+                return nowAction.check() ? nowAction : null;
             }
         }
         else if (ctx.uop != null){
             String now = ctx.uop.getText();
             if (now.equals("new")){
                 MemoryApplyExpression nowAction = new MemoryApplyExpression();
-                TypeSymbol nowType = globalScope.getType(ctx.type_name().getText());
-                if (nowType == null) return "Undefined Type exist:"+ctx.type_name().getText();
-                nowAction.setType(nowType);
-                nowAction.setDimension(ctx.expression().size() + ctx.array().size());
+                if (!nowAction.setProperties(ctx.type_name().getText(),ctx.expression().size() + ctx.array().size())) return null;
+
                 for (MeazzaParser.ExpressionContext x : ctx.expression()){
-                    String Error = visitExpression(x);
-                    if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                    nowAction.addStage((ExpressionAction) currentAction);
+                    if (!nowAction.addStage(visitExpression(x))) return null;
                 }
-                currentAction = nowAction;
-                return "";
+                return nowAction;
             }
             else if(now.equals("++") || now.equals("--")){
-                String Error = visitExpression(ctx.expression(0));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                if (!(currentAction instanceof lvalue))
-                    return "++/-- should be operate on lvalue";
-                if (((lvalue) currentAction).isNot("int"))
-                    return "++/-- should be operate on int";
-                selfAdjust nowAction = new selfAdjust();
-                currentAction.parentAction = nowAction;
-                nowAction.getOP(now);
-                nowAction.set((ExpressionAction) currentAction);
+                AutoAdjustExpression nowAction = new AutoAdjustExpression();
+                nowAction.setChild(visitExpression(ctx.expression(0)));
+                nowAction.setOpertaor(now);
+                return nowAction.check() ? nowAction : null;
             }
-            else if(now.equals("!")){
-                String Error = visitExpression(ctx.expression(0));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                if (((ExpressionAction)currentAction).isNot("bool")){
-                    return "There should be a bool after !";
-                }
+            else if(now.equals("!") || now.equals("-") || now.equals("~")){
                 AlterExpression nowAction = new AlterExpression();
-                currentAction.parentAction = nowAction;
-                nowAction.getChild((ExpressionAction) currentAction);
-                nowAction.set((ExpressionAction) currentAction);
-                nowAction.getOP(now);
-            }
-            else if (now.equals("-")){
-                String Error = visitExpression(ctx.expression(0));
-                if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-                if (((ExpressionAction)currentAction).isNot("int")){
-                    return "There should be an int after -";
-                }
-                AlterExpression nowAction = new AlterExpression();
-                currentAction.parentAction = nowAction;
-                nowAction.getChild((ExpressionAction) currentAction);
-                nowAction.set((ExpressionAction) currentAction);
-                nowAction.getOP(now);
+                nowAction.setChild(visitExpression(ctx.expression(0)));
+                nowAction.setOpertaor(now);
+                return nowAction.check() ? nowAction : null;
             }
         }
         else if (ctx.ID() != null){
             if (ctx.fop == null) {
-                lvalue nowAction = new lvalue();
-                nowAction.getElement(currentScope.getVar(ctx.ID().getText()));
-                //System.out.println(nowAction.type().name()+ " " + ctx.ID().getText());
-                if (nowAction.element() == null) return "Undefined variable exist";
-                currentAction = nowAction;
-                return "";
+                SymbolElement nowAction = new SymbolElement(getVar(ctx.ID().getText()));
+                return nowAction.check() ? nowAction : null;
             }
             else{
-                FunctionCall nowAction = new FunctionCall();
-                nowAction.getElement(currentScope.getFunc(ctx.ID().getText()));
-                if (nowAction.element() == null) return "Undefined function exist";
-                if (ctx.expression().size() != nowAction.element().parameter())
-                    return "The number of Parameters is not correct " + ctx.ID().getText();
-                for (int i = 0; i < ctx.expression().size(); i++){
-                    visitExpression(ctx.expression(i));
-                    VariableSymbol linked = ((FuncSymbol)nowAction.element()).findParameter(i) ;
-                    if (!linked.typeEndure(((ExpressionAction)currentAction).type()))
-                        return "Function call parameter Mismatch";
-                    currentAction.parentAction = nowAction;
-                }
-                currentAction = nowAction;
-                return "";
+                SymbolElement nowAction = new SymbolElement(getFunc(ctx.ID().getText()));
+                if (!nowAction.checkParameter(ctx.expression().size())) return null;
+                for (int i = 0; i < ctx.expression().size(); i++)
+                    if (!nowAction.checkParameter(visitExpression(ctx.expression(i)),i))
+                        return null;
+                return nowAction.check() ? nowAction : null;
             }
         }
         else if (ctx.const_expression() != null){
-            ConstExpression nowAction = new ConstExpression();
+            Literal nowAction = new Literal();
             MeazzaParser.Const_expressionContext x = ctx.const_expression();
-            if (x.INT_DATA() != null) nowAction.setType(globalScope.getType("int"));
-            if (x.STRING_DATA() != null) nowAction.setType(globalScope.getType("string"));
-            if (x.CHAR_DATA() != null) nowAction.setType(globalScope.getType("char"));
-            if (x.boolData != null) nowAction.setType(globalScope.getType("bool"));
-            if (x.nullData != null) nowAction.setType(globalScope.getType(" "));
-            currentAction = nowAction;
+            if (x.INT_DATA() != null) nowAction.setProperties("int");
+            if (x.STRING_DATA() != null) nowAction.setProperties("string");
+            if (x.CHAR_DATA() != null) nowAction.setProperties("char");
+            if (x.boolData != null) nowAction.setProperties("bool");
+            if (x.nullData != null) nowAction.setProperties("@null");
+            return nowAction;
         }
         else if (ctx.oop != null){
             return visitExpression(ctx.expression(0));
         }
-        return "";
+        return null;
     }
 
     @Override
-    public String visitFunc_declaration(MeazzaParser.Func_declarationContext ctx) {
+    public Boolean visitFunc_declaration(MeazzaParser.Func_declarationContext ctx) {
         String now = ctx.ID().getText();
-        //if ( globalScope.getFunc(now) == null) System.out.println(now);
-        currentScope = globalScope.getFunc(now).FuncScope;
-        (currentScope.putVar("@")).copy(globalScope.getFunc(now));
-        String Error = visitCompound_statement(ctx.compound_statement());
+        FuncSymbol nowFunc = getFunc(now);
+        visitScope(nowFunc.FuncScope);
 
-        if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-        if (currentScope.getVar("@").type() != globalScope.getType("void") &&
-            currentScope.getType("+") == null)
-          //  return "The Function:" + now + " don't have a return type";
-        currentScope = currentScope.endScope();
-        return "";
+        if (!nowFunc.accept("void")) putVar("@return").setProperties(nowFunc);
+        Boolean flag = visitCompound_statement(ctx.compound_statement());
+        endScope();
+
+        if (!nowFunc.accept("void"))
+            if (getReserved("+")){
+                System.err.println("Warning: Function "+ now + " do not have return value");
+            }
+        return flag;
     }
 
     @Override
-    public String visitCompound_statement(MeazzaParser.Compound_statementContext ctx) {
+    public Boolean visitCompound_statement(MeazzaParser.Compound_statementContext ctx) {
+        boolean flag = true;
         for (int i = 0; i < ctx.getChildCount(); i++) {
             if (!(ctx.getChild(i) instanceof MeazzaParser.Var_declarationContext ||
-                ctx.getChild(i) instanceof MeazzaParser.StatementContext)) continue;
-            String Error = visit(ctx.getChild(i));
-            if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
+                  ctx.getChild(i) instanceof MeazzaParser.StatementContext)) continue;
+            flag = flag && (Boolean)visit(ctx.getChild(i));
         }
-        return "";
+        return flag;
     }
 
     @Override
-    public String visitStatement(MeazzaParser.StatementContext ctx) {
-        return visitChildren(ctx);
+    public Boolean visitStatement(MeazzaParser.StatementContext ctx) {
+        if (ctx.compound_statement() != null &&
+           (getCurrentScope().size() > 0 ||
+            getCurrentScope().getType() < 2)) { //Not (Loop or Branch)
+            beginScope();
+            boolean flag = visitCompound_statement(ctx.compound_statement());
+            endScope();
+            return flag;
+        }
+        else return (Boolean) visitChildren(ctx);
     }
 
     @Override
-    public String visitIf_statement(MeazzaParser.If_statementContext ctx) {
-        String Error = visitExpression(ctx.expression());
-        if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-        if (((ExpressionAction) currentAction).isNot("bool"))
-            return "The condition of if statment should be boolean expression :" + ((Integer)ctx.getStart().getLine()).toString();
+    public Boolean visitIf_statement(MeazzaParser.If_statementContext ctx) {
+        ExpressionAction controlAction = visitExpression(ctx.expression());
+        boolean flag = controlAction == null;
+        BranchStatment nowAction = new BranchStatment();
 
-        IfStatment nowAction = new IfStatment();
-
-        nowAction.setControl((ExpressionAction) currentAction);
-
-        nowAction.getField(currentScope.beginScope());
-        currentScope = nowAction.field();
-        Error = visitStatement(ctx.statement(0));
-        if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-        currentScope = currentScope.endScope();
-
+        nowAction.setControl(controlAction);
+        nowAction.getField(beginScope());
+        visitScope(nowAction.field());;
+        flag = flag && visitStatement(ctx.statement(0));
+        endScope();
         if (ctx.statement(1) != null) {
-
-            nowAction.getField2(currentScope.beginScope());
-            currentScope = nowAction.field2();
-            Error = visitStatement(ctx.statement(1));
-            if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-            currentScope = currentScope.endScope();
+            nowAction.getField2(beginScope());
+            visitScope(nowAction.field2());
+            flag = flag && visitStatement(ctx.statement(1));
+            endScope();
         }
-
-        currentScope.addAction(nowAction);
-        currentAction = nowAction;
-        return "";
+        nowAction.checkReturn();
+        addAction(nowAction);
+        return flag;
     }
 
     @Override
-    public String visitNormal_statement(MeazzaParser.Normal_statementContext ctx) {
-        String Error = visitExpression(ctx.expression());
-        if (!Error.equals("")) return Error + " :" + ((Integer)ctx.getStart().getLine()).toString();
-        currentScope.addAction(currentAction);
-        return "";
+    public Boolean visitNormal_statement(MeazzaParser.Normal_statementContext ctx) {
+        ExpressionAction nowAction = visitExpression(ctx.expression());
+        if (nowAction != null){
+            addAction(nowAction);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public String visitWhile_statement(MeazzaParser.While_statementContext ctx) {
-        String Error = visitExpression(ctx.expression());
-        if (!Error.equals("")) return Error;
-        if (((ExpressionAction)currentAction).isNot("bool"))
-            return "The condition of while statment should be boolean expression :"+ ((Integer)ctx.getStart().getLine()).toString();
+    public Boolean visitWhile_statement(MeazzaParser.While_statementContext ctx) {
+        ExpressionAction controlAction = visitExpression(ctx.expression());
+
+        if (controlAction != null) {
+            boolean flag = true;
+            if (!controlAction.accept("bool")) {
+                System.err.println("There should be boolean expression to control while statment");
+                tagPos(ctx);
+                flag = false;
+            }
 
 
-        WhileStatment nowAction = new WhileStatment();
-        currentScope.addAction(nowAction);
+            LoopStatment nowAction = new LoopStatment();
+            nowAction.setControl(controlAction);
 
-        nowAction.setControl((ExpressionAction) currentAction);
+            nowAction.getField(beginScope());
+            visitScope(nowAction.field());
+            flag = flag && visitStatement(ctx.statement());
 
-        nowAction.getField(currentScope.beginScope());
-        currentScope = nowAction.field();
-        Error = visitStatement(ctx.statement());
-        if (!Error.equals("")) return Error;
-        currentScope = currentScope.endScope();
-
-        currentScope.addAction(nowAction);
-        currentAction = nowAction;
-
-        return "";
+            endScope();
+            if (flag) addAction(nowAction);
+            return flag;
+        }
+        return false;
     }
 
     @Override
-    public String visitJump_statement(MeazzaParser.Jump_statementContext ctx) {
+    public Boolean visitJump_statement(MeazzaParser.Jump_statementContext ctx) {
+        boolean flag;
         JumpStatment nowAction = new JumpStatment();
         if (ctx.expression() != null){
-            String Error = visitExpression(ctx.expression());
-            if (!Error.equals("")) return Error;
-            if (!currentScope.getVar("@").check((ExpressionAction) currentAction))
-                return "Return Type isn't valid";
-            else currentScope.putType("return");
-            nowAction.setReturnValue((ExpressionAction) currentAction);
-            currentAction = nowAction;
+            ExpressionAction returnValue = visitExpression(ctx.expression());
+            flag = returnValue != null;
+            if (flag){
+                nowAction.setReturnValue(returnValue);
+                flag = nowAction.accepted();
+            }
+        } else {
+            nowAction.set(ctx.op.getText());
+            flag = nowAction.accepted();
         }
-        else {
-            nowAction.setType(ctx.op.getText());
-            if (ctx.op.getText().equals("continue") && !nowAction.Inloop())
-                return "shouldn't continue, for there's no loop exist.";
-
-        }
-        return "";
+        if (flag) addAction(nowAction);
+        return flag;
     }
 
     @Override
-    public String visitFor_statement(MeazzaParser.For_statementContext ctx) {
-        ForStatment nowAction = new ForStatment();
+    public Boolean visitFor_statement(MeazzaParser.For_statementContext ctx) {
+        LoopStatment nowAction = new LoopStatment();
+        boolean flag = true;
         if (ctx.exp1 != null){
-            String Error = visitExpression(ctx.exp1);
-            if (!Error.equals("")) return Error;
-            nowAction.setInitializer((ExpressionAction) currentAction);
+            ExpressionAction initializer = visitExpression(ctx.exp1);
+            flag = initializer != null ;
+            if (flag) addAction(initializer);
         }
 
         if (ctx.exp2 != null){
-            String Error = visitExpression(ctx.exp2);
-            if (!Error.equals("")) return Error;
-            if (((ExpressionAction) currentAction).isNot("bool"))
-                return "The condition of for statmet should be bool";
-            nowAction.setControl((ExpressionAction) currentAction);
+            ExpressionAction controlAction = visitExpression(ctx.exp2);
+            if (!controlAction.accept("bool")) {
+                System.err.println("There should be boolean expression to control for statment");
+                tagPos(ctx);
+            }
+            else nowAction.setControl(controlAction);
         }
 
-        if (ctx.exp3 != null){
-            String Error = visitExpression(ctx.exp3);
-            if (!Error.equals("")) return Error;
-            nowAction.setLooper((ExpressionAction) currentAction);
+        ExpressionAction looper = null;
+        if (ctx.exp3 != null) looper = visitExpression(ctx.exp3);
+
+        nowAction.getField(beginScope());
+
+        visitScope(nowAction.field());
+        if (!visitStatement(ctx.statement())) flag = false;
+
+        endScope();
+
+        if (flag) {
+            nowAction.field().addAction(looper);
+            addAction(nowAction);
         }
-
-        nowAction.getField(currentScope.beginScope());
-        currentScope = nowAction.field();
-        String Error = visitStatement(ctx.statement());
-        if (!Error.equals("")) return Error;
-        currentScope = currentScope.endScope();
-
-        currentAction = nowAction;
-        return "";
+        return flag;
     }
 }

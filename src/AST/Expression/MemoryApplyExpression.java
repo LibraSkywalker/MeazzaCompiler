@@ -2,19 +2,25 @@ package AST.Expression;
 
 import java.util.ArrayList;
 
-import static main.main.globalScope;
 
 /**
  * Created by Bill on 2016/4/4.
  */
 public class MemoryApplyExpression extends ExpressionAction{
     int assigned = 0;
-    ArrayList<ExpressionAction> assignStage = new ArrayList<>();
+    ArrayList<ExpressionAction> stageValue = new ArrayList<>();
+
+    public void set(){}
+    public boolean check(){return true;}
+
+    public boolean setProperties(String now,int dim){
+       return properties.setProperties(now,dim);
+    }
 
     public boolean addStage(ExpressionAction now){
-        if (now.type() != globalScope.getType("int")) return false;
-        assignStage.add(now);
-        assigned++;
+        if (now == null) return false;
+        if (!now.properties.accept("int")) return false;
+        stageValue.add(now);
         return true;
     }
 }

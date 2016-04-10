@@ -2,17 +2,22 @@ package AST.Statment;
 
 import AST.ActionNodeBase;
 import AST.Expression.ExpressionAction;
-import SymbolTable.Scope;
+import SymbolContainer.Scope;
 
 /**
  * Created by Bill on 2016/4/4.
  */
-public abstract class StatmentAction extends ActionNodeBase {
+public abstract class SpecialStatment extends ActionNodeBase {
     Scope field;
     ExpressionAction control;
-    public void getField(Scope now){
-        field = now;
+
+    public SpecialStatment(){
+        control = null;
+        field = null;
     }
+
+
+    public abstract void getField(Scope now);
     public Scope field(){
         return field;
     }

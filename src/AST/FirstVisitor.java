@@ -1,62 +1,73 @@
 package AST;
 
-import SymbolTable.*;
+import SymbolContainer.*;
 import antlr.MeazzaBaseVisitor;
 import antlr.MeazzaParser;
 
-import static main.main.currentScope;
-import static main.main.globalScope;
+import static AST.ASTControler.*;
+
 
 /**
  * Created by Bill on 2016/4/5.
  */
-public class FirstVisitor extends MeazzaBaseVisitor<String> {
+public class FirstVisitor extends MeazzaBaseVisitor<Boolean> {
     @Override
-    public String visitClass_declaration(MeazzaParser.Class_declarationContext ctx) {
-        TypeSymbol now = currentScope.putType(ctx.ID().getText());
-        if (now == null) return "Unable to Define the class:" +
-                            ctx.ID().getText() +
-                            ",since we already have such class/type";
-        return "";
+    public Boolean visitClass_declaration(MeazzaParser.Class_declarationContext ctx) {
+        TypeSymbol now = putType(ctx.ID().getText());
+        if (now == null) {
+            System.err.println("Class: " + ctx.ID().getText() + "definition failed");;
+            tagPos(ctx);
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public String visitFunc_declaration(MeazzaParser.Func_declarationContext ctx) {
+    public Boolean visitFunc_declaration(MeazzaParser.Func_declarationContext ctx) {
+        FuncSymbol nowSymbol = putFunc(ctx.ID().getText());
+        if (nowSymbol == null) {
+            System.err.println("Function: " +ctx.ID().getText() + " definition failed");
+            tagPos(ctx);
+            return false;
+        }
+        String nowType = ctx.type().type_name().getText();
 
-        TypeSymbol nowType = globalScope.getType(ctx.type().type_name().getText());
-        if (nowType == null) return "Undefined type exist: " + ctx.type().type_name().getText();
-        FuncSymbol nowSymbol =  globalScope.putFunc(ctx.ID().getText());
-        if (nowSymbol == null) return "Function: " +ctx.ID().getText() + " creation failed in the globe";
+        if (!nowSymbol.setProperties(nowType,ctx.type().array().size())){
+            System.err.println("Undefined type exist: " + nowType);
+            tagPos(ctx);
+            return false;
+        }
 
-        nowSymbol.setDimension(ctx.type().array().size());
-        nowSymbol.setType(nowType);
-
-        if (ctx.parameters() == null) return "";
-
+        if (ctx.parameters() == null) return true;
+        Boolean flag = true;
         for (MeazzaParser.ParameterContext x: ctx.parameters().parameter()) {
-            nowType = globalScope.getType(x.type().type_name().getText());
-            if (nowType == null) return "Undefined type exist: " + x.type().type_name().getText();
-            VariableSymbol now = nowSymbol.addParameter(x.ID().getText());
-            if (now == null) return "Parameter redefined";
-            now.setType(nowType);
-            now.setDimension(x.type().array().size());
+            VariableSymbol nowParameter = nowSymbol.addParameter(x.ID().getText());
+            if (nowParameter == null){
+                System.err.println("Parameter "+ x.ID().getText() + " redefined");
+                tagPos(ctx);
+                flag = false;
+            }
+            else {
+                nowType = x.type().type_name().getText();
+                if (!nowParameter.setProperties(nowType, x.type().array().size())) {
+                    System.err.println("Undefined type exist: " + x.type().type_name().getText());
+                    tagPos(ctx);
+                    flag = false;
+                }
+            }
         }
 
-        return "";
+        return flag;
     }
 
-    public String visitProg(MeazzaParser.ProgContext ctx) {
-        String Error = "";
-        for (MeazzaParser.Class_declarationContext x : ctx.class_declaration()) {
-            Error = visitClass_declaration(x);
-            if (!(Error.equals(""))) return Error;
-        }
-        for (MeazzaParser.Func_declarationContext x : ctx.func_declaration()) {
-            Error = visitFunc_declaration(x);
-            if (!(Error.equals(""))) return Error;
-        }
-        if (globalScope.getFunc("main") == null) return "";//"Warning: There's no main in the program";
-        if (globalScope.getFunc("main").type() != globalScope.getType("int")) return "The type of main isn't valid";
-        return Error;
+    public Boolean visitProg(MeazzaParser.ProgContext ctx) {
+        boolean flag = true;
+        for (MeazzaParser.Class_declarationContext x : ctx.class_declaration())
+            if (!visitClass_declaration(x)) flag = false;
+
+        for (MeazzaParser.Func_declarationContext x : ctx.func_declaration())
+            if (!visitFunc_declaration(x)) flag =false;
+
+        return flag;
     }
 }

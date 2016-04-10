@@ -12,14 +12,18 @@ public abstract class BinaryExpression extends ExpressionAction {
     public void getOperator(String now){
         operator = now;
     }
-    abstract boolean set();
-    abstract String check();
-    public void getLeft(ActionNodeBase nowAction){
-        leftExpression = (ExpressionAction) nowAction;
+    public boolean setLeft(ExpressionAction nowAction){
+        leftExpression = nowAction;
+        if (nowAction == null) return false;
+        nowAction.parentAction = this;
+        return true;
     }
 
-    public void getRight(ActionNodeBase nowAction){
-        rightExpression = (ExpressionAction) nowAction;
+    public boolean setRight(ExpressionAction nowAction){
+        rightExpression = nowAction;
+        if (nowAction == null) return false;
+        nowAction.parentAction = this;
+        return true;
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public abstract class ActionNodeBase {
     public ActionNodeBase parentAction = null;
+    public void execute(){}
     public ActionNodeBase(){
     }
 }

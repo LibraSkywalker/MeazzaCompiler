@@ -1,28 +1,21 @@
 package AST.Expression;
 
-import static main.main.globalScope;
-
 /**
  * Created by Bill on 2016/4/6.
  */
 public class LogicExpression extends BinaryExpression{
-    public LogicExpression(){
-        type = globalScope.getType("bool");
-        dimension = 0;
+    public LogicExpression(){}
+
+    public void set(){
+        properties.setProperties("bool");
     }
 
-    public boolean set(){
+    public boolean check(){
+        if (!leftExpression.accept("bool") || !rightExpression.accept("bool")){
+            System.err.println("There should be boolean expression beside the Logic operator: ");
+            return false;
+        }
+        set();
         return true;
-    }
-
-    public String check(){
-        if (leftExpression.type == type &&
-            rightExpression.type == type &&
-            (leftExpression.dimension - leftExpression.stage) == 0 &&
-                (rightExpression.dimension - rightExpression.stage) == 0)
-            return "";
-        //System.out.println(type);
-        //System.out.println(rightExpression.type);
-        return "There should be boolean expression beside the Logic operator: " + leftExpression.type.name() + " "+ rightExpression.type.name();
     }
 }

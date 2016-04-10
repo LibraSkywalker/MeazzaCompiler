@@ -4,15 +4,13 @@ package AST.Expression;
  * Created by Bill on 2016/4/6.
  */
 public abstract class UnaryExpression extends ExpressionAction{
-    String uop;
+    String opertaor;
     ExpressionAction childAction;
-    public void getOP(String now){ uop = now;}
-    public String op(){return uop;}
+    public void setOpertaor(String now){ opertaor = now;}
+    public String getOpertaor(){return opertaor;}
 
-    public void set(UnaryExpression now) {
-        super.set(now);
-    }
-    public void getChild(ExpressionAction now){
+    public void setChild(ExpressionAction now){
         childAction = now;
+        now.parentAction = this;
     }
 }
