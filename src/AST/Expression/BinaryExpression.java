@@ -26,4 +26,9 @@ public abstract class BinaryExpression extends ExpressionAction {
         return true;
     }
 
+    public String toString(){
+        return properties.toString()
+                + "\t" + leftExpression.toString()
+                + " "+ rightExpression.toString();
+    }
 }

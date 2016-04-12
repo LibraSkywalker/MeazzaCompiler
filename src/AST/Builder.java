@@ -44,12 +44,12 @@ public class Builder {
 
         putFunc("getString").setPrimitive().setProperties("string");
 
-        putFunc("size").setPrimitive().setProperties("string");
+        putFunc("size").setPrimitive().setProperties("int");
 
         putFunc("getInt").setPrimitive().setProperties("int");
 
         FuncSymbol toString = putFunc("toString").setPrimitive();
-        toString.setProperties("string");;
+        toString.setProperties("string");
         toString.addParameter("x").setProperties("int");
 
         string.resolvedFunc("length").setProperties("int");

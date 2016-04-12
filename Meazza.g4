@@ -6,8 +6,6 @@ UNSIGNED : 'unsigned' ;
 
 CLASS : 'class';
 
-STRING : 'string' ;
-
 INT_POST : 'LL' | 'UL' ;
 
 ID : ID_head ID_tail*;
@@ -74,7 +72,7 @@ const_expression : INT_DATA (INT_POST)?
                  | STRING_DATA
                  ;
 
-func_declaration: (type | op = 'void') ID'('parameters?')' compound_statement;
+func_declaration: type ID'('parameters?')' compound_statement;
 
 parameters : parameter (',' parameter)* ;
 
@@ -103,9 +101,9 @@ normal_statement : expression? ';' ;
 expression : const_expression
            | ID
            | <assoc = left> ID fop = '(' (expression(',' expression)*)? fop = ')'
+           | <assoc = left> uop = 'new' (type_name) ('[' expression ']')* array*
            | <assoc = left> expression op = '.' expression
            | <assoc = left> expression (op = '[' expression']')+
-           | <assoc = left> uop = 'new' (type_name) ('[' expression ']')* array*
            | <assoc = left> oop = '(' expression ')'
            | <assoc = right> uop = ('-' | '~' | '!') expression
            | <assoc = right> expression uop = ('++' | '--')

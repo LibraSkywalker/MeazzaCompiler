@@ -6,6 +6,7 @@ package AST.Expression;
 public class LogicExpression extends BinaryExpression{
     public LogicExpression(){}
 
+    @Override
     public void set(){
         properties.setProperties("bool");
     }

@@ -11,4 +11,7 @@ public class Literal extends ExpressionAction{
     public void getValue(String now){
         _value = now;
     }
+    public String toString(){
+        return "CONST: " + properties.toString() + " " + _value;
+    }
 }

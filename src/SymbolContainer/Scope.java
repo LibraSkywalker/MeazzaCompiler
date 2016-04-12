@@ -21,7 +21,7 @@ public class Scope{
 
     public Scope(){
         nowActionIndex = 0;
-        prevScope = null;
+        prevScope = lastScope = null;
         dict = new Hashtable<>();
         actionList = new ArrayList<>();
         type = NORMAL;
@@ -45,27 +45,31 @@ public class Scope{
 
     public Symbol get(String now){
         Scope nowScope = this;
-        while (nowScope != null && dict.get(now) == null)
+        while (nowScope != null && nowScope.dict.get(now) == null) {
+           // System.out.println(nowScope + now);
             nowScope = nowScope.prevScope;
-        if (nowScope == null) return null;
-        return dict.get(now);
+        }
+        return (nowScope == null) ? null : nowScope.dict.get(now);
     }
 
     public TypeSymbol getType(String now){
         Symbol ret = get(now);
         if (ret != null && ret instanceof TypeSymbol) return (TypeSymbol) ret;
+        System.err.println("Undefined Type: " + now + " exists");
         return null;
     }
 
     public VariableSymbol getVar(String now){
         Symbol ret = get(now);
         if (ret != null && ret instanceof VariableSymbol) return (VariableSymbol)ret;
+        System.err.println("Undefined Variable: " + now + " exists");
         return null;
     }
 
     public  FuncSymbol getFunc(String now){
         Symbol ret = get(now);
         if (ret != null && ret instanceof FuncSymbol) return (FuncSymbol)ret;
+        System.err.println("Undefined Function: " + now + " exists");
         return null;
     }
 
@@ -89,17 +93,6 @@ public class Scope{
         return lastScope;
     }
 
-    public Symbol put(String now,Symbol nowSymbol){
-        Symbol prevSymbol = get(now);
-        if (prevSymbol == null || !prevSymbol.primitive && dict.get(now) == null){
-            dict.put(now,nowSymbol);
-            nowSymbol.name = now;
-            return nowSymbol;
-        }
-        return null;
-    }
-
-
     public void setFunc(){
         type = FUNC;
     }
@@ -117,7 +110,7 @@ public class Scope{
         while ( nowScope != null && nowScope.type != FUNC)
             nowScope = nowScope.prevScope;
         if (nowScope == null) return null;
-        else return nowScope.lastScope;
+        else return nowScope;
     }
 
     public Scope breakTo(){
@@ -154,30 +147,57 @@ public class Scope{
         else return null;
     }
 
+
+    public boolean put(String now,Symbol nowSymbol){
+        Symbol prevSymbol = get(now);
+        if (prevSymbol == null || !prevSymbol.primitive && dict.get(now) == null){
+            dict.put(now,nowSymbol);
+            nowSymbol.name = now;
+            return true;
+        }
+        return false;
+    }
+
     public VariableSymbol putVar(String now){
         VariableSymbol nowSymbol = new VariableSymbol();
-        return (VariableSymbol) put(now,nowSymbol);
+        if (!put(now,nowSymbol)){
+            System.err.println("Variable: " + now + "definition failed");
+            return null;
+        }
+        return getVar(now);
     }
 
     public FuncSymbol putFunc(String now){
-        FuncSymbol nowSymbol =new FuncSymbol();
-        return (FuncSymbol) put(now,nowSymbol);
+        FuncSymbol nowSymbol = new FuncSymbol();
+        if (!put(now,nowSymbol)){
+            System.err.println("Function: " + now + "definition failed");
+            return null;
+        }
+        return getFunc(now);
     }
-
 
     public TypeSymbol putType(String now){
         TypeSymbol nowSymbol = new TypeSymbol(false);
-        return (TypeSymbol) put(now,nowSymbol);
+        if (!put(now,nowSymbol)){
+            System.err.println("Class: " + now + "definition failed");
+            return null;
+        }
+        return getType(now);
     }
 
     public TypeSymbol putType(String now,Object x){
         TypeSymbol nowSymbol = new TypeSymbol(true);
-        return (TypeSymbol) put(now,nowSymbol);
+        if (!put(now,nowSymbol)){
+            System.err.println("Class: " + now + "definition failed");
+            return null;
+        }
+        return getType(now);
     }
 
-    public Reserved putReservedKey(String now){
+    public void putReservedKey(String now){
         Symbol nowSymbol = new Reserved() ;
-        return (Reserved) put(now,nowSymbol);
+        put(now,nowSymbol);
+        nowSymbol.setPrimitive();
     }
 
     public void addAction(ActionNodeBase now){

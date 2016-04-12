@@ -8,13 +8,17 @@ public class EqualExpression extends BinaryExpression{
     public EqualExpression(){
     }
 
+    @Override
     public void set(){
-        properties.setProperties("bool");
+        setProperties("bool");
     }
 
     public boolean check(){
         if (!leftExpression.accept(rightExpression)) return false;
-        if (operator.equals("!=")  || operator.equals("==")) return true;
+        if (operator.equals("!=")  || operator.equals("==")) {
+            set();
+            return true;
+        }
         if (!leftExpression.accept("int")) {
             System.err.println("There should be integer expression beside the partial operator");
             return false;

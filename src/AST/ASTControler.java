@@ -26,9 +26,17 @@ public class ASTControler {
     public static void visitScope(Scope nowScope){
         currentScope = nowScope.visitScope();
     }
-    public static void tagPos(ParserRuleContext ctx){
+    public static boolean tagPos(ParserRuleContext ctx){
         System.err.print("Error exists in Line ") ;
         System.err.println(ctx.getStart().getLine());
+        return false;
+    }
+
+    public static boolean tagPos(ParserRuleContext ctx,boolean flag){
+        if (flag) return true;
+        System.err.print("Error exists in Line ") ;
+        System.err.println(ctx.getStart().getLine());
+        return false;
     }
 
     public static boolean getReserved(String now) {
@@ -54,8 +62,8 @@ public class ASTControler {
         return currentScope.putType(now,x);
     }
 
-    public static Reserved putReserved(String now){
-        return (Reserved) currentScope.putReservedKey(now).setPrimitive();
+    public static void putReserved(String now){
+        currentScope.putReservedKey(now);
     }
 
     public static FuncSymbol putFunc(String now){
@@ -70,19 +78,18 @@ public class ASTControler {
         return currentScope.beginScope();
     }
 
-    public static Scope endScope(){return currentScope.endScope();}
+    public static Scope endScope(){return currentScope = currentScope.endScope();}
 
     public static ActionNodeBase popAction() {
         return currentScope.popAction();
     }
     public boolean Visit(MeazzaParser.ProgContext ctx){
-        boolean flag = true;
         FirstVisitor visitor = new FirstVisitor();
-        if (!visitor.visitProg(ctx)) flag = false;
+        if (!visitor.visitProg(ctx)) return false;
 
         SecondVisitor visitor1 = new SecondVisitor();
-        if (!visitor1.visitProg(ctx)) flag = false;
+        if (!visitor1.visitProg(ctx)) return false;
         // System.out.println("The program has no compile error");
-        return flag;
+        return true;
     }
 }

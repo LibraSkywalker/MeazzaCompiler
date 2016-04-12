@@ -23,4 +23,8 @@ public class MemoryApplyExpression extends ExpressionAction{
         stageValue.add(now);
         return true;
     }
+
+    public String toString(){
+        return "NEW:" + properties;
+    }
 }

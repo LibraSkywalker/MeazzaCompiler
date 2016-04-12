@@ -33,4 +33,8 @@ public class AssignExpression extends BinaryExpression{
         System.err.println("Assigned expression need lvalueExpression on the left of the operator");
         return false;
     }
+
+    public String toString(){
+        return "ASSIGN:" + leftExpression.toString() + "\t"+ rightExpression.toString();
+    }
 }

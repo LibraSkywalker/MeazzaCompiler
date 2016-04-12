@@ -1,6 +1,7 @@
 package AST.Expression;
 
 import SymbolContainer.FuncSymbol;
+import SymbolContainer.Properties;
 import SymbolContainer.Symbol;
 import SymbolContainer.VariableSymbol;
 
@@ -19,13 +20,16 @@ public class SymbolElement extends ExpressionAction{
 
     public SymbolElement(VariableSymbol nowElement){
         element = nowElement;
-        properties = nowElement.getProperties().clone();
+        if (element == null) return;;
+        properties = new Properties();
+        properties.setProperties(nowElement.getProperties());
         lvalue = !(nowElement instanceof FuncSymbol);
     }
 
     public void setElement(VariableSymbol nowElement){
         element = nowElement;
-        properties = nowElement.getProperties().clone();
+        if (element == null) return;;
+        properties.setProperties(nowElement.getProperties());
         lvalue = !(nowElement instanceof FuncSymbol);
     }
 
@@ -37,6 +41,7 @@ public class SymbolElement extends ExpressionAction{
         if (element instanceof FuncSymbol){
             VariableSymbol nowParameter = ((FuncSymbol) element).findParameter(i);
             if (!nowParameter.accept(now)){
+                System.err.println(nowParameter.toString() + " " + now.toString());
                 System.err.println("Parameter "+ i.toString() + " type mismatch");
                 return false;
             }
@@ -55,5 +60,9 @@ public class SymbolElement extends ExpressionAction{
             return false;
         }
         return true;
+    }
+
+    public String toString(){
+        return "Symbol: " + element.toString();
     }
 }

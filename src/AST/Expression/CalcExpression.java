@@ -5,10 +5,12 @@ package AST.Expression;
  */
 public class CalcExpression extends BinaryExpression {
 
+    @Override
     public void set(){
         setProperties(leftExpression.properties);
     }
 
+    @Override
     public boolean check(){
         if (!leftExpression.accept(rightExpression)){
             return false;

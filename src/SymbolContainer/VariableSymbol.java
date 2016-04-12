@@ -17,13 +17,11 @@ public class VariableSymbol extends Symbol{
     }
 
     public boolean setProperties(String type,int dim){
-        if (!properties.setProperties(type ,dim)) return false;
-        return true;
+        return properties.setProperties(type ,dim) ;
     }
 
     public boolean setProperties(String type){
-        if (!properties.setProperties(type)) return false;
-        return true;
+        return properties.setProperties(type);
     }
 
     public void setProperties(VariableSymbol now){
@@ -43,7 +41,7 @@ public class VariableSymbol extends Symbol{
     }
 
     public boolean check(){
-        if (properties.type.equals("void")){
+        if (properties.accept("void")){
             System.err.println("The type of a variable cannot be void");
             return false;
         }
@@ -57,6 +55,10 @@ public class VariableSymbol extends Symbol{
         return properties.accept(now.properties);
     }
     public boolean accept(ExpressionAction now){
+        if (now == null) return false;
         return properties.accept(now.getProperties());
+    }
+    public String toString(){
+        return properties.toString() + " " + name;
     }
 }

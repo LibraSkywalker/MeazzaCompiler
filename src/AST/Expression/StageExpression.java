@@ -11,9 +11,15 @@ public class StageExpression extends ExpressionAction{
     boolean lvalue;
 
     public void set(){}
-    public boolean check(){return previousAction == null;}
+    public boolean check(){return previousAction != null;}
     public void setPreviousAction(ExpressionAction now){
+        if (now == null) return;
         previousAction = now;
+        properties.setProperties(now.properties);
+        if (now instanceof DotElement)
+            lvalue = ((DotElement) now).lvalue;
+        if (now instanceof SymbolElement)
+            lvalue = ((SymbolElement) now).lvalue;
         now.parentAction = this;
     }
 
@@ -29,5 +35,9 @@ public class StageExpression extends ExpressionAction{
         }
         stageValue.add(now);
         return true;
+    }
+
+    public String toString(){
+        return "Stage " + previousAction.toString() + " to " + properties.toString();
     }
 }

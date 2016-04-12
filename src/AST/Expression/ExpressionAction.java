@@ -3,19 +3,17 @@ package AST.Expression;
 import AST.ActionNodeBase;
 import SymbolContainer.Properties;
 
-import java.util.ArrayList;
-
 /**
  * Created by Bill on 2016/4/6.
  */
 public abstract class ExpressionAction extends ActionNodeBase {
-    Properties properties;
+    Properties properties = new Properties();
 
     public abstract void set();
     public abstract boolean check();
 
-    public void setProperties(String now){
-        properties.setProperties(now);
+    public boolean setProperties(String now){
+        return properties.setProperties(now);
     }
 
     public void setProperties(Properties now){

@@ -5,11 +5,14 @@ package AST.Expression;
  */
 public class AutoAdjustExpression extends UnaryExpression {
     public void set(){
-        properties.setProperties("int");
+        setProperties("int");
     }
     public boolean check(){
         if (childAction == null) return false;
-        if (childAction.accept("int")) return false;
+        if (!childAction.accept("int")){
+            System.err.println("Required int instead of " + childAction.properties);
+            return false;
+        }
         if (childAction instanceof SymbolElement &&
            ((SymbolElement)childAction).lvalue ||
            childAction instanceof DotElement &&

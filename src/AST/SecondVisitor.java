@@ -7,6 +7,8 @@ import AST.Statment.LoopStatment;
 import SymbolContainer.*;
 import antlr.MeazzaBaseVisitor;
 import antlr.MeazzaParser;
+import kotlin.reflect.jvm.internal.impl.descriptors.ModuleParameters;
+
 import java.lang.String;
 
 import static AST.ASTControler.*;
@@ -24,18 +26,15 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             VariableSymbol nowSymbol = nowClass.resolvedMember(x.ID().getText());
             if (nowSymbol == null) {
                 flag = false;
-                System.err.println("Variable" + x.ID().getText() + " definition failed in " + ctx.ID().getText());
-                tagPos(ctx);
+                tagPos(x);
             }
-            else if (nowSymbol.setProperties(nowType,x.type().array().size())){
+            else if (!nowSymbol.setProperties(nowType,x.type().array().size())){
                 flag = false;
-                System.err.println("Undefined type: "+ nowType + "exists");
-                tagPos(ctx);
+                tagPos(x);
             }
-            else if (nowSymbol.check()){
+            else if (!nowSymbol.check()){
                 flag = false;
-                System.err.println("The type of a variable cannot be void");
-                tagPos(ctx);
+                tagPos(x);
             }
         }
         return flag;
@@ -47,13 +46,12 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         for (MeazzaParser.Class_declarationContext x : ctx.class_declaration()) {
             if(!visitClass_declaration(x)){
                 flag = false;
-            };
+            }
         }
         for (int i = 0; i < ctx.getChildCount(); i++) {
             if (ctx.getChild(i) instanceof MeazzaParser.Class_declarationContext) continue;
             if (!(Boolean) visit(ctx.getChild(i))) flag = false;
         }
-
         if (getFunc("main") == null) {
             System.err.println("Warning: There's no main function in the program");
             return flag;
@@ -75,19 +73,19 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         boolean flag = true;
         if (nowVariable == null){
             flag = false;
-            System.err.println("Variable" + ctx.ID().getText() + " definition failed");
             tagPos(ctx);
         }
         else if (!nowVariable.setProperties(nowType,ctx.type().array().size())){
             flag = false;
-            System.err.println("Undefined Type: " + nowType + " exists");
             tagPos(ctx);
         }
+        /*
         else if (!nowVariable.check()){
             flag = false;
             tagPos(ctx);
         }
-
+        */
+        if (flag) flag = nowVariable.check();
         if (ctx.expression() == null) return flag;
 
         AssignExpression nowAction = new AssignExpression();
@@ -112,11 +110,14 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
 
     @Override
     public ExpressionAction visitExpression(MeazzaParser.ExpressionContext ctx) {
+        if (ctx == null) return new EmptyExpression();
         if (ctx.op != null){
             String now = ctx.op.getText();
             if (now.equals("=")) {
                 AssignExpression nowAction = new AssignExpression();
-                if (BinaryDefault(ctx,nowAction) == null) return null;
+                if (BinaryDefault(ctx,nowAction) == null){
+                    return null;
+                }
                 return nowAction.check() ? nowAction : null;
             }
             if (now.equals("||") || now.equals("&&")){
@@ -150,7 +151,6 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             if (now.equals(".")) {
                 DotElement nowAction = new DotElement();
                 if (BinaryDefault(ctx,nowAction) == null) return null;
-                if (!nowAction.check()) return null;
                 return nowAction.check() ? nowAction : null;
             }
             if (now.equals("+") || now.equals("-") || now.equals("*") || now.equals("/") || now.equals("%"))
@@ -192,6 +192,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             }
             else{
                 SymbolElement nowAction = new SymbolElement(getFunc(ctx.ID().getText()));
+                if (!nowAction.check()) return null;
                 if (!nowAction.checkParameter(ctx.expression().size())) return null;
                 for (int i = 0; i < ctx.expression().size(); i++)
                     if (!nowAction.checkParameter(visitExpression(ctx.expression(i)),i))
@@ -207,6 +208,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             if (x.CHAR_DATA() != null) nowAction.setProperties("char");
             if (x.boolData != null) nowAction.setProperties("bool");
             if (x.nullData != null) nowAction.setProperties("@null");
+            nowAction.getValue(ctx.const_expression().getText());
             return nowAction;
         }
         else if (ctx.oop != null){
@@ -219,17 +221,17 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
     public Boolean visitFunc_declaration(MeazzaParser.Func_declarationContext ctx) {
         String now = ctx.ID().getText();
         FuncSymbol nowFunc = getFunc(now);
+        if (nowFunc == null) return false;
         visitScope(nowFunc.FuncScope);
 
         if (!nowFunc.accept("void")) putVar("@return").setProperties(nowFunc);
         Boolean flag = visitCompound_statement(ctx.compound_statement());
         endScope();
-
         if (!nowFunc.accept("void"))
             if (getReserved("+")){
                 System.err.println("Warning: Function "+ now + " do not have return value");
             }
-        return flag;
+        return tagPos(ctx,flag);
     }
 
     @Override
@@ -240,42 +242,49 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
                   ctx.getChild(i) instanceof MeazzaParser.StatementContext)) continue;
             flag = flag && (Boolean)visit(ctx.getChild(i));
         }
-        return flag;
+        return tagPos(ctx,flag);
     }
 
     @Override
     public Boolean visitStatement(MeazzaParser.StatementContext ctx) {
-        if (ctx.compound_statement() != null &&
-           (getCurrentScope().size() > 0 ||
-            getCurrentScope().getType() < 2)) { //Not (Loop or Branch)
-            beginScope();
+        if (ctx.compound_statement() != null){
+            visitScope(beginScope());
             boolean flag = visitCompound_statement(ctx.compound_statement());
             endScope();
-            return flag;
+            return tagPos(ctx,flag);
         }
-        else return (Boolean) visitChildren(ctx);
+        else return tagPos(ctx,(boolean)visitChildren(ctx)) ;
     }
 
     @Override
     public Boolean visitIf_statement(MeazzaParser.If_statementContext ctx) {
         ExpressionAction controlAction = visitExpression(ctx.expression());
-        boolean flag = controlAction == null;
+        boolean flag = controlAction != null;
         BranchStatment nowAction = new BranchStatment();
-
+        if (!flag) return false;
+        if (!controlAction.accept("bool")) {
+            System.err.println("There should be boolean expression to control while statment");
+            flag = false;
+        }
         nowAction.setControl(controlAction);
         nowAction.getField(beginScope());
-        visitScope(nowAction.field());;
-        flag = flag && visitStatement(ctx.statement(0));
+        visitScope(nowAction.field());
+        if (ctx.statement(0).compound_statement() != null){
+            flag = flag && visitCompound_statement(ctx.statement(0).compound_statement());
+        }
+        else flag = flag && visitStatement(ctx.statement(0));
         endScope();
         if (ctx.statement(1) != null) {
             nowAction.getField2(beginScope());
             visitScope(nowAction.field2());
-            flag = flag && visitStatement(ctx.statement(1));
+            if (ctx.statement(1).compound_statement() != null)
+                flag = flag && visitCompound_statement(ctx.statement(1).compound_statement());
+            else flag = flag && visitStatement(ctx.statement(1));
             endScope();
         }
         nowAction.checkReturn();
         addAction(nowAction);
-        return flag;
+        return tagPos(ctx,flag);
     }
 
     @Override
@@ -349,6 +358,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             if (!controlAction.accept("bool")) {
                 System.err.println("There should be boolean expression to control for statment");
                 tagPos(ctx);
+                flag = false;
             }
             else nowAction.setControl(controlAction);
         }

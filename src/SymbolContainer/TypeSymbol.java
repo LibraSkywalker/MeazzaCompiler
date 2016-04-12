@@ -1,6 +1,7 @@
 package SymbolContainer;
 
 import static AST.ASTControler.beginScope;
+import static AST.ASTControler.endScope;
 import static AST.ASTControler.getType;
 
 /**
@@ -20,20 +21,13 @@ public class TypeSymbol extends Symbol{
         return this;
     }
 
-    public Scope visitClassMember(){
-        if (classMembers == null) return null;
-        else return classMembers.visitScope();
-    }
-
     public VariableSymbol resolvedMember(String member){
-        VariableSymbol now = new VariableSymbol();
-        return (VariableSymbol) classMembers.put(member, now);
+        return classMembers.putVar(member);
     }
 
 
     public FuncSymbol resolvedFunc(String member){
-        FuncSymbol now = new FuncSymbol();
-        return (FuncSymbol) classMembers.put(member, now);
+        return classMembers.putFunc(member);
     }
 
     @Override
