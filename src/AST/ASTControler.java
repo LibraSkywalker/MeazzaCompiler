@@ -50,6 +50,7 @@ public class ASTControler {
         return currentScope.getVar(now);
     }
 
+    public static VariableSymbol getVar(String now,Object x){return currentScope.getVar(now,x);}
     public static FuncSymbol getFunc(String now){
         return currentScope.getFunc(now);
     }

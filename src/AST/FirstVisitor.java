@@ -14,11 +14,8 @@ public class FirstVisitor extends MeazzaBaseVisitor<Boolean> {
     @Override
     public Boolean visitClass_declaration(MeazzaParser.Class_declarationContext ctx) {
         TypeSymbol now = putType(ctx.ID().getText());
-        if (now == null) {
-            tagPos(ctx);
-            return false;
-        }
-        return true;
+        if (now == null) return tagPos(ctx);
+        else return true;
     }
 
     @Override
@@ -33,20 +30,15 @@ public class FirstVisitor extends MeazzaBaseVisitor<Boolean> {
         Boolean flag = true;
         for (MeazzaParser.ParameterContext x: ctx.parameters().parameter()) {
             VariableSymbol nowParameter = nowSymbol.addParameter(x.ID().getText());
-            if (nowParameter == null){
-                tagPos(ctx);
-                flag = false;
-            }
+            if (nowParameter == null) return tagPos(ctx);
             else {
                 nowType = x.type().type_name().getText();
-                if (!nowParameter.setProperties(nowType, x.type().array().size())) {
-                    tagPos(ctx);
-                    flag = false;
-                }
+                if (!nowParameter.setProperties(nowType, x.type().array().size()))
+                    flag = tagPos(ctx);;
             }
         }
 
-        return tagPos(ctx,flag);
+        return flag;
     }
 
     public Boolean visitProg(MeazzaParser.ProgContext ctx) {
@@ -57,6 +49,6 @@ public class FirstVisitor extends MeazzaBaseVisitor<Boolean> {
         for (MeazzaParser.Func_declarationContext x : ctx.func_declaration())
             if (!visitFunc_declaration(x)) flag =false;
 
-        return tagPos(ctx,flag);
+        return flag;
     }
 }

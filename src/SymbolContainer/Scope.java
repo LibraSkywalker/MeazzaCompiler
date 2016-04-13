@@ -66,6 +66,12 @@ public class Scope{
         return null;
     }
 
+    public VariableSymbol getVar(String now,Object x){
+        Symbol ret = get(now);
+        if (ret != null && ret instanceof VariableSymbol) return (VariableSymbol)ret;
+        return null;
+    }
+
     public  FuncSymbol getFunc(String now){
         Symbol ret = get(now);
         if (ret != null && ret instanceof FuncSymbol) return (FuncSymbol)ret;
@@ -161,7 +167,7 @@ public class Scope{
     public VariableSymbol putVar(String now){
         VariableSymbol nowSymbol = new VariableSymbol();
         if (!put(now,nowSymbol)){
-            System.err.println("Variable: " + now + "definition failed");
+            System.err.println("Variable: " + now + " definition failed");
             return null;
         }
         return getVar(now);
@@ -170,7 +176,7 @@ public class Scope{
     public FuncSymbol putFunc(String now){
         FuncSymbol nowSymbol = new FuncSymbol();
         if (!put(now,nowSymbol)){
-            System.err.println("Function: " + now + "definition failed");
+            System.err.println("Function: " + now + " definition failed");
             return null;
         }
         return getFunc(now);

@@ -45,7 +45,7 @@ public class JumpStatment extends ActionNodeBase{
             }
             return true;
         } else
-        if (getVar("@return") == null) {
+        if (getVar("@return","") == null) {
             if (returnValue != null) {
                 System.err.println("A void function Should not have return value");
                 return false;
