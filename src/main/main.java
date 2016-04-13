@@ -10,9 +10,6 @@ import java.io.*;
  */
 public class main {
     public static void main(String[] args) throws IOException{
-        // test = System.in.toString();
-        //System.out.print(test);
-        //if (test.length() > 235) System.exit(0);
         MeazzaLexer lexer = new MeazzaLexer(new ANTLRInputStream(System.in)) ;
         CommonTokenStream tokens = new CommonTokenStream(lexer) ;
 
