@@ -6,4 +6,5 @@ package AST.Expression;
 public class EmptyExpression extends ExpressionAction{
     public void set(){}
     public boolean check(){return false;}
+    public void Translate(){}
 }

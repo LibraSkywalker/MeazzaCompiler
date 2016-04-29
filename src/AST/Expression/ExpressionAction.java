@@ -8,7 +8,17 @@ import SymbolContainer.Properties;
  */
 public abstract class ExpressionAction extends ActionNodeBase {
     Properties properties = new Properties();
-
+    int rDest = 0;
+    
+    boolean isLiteral(){
+        return this instanceof Literal;
+    }
+    
+    int src(){
+        return isLiteral() ? ((Literal)this).value() : this.rDest;
+    }
+    
+    
     public abstract void set();
     public abstract boolean check();
 

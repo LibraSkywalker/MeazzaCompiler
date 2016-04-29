@@ -10,7 +10,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class ASTControler {
     private static Scope currentScope;
-
     public ASTControler(){
         currentScope = new Scope();
         new Builder();
@@ -23,8 +22,9 @@ public class ASTControler {
         return currentScope;
     }
 
-    public static void visitScope(Scope nowScope){
+    public static Scope visitScope(Scope nowScope){
         currentScope = nowScope.visitScope();
+        return currentScope;
     }
     public static boolean tagPos(ParserRuleContext ctx){
         System.err.print("Error exists in Line ") ;

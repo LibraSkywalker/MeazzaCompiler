@@ -1,6 +1,9 @@
 package AST.Expression;
 
+import MIPS.Instruction.BinaryInstruction;
 import SymbolContainer.VariableSymbol;
+
+import static MIPS.IRcontroler.getBlock;
 
 
 /**
@@ -9,32 +12,45 @@ import SymbolContainer.VariableSymbol;
 public class AssignExpression extends BinaryExpression{
 
     public void set(){
-        properties.setProperties(leftExpression.properties);
+        properties.setProperties(leftAction.properties);
+    }
+
+    public void Translate(){
+        ((SymbolElement) leftAction).update(); // renaming
+        rightAction.Translate();
+
+        rDest = leftAction.rDest;
+        int rSrc =  rightAction.src();
+        boolean isReg = !rightAction.isLiteral();
+        if (!isReg) rSrc = ((Literal) rightAction).Reg();
+
+        getBlock().add(new BinaryInstruction("move", rDest, rSrc, isReg));
+
     }
 
     public void setLeft(VariableSymbol now){
         SymbolElement nowAction = new SymbolElement();
         nowAction.setElement(now);
-        leftExpression = nowAction;
+        leftAction = nowAction;
         nowAction.parentAction = this;
     }
 
     public boolean check(){
-        if (leftExpression == null || rightExpression == null) return false;
-        if (leftExpression instanceof SymbolElement &&
-            ((SymbolElement)leftExpression).lvalue ||
-            leftExpression instanceof DotElement &&
-            ((DotElement)leftExpression).lvalue ||
-            leftExpression instanceof StageExpression &&
-            ((StageExpression) leftExpression).lvalue) {
+        if (leftAction == null || rightAction == null) return false;
+        if (leftAction instanceof SymbolElement &&
+            ((SymbolElement) leftAction).lvalue ||
+            leftAction instanceof DotElement &&
+            ((DotElement) leftAction).lvalue ||
+            leftAction instanceof StageExpression &&
+            ((StageExpression) leftAction).lvalue) {
                 set();
-                return  leftExpression.accept(rightExpression);
+                return  leftAction.accept(rightAction);
         }
         System.err.println("Assigned expression need lvalueExpression on the left of the operator");
         return false;
     }
 
     public String toString(){
-        return "ASSIGN:" + leftExpression.toString() + "\t"+ rightExpression.toString();
+        return "ASSIGN:" + leftAction.toString() + "\t"+ rightAction.toString();
     }
 }

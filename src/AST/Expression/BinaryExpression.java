@@ -1,26 +1,24 @@
 package AST.Expression;
 
-import AST.ActionNodeBase;
-
 /**
  * Created by Bill on 2016/4/6.
  */
 public abstract class BinaryExpression extends ExpressionAction {
-    protected ExpressionAction leftExpression,rightExpression;
+    protected ExpressionAction leftAction, rightAction;
     String operator;
 
     public void getOperator(String now){
         operator = now;
     }
     public boolean setLeft(ExpressionAction nowAction){
-        leftExpression = nowAction;
+        leftAction = nowAction;
         if (nowAction == null) return false;
         nowAction.parentAction = this;
         return true;
     }
 
     public boolean setRight(ExpressionAction nowAction){
-        rightExpression = nowAction;
+        rightAction = nowAction;
         if (nowAction == null) return false;
         nowAction.parentAction = this;
         return true;
@@ -28,7 +26,7 @@ public abstract class BinaryExpression extends ExpressionAction {
 
     public String toString(){
         return properties.toString()
-                + "\t" + leftExpression.toString()
-                + " "+ rightExpression.toString();
+                + "\t" + leftAction.toString()
+                + " "+ rightAction.toString();
     }
 }

@@ -65,4 +65,13 @@ public class SymbolElement extends ExpressionAction{
     public String toString(){
         return "Symbol: " + element.toString();
     }
+
+    public void Translate(){
+        rDest = element.getVirtualRegister();
+    }
+
+    public void update(){
+        element.update();
+        rDest = element.getVirtualRegister();
+    }
 }

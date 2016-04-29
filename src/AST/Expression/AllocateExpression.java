@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by Bill on 2016/4/4.
  */
-public class MemoryApplyExpression extends ExpressionAction{
+public class AllocateExpression extends ExpressionAction{
     int assigned = 0;
     ArrayList<ExpressionAction> stageValue = new ArrayList<>();
 

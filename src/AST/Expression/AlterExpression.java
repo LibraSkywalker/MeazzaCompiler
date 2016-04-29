@@ -1,5 +1,12 @@
 package AST.Expression;
 
+import MIPS.Instruction.BinaryInstruction;
+import MIPS.Instruction.FastInstruction;
+import MIPS.Instruction.Instruciton;
+
+import static MIPS.IRcontroler.getBlock;
+import static RegisterControler.VirtualRegister.newVReg;
+
 /**
  * Created by Bill on 2016/4/7.
  */
@@ -16,5 +23,24 @@ public class AlterExpression extends UnaryExpression {
             if (!properties.accept("int")) return false;
         }
         return true;
+    }
+
+    public void Translate(){
+        //translate array,string
+        childAction.Translate();
+
+        rDest = newVReg();
+        int rSrc = childAction.src();
+        boolean isReg = !childAction.isLiteral();
+
+        if (!isReg) rSrc = ((Literal)childAction).Reg();
+
+        switch (opertaor){
+            case"-": getBlock().add(new BinaryInstruction("neg", rDest, rSrc,true));
+                     return;
+            case"~": getBlock().add(new BinaryInstruction("not", rDest, rSrc,true));
+                     return;
+            case"!": getBlock().add(new FastInstruction("xor", rDest, rSrc, 1,false));
+        }
     }
 }

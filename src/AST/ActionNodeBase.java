@@ -1,5 +1,8 @@
 package AST;
 
+import MIPS.BasicBlock;
+import MIPS.Instruction.Instruciton;
+
 import java.util.ArrayList;
 
 /**
@@ -10,4 +13,5 @@ public abstract class ActionNodeBase {
     public void execute(){}
     public ActionNodeBase(){
     }
+    public abstract void Translate();
 }

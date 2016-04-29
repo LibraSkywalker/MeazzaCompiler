@@ -146,7 +146,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         else if (ctx.uop != null){
             String now = ctx.uop.getText();
             if (now.equals("new")){
-                MemoryApplyExpression nowAction = new MemoryApplyExpression();
+                AllocateExpression nowAction = new AllocateExpression();
                 if (!nowAction.setProperties(ctx.type_name().getText(),ctx.expression().size() + ctx.array().size())) return null;
 
                 for (MeazzaParser.ExpressionContext x : ctx.expression()){
@@ -156,6 +156,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             }
             else if(now.equals("++") || now.equals("--")){
                 AutoAdjustExpression nowAction = new AutoAdjustExpression();
+                if (ctx.getChild(0).equals(ctx.uop)) nowAction.setPre();
                 nowAction.setChild(visitExpression(ctx.expression(0)));
                 nowAction.setOpertaor(now);
                 return nowAction.check() ? nowAction : null;
@@ -230,7 +231,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
     @Override
     public Boolean visitStatement(MeazzaParser.StatementContext ctx) {
         if (ctx.compound_statement() != null){
-            visitScope(beginScope());
+            addAction(visitScope(beginScope()));;
             boolean flag = visitCompound_statement(ctx.compound_statement());
             endScope();
             return flag;

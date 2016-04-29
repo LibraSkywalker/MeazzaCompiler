@@ -1,6 +1,7 @@
 package SymbolContainer;
 
 import static AST.ASTControler.getCurrentScope;
+import static RegisterControler.VirtualRegister.newVReg;
 
 /**
  * Created by Bill on 2016/4/2.
@@ -8,8 +9,17 @@ import static AST.ASTControler.getCurrentScope;
 public abstract class Symbol {
     protected String name;
     protected boolean primitive;
+    int virtualRegister;
 
     public abstract Symbol setPrimitive();
+
+    public void update(){
+        virtualRegister = newVReg();
+    }
+
+    public int getVirtualRegister(){
+        return virtualRegister;
+    }
 
     public boolean isPrimitive(){
         return primitive;

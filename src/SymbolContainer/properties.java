@@ -1,6 +1,5 @@
 package SymbolContainer;
 
-import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getType;
 
 /**
@@ -10,13 +9,6 @@ public class Properties {
     int dimension;
     TypeSymbol type;
 
-    @Override
-    public String toString(){
-        String dim = "";
-        for (int i = 0; i < dimension; i++)
-            dim += "[]";
-        return "<" + type.toString() + dim + ">";
-    }
     public Properties(){
         dimension = 0;
         type = null;
@@ -46,14 +38,20 @@ public class Properties {
 
     public boolean setProperties(String nowType, int dim){
         type = getType(nowType);
-        if (type == null) return false;
+        if (type == null) {
+            System.err.println("Undefined Type: " + nowType + " exists");
+            return false;
+        }
         dimension = dim;
         return true;
     }
 
     public boolean setProperties(String nowType){
         type = getType(nowType);
-        if (type == null) return false;
+        if (type == null){
+            System.err.println("Undefined Type: " + nowType + " exists");
+            return false;
+        }
         dimension = 0;
         return true;
     }
@@ -74,15 +72,15 @@ public class Properties {
         String dimB = "";
         for (int i = 0;i < dimension; i++) dimA += "[]";
         for (int i = 0;i < now.dimension; i++) dimB +="[]";
-        System.err.println("Type mismatch: required " + type.toString() + dimA + " instead of " + now.type.toString() + dimB);
+        System.err.println("Type mismatch: required" + type.toString() + dimA + " instead of " + now.type.toString() + dimB);
         return false;
     }
 
     public boolean accept(String now){
-        return (type.equals(getType(now)) && dimension == 0);
+        return type.equals(getType(now)) && dimension == 0;
     }
 
-    public boolean accept(TypeSymbol now) {
-        return (type.equals(now) && dimension == 0);
+    public boolean accept(TypeSymbol now){
+        return type.equals(now) && dimension == 0;
     }
 }

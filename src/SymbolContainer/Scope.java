@@ -10,7 +10,7 @@ import static AST.ASTControler.getCurrentScope;
 /**
  * Created by Bill on 2016/4/5.
  */
-public class Scope{
+public class Scope extends ActionNodeBase{
     Scope prevScope,lastScope;
     int type;
     Dictionary<String, Symbol> dict;
@@ -211,7 +211,7 @@ public class Scope{
     }
 
     public ActionNodeBase popAction(){
-        if (nowActionIndex > actionList.size())
+        if (nowActionIndex >= actionList.size())
             return null;
         return actionList.get(nowActionIndex++) ;
     }
