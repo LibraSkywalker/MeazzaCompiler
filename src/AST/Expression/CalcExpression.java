@@ -1,8 +1,10 @@
 package AST.Expression;
 
-import MIPS.Instruction.FastInstruction;
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRcontroler.getBlock;
+import static MIPS.IRControler.addInstruction;
+import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -37,6 +39,11 @@ public class CalcExpression extends BinaryExpression {
         leftAction.Translate();
         rightAction.Translate();
 
+        if (leftAction.accept("string")){
+            StringTranslate();
+            return;
+        }
+
         rDest = newVReg();
         int rSrc1 = leftAction.src();
         if (leftAction.isLiteral())
@@ -45,15 +52,31 @@ public class CalcExpression extends BinaryExpression {
         boolean isReg = !rightAction.isLiteral();
 
         switch (operator){
-            case "+": getBlock().add(new FastInstruction("add", rDest, rSrc1, Src2, isReg));
+            case "+": getBlock().add(new RegTerInstruction("add", rDest, rSrc1, Src2, isReg));
                 return;
-            case "-": getBlock().add(new FastInstruction("sub", rDest, rSrc1, Src2, isReg));
+            case "-": getBlock().add(new RegTerInstruction("sub", rDest, rSrc1, Src2, isReg));
                 return;
-            case "*": getBlock().add(new FastInstruction("mul", rDest, rSrc1, Src2, isReg));
+            case "*": getBlock().add(new RegTerInstruction("mul", rDest, rSrc1, Src2, isReg));
                 return;
-            case "/": getBlock().add(new FastInstruction("div", rDest, rSrc1, Src2, isReg));
+            case "/": getBlock().add(new RegTerInstruction("div", rDest, rSrc1, Src2, isReg));
                 return;
-            case "%": getBlock().add(new FastInstruction("rem", rDest, rSrc1, Src2, isReg));
+            case "%": getBlock().add(new RegTerInstruction("rem", rDest, rSrc1, Src2, isReg));
         }
+    }
+
+    public void StringTranslate(){
+        int rSrc1 = leftAction.src();
+        if (leftAction.isLiteral()){
+            rSrc1 = newVReg();
+            addInstruction(new AddBinInstruction("la",rSrc1,((Literal) leftAction).memName()));
+        }
+
+        int rSrc2 = rightAction.src();
+        if (rightAction.isLiteral()){
+            rSrc1 = newVReg();
+            addInstruction(new AddBinInstruction("la",rSrc1,((Literal) rightAction).memName()));
+        }
+
+
     }
 }

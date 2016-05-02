@@ -2,6 +2,7 @@ import AST.ASTControler;
 import AST.Builder;
 import AST.FirstVisitor;
 import AST.SecondVisitor;
+import MIPS.IRControler;
 import SymbolContainer.Scope;
 import antlr.MeazzaLexer;
 import antlr.MeazzaParser;
@@ -31,11 +32,6 @@ public class test  {
                 params.add(new Object[] { "testcase/passed/" + f.getName(), true });
             }
         }
-        for (File f : new File("testcase/compile_error/").listFiles()) {
-            if (f.isFile() && f.getName().endsWith(".mx")) {
-                params.add(new Object[] { "testcase/compile_error/" + f.getName(), false });
-            }
-        }
         return params;
     }
 
@@ -63,6 +59,10 @@ public class test  {
 
             ASTControler visitor = new ASTControler();
             if (!visitor.Visit(ctx)) throw new IOException();
+
+            IRControler transformer = new IRControler();
+            transformer.visit();
+            System.out.println(transformer.virtualPrint());
 
             if (!shouldPass) fail("Should not pass.");
         } catch (Exception e) {

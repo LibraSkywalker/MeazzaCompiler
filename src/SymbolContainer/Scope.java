@@ -14,6 +14,8 @@ public class Scope extends ActionNodeBase{
     Scope prevScope,lastScope;
     int type;
     Dictionary<String, Symbol> dict;
+    ArrayList<VariableSymbol> dict2;
+    public ArrayList<FuncSymbol> dict3;
     ArrayList<ActionNodeBase> actionList;
     int nowActionIndex;
     int NORMAL = 0, FUNC = 1, LOOP = 2, BRANCH = 3;
@@ -23,8 +25,17 @@ public class Scope extends ActionNodeBase{
         nowActionIndex = 0;
         prevScope = lastScope = null;
         dict = new Hashtable<>();
+        dict2 = new ArrayList<>();
+        dict3 = new ArrayList<>();
         actionList = new ArrayList<>();
         type = NORMAL;
+    }
+
+    public void Translate(){
+        for(ActionNodeBase now : actionList){
+            System.err.println("! " + now);
+            now.Translate();
+        }
     }
 
     public boolean contains(FuncSymbol now){
@@ -159,6 +170,7 @@ public class Scope extends ActionNodeBase{
         if (prevSymbol == null || !prevSymbol.primitive && dict.get(now) == null){
             dict.put(now,nowSymbol);
             nowSymbol.name = now;
+            nowSymbol.scope = this;
             return true;
         }
         return false;
@@ -170,6 +182,7 @@ public class Scope extends ActionNodeBase{
             System.err.println("Variable: " + now + " definition failed");
             return null;
         }
+        dict2.add(nowSymbol);
         return getVar(now);
     }
 
@@ -179,6 +192,7 @@ public class Scope extends ActionNodeBase{
             System.err.println("Function: " + now + " definition failed");
             return null;
         }
+        dict3.add(nowSymbol);
         return getFunc(now);
     }
 
@@ -221,5 +235,11 @@ public class Scope extends ActionNodeBase{
     }
     public int size(){
         return actionList.size();
+    }
+    public int memberSize(){
+        return dict2.size();
+    }
+    public int indexOfMember(Symbol now){
+        return dict2.indexOf(now);
     }
 }

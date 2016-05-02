@@ -1,9 +1,13 @@
 package AST.Expression;
 
-import MIPS.Instruction.BinaryInstruction;
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.RegBinInstruction;
 import SymbolContainer.VariableSymbol;
 
-import static MIPS.IRcontroler.getBlock;
+import static AST.ASTControler.getGlobeScope;
+import static MIPS.IRControler.addInstruction;
+import static MIPS.IRControler.getBlock;
+import static RegisterControler.ReservedRegister.globalAddress;
 
 
 /**
@@ -16,16 +20,29 @@ public class AssignExpression extends BinaryExpression{
     }
 
     public void Translate(){
-        ((SymbolElement) leftAction).update(); // renaming
+        leftAction.Translate();
+        if (leftAction instanceof SymbolElement)
+            ((SymbolElement) leftAction).update();// renaming
         rightAction.Translate();
-
+        System.err.println(leftAction);
+        System.err.println(rightAction);
         rDest = leftAction.rDest;
-        int rSrc =  rightAction.src();
-        boolean isReg = !rightAction.isLiteral();
-        if (!isReg) rSrc = ((Literal) rightAction).Reg();
+        int Src =  rightAction.src();
 
-        getBlock().add(new BinaryInstruction("move", rDest, rSrc, isReg));
+        if (rightAction.isLiteral()){
+            if (rightAction.accept("string")) {
+                addInstruction(new AddBinInstruction("la", rDest, ((Literal) rightAction).memName()));
+            }else{
+                    Src = ((Literal) rightAction).Reg();
+                    getBlock().add(new RegBinInstruction("li", rDest, Src, false));
+                }
+        }
+        else
+            getBlock().add(new RegBinInstruction("move", rDest, Src, false));
 
+        if (!(leftAction instanceof SymbolElement) || ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope())){
+            getBlock().add(new AddBinInstruction("sw", rDest, globalAddress));
+        }
     }
 
     public void setLeft(VariableSymbol now){

@@ -52,8 +52,6 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             System.err.println("The type of main isn't valid");
             return false;
         }
-
-        addAction(new SymbolElement(getFunc("main"))) ;
         return flag;
     }
 
@@ -116,7 +114,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             }
             if (now.equals("==")|| now.equals("!=") || now.equals(">") ||
                 now.equals(">=")|| now.equals("<=") || now.equals("<") ){
-                EqualExpression nowAction = new EqualExpression();
+                CompareExpression nowAction = new CompareExpression();
                 nowAction.getOperator(now);
                 if (BinaryDefault(ctx,nowAction) == null) return null;
                 return nowAction.check() ? nowAction : null;
@@ -192,6 +190,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             if (x.boolData != null) nowAction.setProperties("bool");
             if (x.nullData != null) nowAction.setProperties("@null");
             nowAction.getValue(ctx.const_expression().getText());
+            System.err.println(nowAction);
             return nowAction;
         }
         else if (ctx.oop != null){

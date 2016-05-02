@@ -10,6 +10,11 @@ public abstract class Symbol {
     protected String name;
     protected boolean primitive;
     int virtualRegister;
+    Scope scope;
+
+    public Scope getScope(){
+        return scope;
+    }
 
     public abstract Symbol setPrimitive();
 

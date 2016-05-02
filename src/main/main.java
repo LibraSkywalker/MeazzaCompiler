@@ -1,4 +1,5 @@
 package main;
+import MIPS.IRControler;
 import antlr.*;
 import AST.* ;
 import org.antlr.v4.runtime.* ;
@@ -19,5 +20,8 @@ public class main {
         ASTControler visitor = new ASTControler();
         if (!visitor.Visit(ctx)) System.exit(1);
 
+        IRControler transformer = new IRControler();
+        transformer.visit();
+        System.out.println(transformer.virtualPrint());
     }
 }

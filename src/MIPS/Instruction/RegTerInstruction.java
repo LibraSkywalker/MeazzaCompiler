@@ -3,10 +3,10 @@ package MIPS.Instruction;
 /**
  * Created by Bill on 2016/4/26.
  */
-public class FastInstruction extends TernaryInstruction{
+public class RegTerInstruction extends TernaryInstruction{
     Integer rDest,vDest;
-    FastInstruction(){}
-    public FastInstruction(String OP,int dest,int src1,int src2,boolean isRegister){
+    RegTerInstruction(){}
+    public RegTerInstruction(String OP, int dest, int src1, int src2, boolean isRegister){
         operator = OP;
         isReg = isRegister;
         vDest = dest;

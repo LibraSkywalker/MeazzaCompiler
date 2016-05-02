@@ -1,13 +1,18 @@
 package AST.Statment;
 
 import AST.ActionNodeBase;
+import AST.Expression.BinaryExpression;
 import AST.Expression.ExpressionAction;
+import MIPS.Instruction.JumpInstruction;
+import MIPS.Instruction.RegBinInstruction;
 import SymbolContainer.Properties;
 import SymbolContainer.Scope;
 
 import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getType;
 import static AST.ASTControler.getVar;
+import static MIPS.IRControler.addInstruction;
+import static RegisterControler.ReservedRegister.returnRegister;
 
 /**
  * Created by Bill on 2016/4/4.
@@ -61,6 +66,18 @@ public class JumpStatment extends ActionNodeBase{
                 return false;
             }
             return true;
+        }
+    }
+
+    public void Translate(){
+        if (operator.equals("return")){
+            if (returnValue != null){
+                if (returnValue.isLiteral())
+                    addInstruction(new RegBinInstruction("li" , returnRegister, returnValue.src(), false));
+                else
+                    addInstruction(new RegBinInstruction("move", returnRegister, returnValue.src(), true));
+            }
+            addInstruction(new JumpInstruction());
         }
     }
 

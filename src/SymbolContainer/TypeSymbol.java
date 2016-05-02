@@ -10,10 +10,18 @@ import static AST.ASTControler.getType;
 public class TypeSymbol extends Symbol{
     public Scope classMembers;
 
+    public int size(){
+        return classMembers.memberSize();
+    }
+
     protected TypeSymbol(boolean disableClassMembers){
         primitive = false;
         if (!disableClassMembers)
             classMembers = beginScope();
+    }
+
+    public int indexOfMember(Symbol now){
+        return classMembers.indexOfMember(now);
     }
 
     public TypeSymbol setPrimitive(){

@@ -1,10 +1,9 @@
 package AST.Expression;
 
-import MIPS.Instruction.BinaryInstruction;
-import MIPS.Instruction.FastInstruction;
-import MIPS.Instruction.Instruciton;
+import MIPS.Instruction.RegBinInstruction;
+import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRcontroler.getBlock;
+import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -36,11 +35,11 @@ public class AlterExpression extends UnaryExpression {
         if (!isReg) rSrc = ((Literal)childAction).Reg();
 
         switch (opertaor){
-            case"-": getBlock().add(new BinaryInstruction("neg", rDest, rSrc,true));
+            case"-": getBlock().add(new RegBinInstruction("neg", rDest, rSrc,true));
                      return;
-            case"~": getBlock().add(new BinaryInstruction("not", rDest, rSrc,true));
+            case"~": getBlock().add(new RegBinInstruction("not", rDest, rSrc,true));
                      return;
-            case"!": getBlock().add(new FastInstruction("xor", rDest, rSrc, 1,false));
+            case"!": getBlock().add(new RegTerInstruction("xor", rDest, rSrc, 1,false));
         }
     }
 }

@@ -1,11 +1,15 @@
 package AST.Expression;
 
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.RegBinInstruction;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Properties;
-import SymbolContainer.Symbol;
 import SymbolContainer.VariableSymbol;
 
-import java.util.ArrayList;
+import static AST.ASTControler.getGlobeScope;
+import static MIPS.IRControler.getBlock;
+import static RegisterControler.ReservedRegister.globalAddress;
+import static RegisterControler.ReservedRegister.globalPointer;
 
 /**
  * Created by Bill on 2016/4/10.
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 public class SymbolElement extends ExpressionAction{
     VariableSymbol element;
     boolean lvalue;
+    String label;
     public SymbolElement(){
         lvalue = false;
         element = null;
@@ -68,9 +73,16 @@ public class SymbolElement extends ExpressionAction{
 
     public void Translate(){
         rDest = element.getVirtualRegister();
+        if (element.getScope().equals(getGlobeScope())){
+            getBlock().add(new AddBinInstruction("la",globalAddress, globalPointer, getGlobeScope().indexOfMember(element)));
+            getBlock().add(new AddBinInstruction("lw",rDest, globalAddress));
+        }
+        else getBlock().add(new RegBinInstruction("li",globalAddress,0,false));
     }
 
     public void update(){
+        if (element.getScope().equals(getGlobeScope()) && element.getVirtualRegister() > 0)
+            return;
         element.update();
         rDest = element.getVirtualRegister();
     }

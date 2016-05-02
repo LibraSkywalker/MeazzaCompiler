@@ -9,10 +9,14 @@ import org.antlr.v4.runtime.tree.ParseTree;
  * Created by Bill on 2016/4/8.
  */
 public class ASTControler {
-    private static Scope currentScope;
+    private static Scope currentScope,globeScope;
     public ASTControler(){
-        currentScope = new Scope();
+        globeScope = currentScope = new Scope();
         new Builder();
+    }
+
+    public static Scope getGlobeScope(){
+        return globeScope;
     }
 
     public static void addAction(ActionNodeBase now){

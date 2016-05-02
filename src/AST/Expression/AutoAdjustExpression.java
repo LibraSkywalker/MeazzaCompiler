@@ -1,9 +1,9 @@
 package AST.Expression;
 
-import MIPS.Instruction.BinaryInstruction;
-import MIPS.Instruction.FastInstruction;
+import MIPS.Instruction.RegBinInstruction;
+import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRcontroler.getBlock;
+import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -46,14 +46,14 @@ public class AutoAdjustExpression extends UnaryExpression {
         if (!isReg) rSrc = ((Literal)childAction).Reg();
 
         if (!isPre){
-            getBlock().add(new BinaryInstruction("move", rDest , rSrc,true));
+            getBlock().add(new RegBinInstruction("move", rDest , rSrc,true));
         }
         else rDest = rSrc;
 
         if (opertaor.equals("++")){
-            getBlock().add(new FastInstruction("add",rDest ,rSrc ,1,false));
+            getBlock().add(new RegTerInstruction("add",rDest ,rSrc ,1,false));
         } else {
-            getBlock().add(new FastInstruction("sub",rDest ,rSrc ,1 ,false));
+            getBlock().add(new RegTerInstruction("sub",rDest ,rSrc ,1 ,false));
         }
     }
 }

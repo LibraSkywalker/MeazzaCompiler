@@ -1,6 +1,6 @@
 package MIPS;
 
-import MIPS.Instruction.Instruciton;
+import MIPS.Instruction.Instruction;
 
 import java.util.LinkedList;
 
@@ -9,29 +9,33 @@ import java.util.LinkedList;
  */
 public class BasicBlock {
     String label;
-    LinkedList<Instruciton> BlockStat = new LinkedList<>();
+    LinkedList<Instruction> BlockStat = new LinkedList<>();
 
     public BasicBlock(){}
+
+    public String getLabel() {
+        return label;
+    }
 
     public BasicBlock(String now){
         label = now;
     }
 
-    public void add(Instruciton now){
+    public void add(Instruction now){
         BlockStat.add(now);
     }
 
     @Override
     public String toString(){
         String str = label + ":\n";
-        for (Instruciton now : BlockStat){
+        for (Instruction now : BlockStat){
             str += now.toString();
         }
         return str;
     }
     public String virtualPrint(){
         String str = label + ":\n";
-        for (Instruciton now : BlockStat){
+        for (Instruction now : BlockStat){
             str += now.virtualPrint();
         }
         return str;

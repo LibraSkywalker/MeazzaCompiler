@@ -1,9 +1,8 @@
 package AST.Expression;
 
-import MIPS.Instruction.BinaryInstruction;
-import MIPS.Instruction.FastInstruction;
+import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRcontroler.getBlock;
+import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -40,15 +39,15 @@ public class BitExpression extends BinaryExpression{
             rSrc1 = ((Literal) leftAction).Reg();
 
         switch (operator){
-            case "&" : getBlock().add(new FastInstruction("and", rDest, rSrc1, Src2, isReg));
+            case "&" : getBlock().add(new RegTerInstruction("and", rDest, rSrc1, Src2, isReg));
                 return;
-            case "^" : getBlock().add(new FastInstruction("xor", rDest, rSrc1, Src2, isReg));
+            case "^" : getBlock().add(new RegTerInstruction("xor", rDest, rSrc1, Src2, isReg));
                 return;
-            case "|" : getBlock().add(new FastInstruction("or", rDest, rSrc1, Src2, isReg));
+            case "|" : getBlock().add(new RegTerInstruction("or", rDest, rSrc1, Src2, isReg));
                 return;
-            case "<<" : getBlock().add(new FastInstruction("sll",rDest, rSrc1 , Src2, isReg));
+            case "<<" : getBlock().add(new RegTerInstruction("sll",rDest, rSrc1 , Src2, isReg));
                 return;
-            case ">>" : getBlock().add(new FastInstruction("srl",rDest,rSrc1, Src2, isReg));
+            case ">>" : getBlock().add(new RegTerInstruction("srl",rDest,rSrc1, Src2, isReg));
         }
     }
 }

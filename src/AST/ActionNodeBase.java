@@ -1,10 +1,5 @@
 package AST;
 
-import MIPS.BasicBlock;
-import MIPS.Instruction.Instruciton;
-
-import java.util.ArrayList;
-
 /**
  * Created by Bill on 2016/4/4.
  */

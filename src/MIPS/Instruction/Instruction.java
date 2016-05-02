@@ -3,7 +3,7 @@ package MIPS.Instruction;
 /**
  * Created by Bill on 2016/4/26.
  */
-public abstract class Instruciton {
+public abstract class Instruction {
     String operator;
     boolean isReg;
     public abstract String toString();

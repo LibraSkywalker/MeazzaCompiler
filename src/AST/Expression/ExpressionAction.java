@@ -10,11 +10,11 @@ public abstract class ExpressionAction extends ActionNodeBase {
     Properties properties = new Properties();
     int rDest = 0;
     
-    boolean isLiteral(){
+    public boolean isLiteral(){
         return this instanceof Literal;
     }
     
-    int src(){
+    public int src(){
         return isLiteral() ? ((Literal)this).value() : this.rDest;
     }
     

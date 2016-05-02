@@ -1,8 +1,13 @@
 package AST.Expression;
 
-import MIPS.Instruction.BinaryInstruction;
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.RegBinInstruction;
+import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRcontroler.getBlock;
+import static MIPS.IRControler.addData;
+import static MIPS.IRControler.getBlock;
+import static MIPS.IRControler.getDataBlock;
+import static RegisterControler.ReservedRegister.globalAllocator;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -14,6 +19,9 @@ public class Literal extends ExpressionAction{
     public boolean check(){return true;}
     public void getValue(String now){
         _value = now;
+        if (now.charAt(0) == '\"'){
+            _value = now.substring(1,now.length() - 1);
+        }
     }
     public String toString(){
         return "CONST: " + properties.toString() + " " + _value;
@@ -23,6 +31,8 @@ public class Literal extends ExpressionAction{
     }
 
     int value(){
+        if (properties.accept("string"))
+            return 0;
         switch (_value){
             case "true" : return 1;
             case "false": return 0;
@@ -31,11 +41,19 @@ public class Literal extends ExpressionAction{
         }
     }
 
-    public void Translate(){}
+    String memName(){
+        return _value;
+    }
+    public void Translate(){
+        if (properties.accept("string")) {
+            addData(_value.length());
+            _value = addData(_value);
+        }
+    }
 
     public int Reg(){
         rDest = newVReg();
-        getBlock().add(new BinaryInstruction("li",rDest,value(),false));
+        getBlock().add(new RegBinInstruction("li",rDest,value(),false));
         return rDest;
     }
 }
