@@ -2,12 +2,16 @@ package AST.Expression;
 
 import MIPS.Instruction.AddBinInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
+import MIPS.Instruction.ArithmeticInstruction;
+import MIPS.Instruction.SystemCall;
 
 import java.util.ArrayList;
 
+import static AST.ASTControler.getCurrentScope;
+import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.globalAllocator;
+import static RegisterControler.ReservedRegister.a_0;
+import static RegisterControler.ReservedRegister.v_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 
@@ -35,26 +39,42 @@ public class AllocateExpression extends ExpressionAction{
         return true;
     }
 
-    public void Translate(){
-        rDest = newVReg();
-        int rSrc1 = globalAllocator;
-        getBlock().add(new RegTerInstruction("add", rDest, rSrc1 ,4 , false));
-        int rSrc2;
+    public void Translate() {
+        int Src2;
+        boolean isReg = false;
 
         if (properties.getDimension() == 0) {
-            rSrc2 = newVReg();
-            int Src2 = properties.type().size();
-            getBlock().add(new RegBinInstruction("li",rSrc2,Src2,false));
-
+            Src2 = properties.type().size(); //class
         } else {
             stageValue.get(0).Translate();
             ExpressionAction preAction = stageValue.get(0);
-            rSrc2 = preAction.src();
-            if (preAction.isLiteral()) rSrc2 = ((Literal) preAction).Reg();
+            Src2 = preAction.src();
+            isReg = !preAction.isLiteral();
+        } //array
+
+        int rDest = getCurrentScope().returnTo().update(0);
+        if (rDest > 0)
+            addInstruction(new RegBinInstruction("move", rDest, a_0, true));
+
+        addInstruction(new RegBinInstruction("li",a_0,4,false));
+        addInstruction(new RegBinInstruction("li",v_0,9,false));
+        addInstruction(new SystemCall());
+
+        int rSrc2;
+        if (!isReg){
+            rSrc2 = newVReg();
+            addInstruction(new RegBinInstruction("li",rSrc2,Src2,false));
         }
-        getBlock().add(new AddBinInstruction("sw", rSrc2, rSrc1));
-        getBlock().add(new RegTerInstruction("sll", rSrc2, rSrc2, 2, false));
-        getBlock().add(new RegTerInstruction("add", rSrc1, rDest, rSrc2, true));
+        else rSrc2 = Src2;
+
+        getBlock().add(new AddBinInstruction("sw", rSrc2, v_0)); //save length
+
+        addInstruction(new ArithmeticInstruction("sll",a_0,rSrc2,2,false));
+        addInstruction(new RegBinInstruction("li",v_0,9,false));
+        addInstruction(new SystemCall()); // allocate
+
+        rDest = newVReg();
+        addInstruction(new RegBinInstruction("move",rDest,v_0,true));
     }
     public String toString(){
         return "NEW:" + properties;

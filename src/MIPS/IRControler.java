@@ -4,6 +4,7 @@ import AST.ASTControler;
 import AST.ActionNodeBase;
 import MIPS.Instruction.Instruction;
 import MIPS.Instruction.RegBinInstruction;
+import RegisterControler.RegisterStatic;
 import SymbolContainer.TypeSymbol;
 
 import static AST.ASTControler.getGlobeScope;
@@ -16,7 +17,7 @@ import static RegisterControler.ReservedRegister.globalAddress;
 public class IRControler {
     static DataControler data = new DataControler();
     static TextControler text = new TextControler();
-
+    public static RegisterStatic state = new RegisterStatic();
     public void visit(){
         text.visit();
     }
@@ -41,10 +42,6 @@ public class IRControler {
         return data.add(value);
     }
 
-    public static String addData(int name){
-        return data.add(name);
-    }
-
     public static void addFunction(String name){
         text.currentFunction = new Function(name);
         text.functionList.add(text.currentFunction);
@@ -57,8 +54,13 @@ public class IRControler {
     public static void addBlock(BasicBlock preBlock,String name){
         text.currentFunction.addBasicBlock(preBlock,name);
     }
+
     public static void addBlock(){
         text.currentFunction.addBasicBlock();
+    }
+
+    public static void visitBlock(BasicBlock now){
+        text.currentFunction.visitBlock(now);
     }
 
     public static void addInstruction(Instruction now){
@@ -72,4 +74,7 @@ public class IRControler {
         return data.toString() + "\n\n" + text.virtualPrint();
     }
 
+    public static String addData(int name){
+        return data.add(name);
+    }
 }

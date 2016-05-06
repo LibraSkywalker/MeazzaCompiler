@@ -3,7 +3,6 @@ package AST;
 import SymbolContainer.*;
 import antlr.MeazzaParser;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * Created by Bill on 2016/4/8.
@@ -27,7 +26,7 @@ public class ASTControler {
     }
 
     public static Scope visitScope(Scope nowScope){
-        currentScope = nowScope.visitScope();
+        currentScope = nowScope.gotoScope();
         return currentScope;
     }
     public static boolean tagPos(ParserRuleContext ctx){

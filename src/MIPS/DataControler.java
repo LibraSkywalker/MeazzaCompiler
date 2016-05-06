@@ -2,6 +2,8 @@ package MIPS;
 
 import java.util.ArrayList;
 
+import static MIPS.buildIn.buildIn_data;
+
 /**
  * Created by Bill on 2016/5/2.
  */
@@ -22,6 +24,7 @@ public class DataControler {
 
     public String toString(){
         String str = ".data\n";
+        str += buildIn_data;
         for (PseudoVar now : data){
             str += now.toString();
         }

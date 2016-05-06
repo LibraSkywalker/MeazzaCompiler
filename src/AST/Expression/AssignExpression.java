@@ -21,9 +21,11 @@ public class AssignExpression extends BinaryExpression{
 
     public void Translate(){
         leftAction.Translate();
+        rightAction.Translate();
+
         if (leftAction instanceof SymbolElement)
             ((SymbolElement) leftAction).update();// renaming
-        rightAction.Translate();
+
         System.err.println(leftAction);
         System.err.println(rightAction);
         rDest = leftAction.rDest;
@@ -33,16 +35,23 @@ public class AssignExpression extends BinaryExpression{
             if (rightAction.accept("string")) {
                 addInstruction(new AddBinInstruction("la", rDest, ((Literal) rightAction).memName()));
             }else{
-                    Src = ((Literal) rightAction).Reg();
                     getBlock().add(new RegBinInstruction("li", rDest, Src, false));
                 }
         }
         else
-            getBlock().add(new RegBinInstruction("move", rDest, Src, false));
+            getBlock().add(new RegBinInstruction("move", rDest, Src, true));
 
-        if (!(leftAction instanceof SymbolElement) || ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope())){
+        if ((leftAction instanceof SymbolElement) && ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope())){
             getBlock().add(new AddBinInstruction("sw", rDest, globalAddress));
-        }
+        } //global
+
+        if (leftAction instanceof StageExpression)
+            addInstruction(new AddBinInstruction("sw", rDest, globalAddress));
+          //array
+
+        if (leftAction instanceof DotElement)
+            addInstruction(new AddBinInstruction("sw", rDest, globalAddress));
+            //class
     }
 
     public void setLeft(VariableSymbol now){

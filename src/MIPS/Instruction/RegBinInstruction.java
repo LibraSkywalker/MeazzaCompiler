@@ -1,5 +1,10 @@
 package MIPS.Instruction;
 
+import MIPS.Function;
+import RegisterControler.VirtualReadWrite;
+
+import static MIPS.IRControler.state;
+
 /**
  * Created by Bill on 2016/4/26.
  */
@@ -11,7 +16,6 @@ public class RegBinInstruction extends BinaryInstruction{
         operator = OP;
         vDest = dest;
         isReg = isRegister;
-        vSrc = 0;
         if (isReg) vSrc = src;
         else immediate = src;
     }
@@ -22,5 +26,18 @@ public class RegBinInstruction extends BinaryInstruction{
 
     public String virtualPrint(){
         return operator + " " + "$" + vDest + " " + ( isReg ? "$" + vSrc : immediate) +"\n";
+    }
+
+
+
+    public void update(VirtualReadWrite usage){
+        if (vSrc != null) usage.addReader(vSrc);
+        usage.addWriter(vDest);
+    }
+
+    @Override
+    public void globalize(Function Func) {
+        if (vSrc != null) Func.state.update(vSrc);
+        Func.state.set(vDest);
     }
 }

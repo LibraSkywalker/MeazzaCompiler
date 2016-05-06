@@ -32,6 +32,7 @@ public class FuncSymbol extends VariableSymbol {
 
     public VariableSymbol addParameter(String now){
         VariableSymbol nowSymbol = FuncScope.putVar(now);
+        System.out.println("current function " + name + " " + FuncScope.print() + " :"+ FuncScope.memberSize());
         if (nowSymbol == null) return null;
         Parameters.add(nowSymbol) ;
         parameter++;

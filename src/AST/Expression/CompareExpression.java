@@ -1,11 +1,12 @@
 package AST.Expression;
 
 
-import MIPS.Instruction.AddBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
+import MIPS.Instruction.*;
 
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
+import static RegisterControler.ReservedRegister.a_0;
+import static RegisterControler.ReservedRegister.v_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -49,29 +50,48 @@ public class CompareExpression extends BinaryExpression{
         boolean isReg = !rightAction.isLiteral();
 
         switch (operator){
-            case "==": getBlock().add(new RegTerInstruction("seq", rDest, rSrc1, Src2, isReg));
+            case "==": addInstruction(new CompareInstruction("seq", rDest, rSrc1, Src2, isReg));
                 return;
-            case "!=": getBlock().add(new RegTerInstruction("sne", rDest, rSrc1, Src2, isReg));
+            case "!=": addInstruction(new CompareInstruction("sne", rDest, rSrc1, Src2, isReg));
                 return;
-            case ">=": getBlock().add(new RegTerInstruction("sge", rDest, rSrc1, Src2, isReg));
+            case ">=": addInstruction(new CompareInstruction("sge", rDest, rSrc1, Src2, isReg));
                 return;
-            case "<=": getBlock().add(new RegTerInstruction("sle", rDest, rSrc1, Src2, isReg));
+            case "<=": addInstruction(new CompareInstruction("sle", rDest, rSrc1, Src2, isReg));
                 return;
-            case ">" : getBlock().add(new RegTerInstruction("sgt", rDest, rSrc1, Src2, isReg));
+            case ">" : addInstruction(new CompareInstruction("sgt", rDest, rSrc1, Src2, isReg));
                 return;
-            case "<" : getBlock().add(new RegTerInstruction("slt", rDest, rSrc1, Src2, isReg));
+            case "<" : addInstruction(new CompareInstruction("slt", rDest, rSrc1, Src2, isReg));
         }
     }
 
     public void StringTranslate(){
-        rDest = newVReg();
-        int rSrc1 = leftAction.src();
-
-        int rSrc2 = rightAction.src();
-        if (rightAction.isLiteral()){
-            rSrc1 = newVReg();
-            addInstruction(new AddBinInstruction("la",rSrc1,((Literal) rightAction).memName()));
+        int delta = 0;
+        if (operator.equals(">") || operator.equals("<=")) delta = 1;
+        if (leftAction.isLiteral()){
+            addInstruction(new AddBinInstruction("la",a_0 + delta,((Literal) leftAction).memName()));
         }
-        jaja
+        else addInstruction(new RegBinInstruction("move",a_0 + delta,leftAction.src(),true));
+        if (rightAction.isLiteral()){
+            addInstruction(new AddBinInstruction("la",a_0 + 1 - delta,((Literal) rightAction).memName()));
+        }
+        else addInstruction(new RegBinInstruction("move",a_0 + 1 - delta,rightAction.src(),true));
+
+        // choose order
+
+        if (operator.equals("!=") || operator.equals("==")){
+            addInstruction(new JumpInstruction("Jal","func_stringIsEqual"));
+        } else {
+            addInstruction(new JumpInstruction("Jal","func_stringLess"));
+        }
+
+        // choose operation
+
+        rDest = newVReg();
+        if (operator.equals("==") || operator.equals("<") || operator.equals(">"))
+            addInstruction(new RegBinInstruction("move",rDest,v_0,true));
+        else
+            addInstruction(new ArithmeticInstruction("xor",rDest,v_0,1,false));
+
+        // choose result to take
     }
 }

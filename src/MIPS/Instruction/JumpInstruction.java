@@ -1,5 +1,8 @@
 package MIPS.Instruction;
 
+import MIPS.Function;
+import RegisterControler.VirtualReadWrite;
+
 /**
  * Created by Bill on 2016/4/26.
  */
@@ -29,5 +32,16 @@ public class JumpInstruction extends Instruction {
 
     public String virtualPrint(){
         return operator + " " + (isReg ? "$ra" : label) + "\n";
+    }
+
+    public void update(VirtualReadWrite usage){}
+
+    @Override
+    public void globalize(Function Func) {
+        if (operator.equals("jal")){
+            if (label.equals(Func.FuncName))
+                Func.state.selfCall();
+            else Func.state.call();
+        }
     }
 }

@@ -4,14 +4,10 @@ import AST.Expression.Literal;
 import MIPS.BasicBlock;
 import MIPS.Instruction.BranchInstruction;
 import MIPS.Instruction.JumpInstruction;
-import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
 import SymbolContainer.Scope;
 
 import static AST.ASTControler.getCurrentScope;
-import static MIPS.IRControler.addBlock;
-import static MIPS.IRControler.addInstruction;
-import static MIPS.IRControler.getBlock;
+import static MIPS.IRControler.*;
 
 /**
  * Created by Bill on 2016/4/7.
@@ -19,12 +15,12 @@ import static MIPS.IRControler.getBlock;
 public class BranchStatment extends SpecialStatment {
     Scope field2;
     boolean useless = false;
-    @Override
-    public void getField(Scope now){
+
+    public void setField(Scope now){
         field = now;
         field.setBranch();
     }
-    public void getField2(Scope now) {
+    public void setField2(Scope now) {
         field2 = now;
         field2.setBranch();
     }
@@ -53,19 +49,29 @@ public class BranchStatment extends SpecialStatment {
         int rSrc = control.src();
         if (control.isLiteral()) rSrc = ((Literal) control).Reg();
 
+        // block1->entry block2->else block3->then block4->exit
 
         BasicBlock block1 = getBlock();
-        block1.add(new BranchInstruction("bne",rSrc,imm,block1.getLabel() + "_branch",false));
-        field2.Translate();
 
-        addBlock(block1,"branch");
+        addBlock(block1,"branch_else");
         BasicBlock block2 = getBlock();
-        field.Translate();
 
-        addBlock();
+        addBlock(block1,"branch_then");
         BasicBlock block3 = getBlock();
 
-        block1.add(new JumpInstruction("b",block3.getLabel()));
-        block2.add(new JumpInstruction("b",block3.getLabel()));
+        addBlock();
+        BasicBlock block4 = getBlock();
+
+        visitBlock(block1);
+        addInstruction(new BranchInstruction("bne",rSrc,imm,block3.getLabel(),false)); // else or then
+
+        visitBlock(block2);
+        if (field2 != null) field2.Translate();
+        addInstruction(new JumpInstruction("b",block4.getLabel())); //block1_else to block3
+
+        visitBlock(block3);
+        field.Translate();
+
+        visitBlock(block4);
     }
 }

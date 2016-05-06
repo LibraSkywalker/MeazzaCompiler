@@ -1,21 +1,26 @@
 package AST.Expression;
 
-import MIPS.Instruction.AddBinInstruction;
-import MIPS.Instruction.RegBinInstruction;
+import MIPS.Instruction.*;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Properties;
+import SymbolContainer.Symbol;
 import SymbolContainer.VariableSymbol;
 
+import java.util.ArrayList;
+
+import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getGlobeScope;
+import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.globalAddress;
-import static RegisterControler.ReservedRegister.globalPointer;
+import static RegisterControler.ReservedRegister.*;
+import static RegisterControler.VirtualRegister.newVReg;
 
 /**
  * Created by Bill on 2016/4/10.
  */
 public class SymbolElement extends ExpressionAction{
     VariableSymbol element;
+    ArrayList<ExpressionAction> actionList = new ArrayList<>();
     boolean lvalue;
     String label;
     public SymbolElement(){
@@ -46,10 +51,11 @@ public class SymbolElement extends ExpressionAction{
         if (element instanceof FuncSymbol){
             VariableSymbol nowParameter = ((FuncSymbol) element).findParameter(i);
             if (!nowParameter.accept(now)){
-                System.err.println(nowParameter.toString() + " " + now.toString());
+                //System.err.println(nowParameter.toString() + " " + now.toString());
                 System.err.println("Parameter "+ i.toString() + " type mismatch");
                 return false;
             }
+            actionList.add(now);
             return true;
         }
         else return false;
@@ -72,18 +78,71 @@ public class SymbolElement extends ExpressionAction{
     }
 
     public void Translate(){
-        rDest = element.getVirtualRegister();
-        if (element.getScope().equals(getGlobeScope())){
-            getBlock().add(new AddBinInstruction("la",globalAddress, globalPointer, getGlobeScope().indexOfMember(element)));
-            getBlock().add(new AddBinInstruction("lw",rDest, globalAddress));
+        if (element instanceof FuncSymbol) {
+            callTranslate();
+            return;
         }
-        else getBlock().add(new RegBinInstruction("li",globalAddress,0,false));
+
+        rDest = element.getVirtualRegister();
+        if (element.getScope().equals(getGlobeScope()))
+            getBlock().add(new AddBinInstruction("lw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(element)));
     }
 
-    public void update(){
-        if (element.getScope().equals(getGlobeScope()) && element.getVirtualRegister() > 0)
-            return;
-        element.update();
-        rDest = element.getVirtualRegister();
+    void callTranslate(){
+        int paraSize = ((FuncSymbol) element).parameterSize();
+
+        for (int i = 0; i < 5; i++){
+            int rDest = getCurrentScope().returnTo().update(i);
+            if (rDest > 0)
+                addInstruction(new RegBinInstruction("move",rDest,a_0 + i,true));
+        }
+
+        if (paraSize > 5){
+            addInstruction(new RegBinInstruction("li",a_0,paraSize * 4,false));
+            addInstruction(new RegBinInstruction("li",v_0,9,false));
+            addInstruction(new SystemCall()); // allocate an array for parameters
+            addInstruction(new RegBinInstruction("move",a_0,v_0,true));
+        }
+
+        for (int i = 0; i < paraSize; i++){
+            ExpressionAction now = actionList.get(i);
+            now.Translate();
+            if (paraSize > 5){
+                int rSrc = now.isLiteral() ? now.src() : ((Literal) now).Reg();
+                addInstruction(new AddBinInstruction("sw",rSrc,a_0,i * 4));
+            }
+            else {
+                // can check
+                if (now.isLiteral())
+                    if (now.properties.accept("string")) {
+                        addInstruction(new AddBinInstruction("la", a_0 + i, ((Literal) now).memName()));
+                    } else {
+                        addInstruction(new RegBinInstruction("li", a_0 + i, now.src(), false));
+                    }
+                else
+                    addInstruction(new RegBinInstruction("move",a_0 + i,now.src(),true));
+            }
+
+        } // solving parameters
+
+        getCurrentScope().print();
+        System.out.println(getCurrentScope().returnTo().print() +": " + getCurrentScope().returnTo().memberSize());
+        if (!element.isPrimitive()) {
+            addInstruction(new JumpInstruction("jal", element.name()));
+        } else {
+            addInstruction(new JumpInstruction("jal", "func_" + element.name())); //// jump in
+        }
+        rDest = v_0;
+    }
+    void update(){
+        if (element.getScope().equals(getGlobeScope())){
+            element.update();
+            getBlock().add(new AddBinInstruction("la",globalAddress, globalVariable, 4 * getGlobeScope().indexOfMember(element)));
+        }
+        else {
+            if (!element.getScope().equals(getCurrentScope())) return;
+            element.update();
+            rDest = element.getVirtualRegister();
+        }
     }
 }

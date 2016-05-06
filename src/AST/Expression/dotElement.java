@@ -1,12 +1,17 @@
 package AST.Expression;
 
-import SymbolContainer.VariableSymbol;
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.JumpInstruction;
+import MIPS.Instruction.RegBinInstruction;
+import SymbolContainer.FuncSymbol;
 
-import java.util.ArrayList;
-
-import static AST.ASTControler.endScope;
-import static AST.ASTControler.getFunc;
-import static AST.ASTControler.visitScope;
+import static AST.ASTControler.*;
+import static MIPS.IRControler.addInstruction;
+import static MIPS.IRControler.getBlock;
+import static RegisterControler.ReservedRegister.a_0;
+import static RegisterControler.ReservedRegister.globalAddress;
+import static RegisterControler.ReservedRegister.v_0;
+import static RegisterControler.VirtualRegister.newVReg;
 
 /**
  * Created by Bill on 2016/4/6.
@@ -17,15 +22,15 @@ public class DotElement extends BinaryExpression{
         lvalue = false;
     }
 
+    @Override
     public void set() {
-        lvalue = ((SymbolElement) rightExpression).lvalue;
-        properties = rightExpression.properties;
+        lvalue = ((SymbolElement) rightAction).lvalue;
+        properties.setProperties(rightAction.properties);
     }
 
     public boolean setEnvironment(){
-        if (leftExpression == null) return false;
-        if (leftExpression.properties.getDimension() == 0)
-            visitScope(leftExpression.getProperties().type().classMembers);
+        if (leftAction.properties.getDimension() == 0)
+            visitScope(leftAction.getProperties().type().classMembers);
         return true;
     }
 
@@ -35,7 +40,7 @@ public class DotElement extends BinaryExpression{
 
     @Override
     public boolean setLeft(ExpressionAction nowAction){
-        leftExpression = nowAction;
+        leftAction = nowAction;
         if (nowAction == null) return false;
         nowAction.parentAction = this;
         setEnvironment();
@@ -43,21 +48,48 @@ public class DotElement extends BinaryExpression{
     }
 
     public boolean check(){
-        if (leftExpression == null ||
-            rightExpression == null ||   // dot expression
-           !(rightExpression instanceof SymbolElement))
+        if (leftAction == null ||
+            rightAction == null ||
+           !(rightAction instanceof SymbolElement))
             return false;
-        if (leftExpression.properties.getDimension() > 0){
-            if (!((SymbolElement) rightExpression).element.equals(getFunc("size")))
+        if (leftAction.properties.getDimension() > 0){
+            if (!((SymbolElement) rightAction).element.equals(getFunc("size"))) {
                 System.err.println("Cannot access the suffix of a pointer");
-            return false;
+                return false;
+            }
         }
         else {
             clearEnvironment();
-            if (((SymbolElement) rightExpression).element.equals(getFunc("size")))
+            if (((SymbolElement) rightAction).element.equals(getFunc("size"))) {
                 System.err.println("size cannot be done on non array expression");
+                return false;
+            }
         }
         set();
         return true;
+    }
+
+    public void Translate(){
+        leftAction.Translate(); //delta
+        if (((SymbolElement) rightAction).element instanceof FuncSymbol){
+            String FuncName = ((SymbolElement) rightAction).element.name();
+            if (FuncName.equals("size")){
+                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,false));
+                addInstruction(new JumpInstruction("jal","func__array.size"));
+            }
+            if (leftAction.accept("string")){
+                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,false));
+                addInstruction(new JumpInstruction("jal","func_string." + FuncName));
+            }
+            rDest = newVReg();
+            addInstruction(new RegBinInstruction("move",rDest,v_0,false));
+            //System.err.println("Inside function doen't support now");
+        }
+        else {
+            rDest = newVReg();
+            int Src = leftAction.getProperties().type().indexOfMember(((SymbolElement) rightAction).element);
+            getBlock().add(new AddBinInstruction("lw", rDest, leftAction.rDest, Src * 4));
+            getBlock().add(new AddBinInstruction("la", globalAddress , leftAction.rDest, Src * 4)); //lvalue
+        }
     }
 }

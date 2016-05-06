@@ -116,8 +116,8 @@ expression : const_expression
            | <assoc = left> expression op = '&' expression
            | <assoc = left> expression op = '^' expression
            | <assoc = left> expression op = '|' expression
-           | <assoc = left> expression op = '&&' expression
-           | <assoc = left> expression op = '||' expression
+           | <assoc = right> expression op = '&&' expression
+           | <assoc = right> expression op = '||' expression
            | <assoc = right> expression op = '=' expression
            ;
 

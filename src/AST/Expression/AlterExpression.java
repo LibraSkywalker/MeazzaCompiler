@@ -1,7 +1,7 @@
 package AST.Expression;
 
+import MIPS.Instruction.ArithmeticInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
 
 import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
@@ -25,7 +25,6 @@ public class AlterExpression extends UnaryExpression {
     }
 
     public void Translate(){
-        //translate array,string
         childAction.Translate();
 
         rDest = newVReg();
@@ -39,7 +38,7 @@ public class AlterExpression extends UnaryExpression {
                      return;
             case"~": getBlock().add(new RegBinInstruction("not", rDest, rSrc,true));
                      return;
-            case"!": getBlock().add(new RegTerInstruction("xor", rDest, rSrc, 1,false));
+            case"!": getBlock().add(new ArithmeticInstruction("xor", rDest, rSrc, 1,false));
         }
     }
 }

@@ -1,7 +1,7 @@
 package AST.Expression;
 
+import MIPS.Instruction.ArithmeticInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
 
 import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
@@ -51,9 +51,9 @@ public class AutoAdjustExpression extends UnaryExpression {
         else rDest = rSrc;
 
         if (opertaor.equals("++")){
-            getBlock().add(new RegTerInstruction("add",rDest ,rSrc ,1,false));
+            getBlock().add(new ArithmeticInstruction("add",rSrc ,rSrc ,1,false));
         } else {
-            getBlock().add(new RegTerInstruction("sub",rDest ,rSrc ,1 ,false));
+            getBlock().add(new ArithmeticInstruction("sub",rSrc ,rSrc ,1 ,false));
         }
     }
 }

@@ -17,7 +17,7 @@ public abstract class SpecialStatment extends ActionNodeBase {
     }
 
 
-    public abstract void getField(Scope now);
+    public abstract void setField(Scope now);
     public Scope field(){
         return field;
     }

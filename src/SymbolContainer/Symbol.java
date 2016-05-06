@@ -1,6 +1,11 @@
 package SymbolContainer;
 
+import MIPS.Instruction.AddBinInstruction;
+
 import static AST.ASTControler.getCurrentScope;
+import static AST.ASTControler.getVar;
+import static MIPS.IRControler.addInstruction;
+import static RegisterControler.ReservedRegister.a_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -9,7 +14,7 @@ import static RegisterControler.VirtualRegister.newVReg;
 public abstract class Symbol {
     protected String name;
     protected boolean primitive;
-    int virtualRegister;
+    int virtualRegister = 0;
     Scope scope;
 
     public Scope getScope(){
@@ -18,11 +23,30 @@ public abstract class Symbol {
 
     public abstract Symbol setPrimitive();
 
-    public void update(){
-        virtualRegister = newVReg();
+    public int update(){
+        return virtualRegister = newVReg();
     }
 
     public int getVirtualRegister(){
+        if (virtualRegister == 0) {
+            if (this == getVar("_arg_before_it")) {
+                virtualRegister = a_0;
+                return virtualRegister;
+            }
+            if (scope.dict2.indexOf(this) < scope.dict2.indexOf(getVar("_arg_before_it"))) {
+                if (scope.dict2.indexOf(getVar("_arg_before_it")) > 5) {
+                    update();
+                    int delta = scope.dict2.indexOf(this) * 4;
+                    int rSrc = getVar("_arg_before_it").getVirtualRegister();
+                    addInstruction(new AddBinInstruction("lw", virtualRegister, rSrc, delta));
+                    return virtualRegister;
+                }
+                else {
+                    virtualRegister = a_0 + scope.dict2.indexOf(this);
+                    return virtualRegister;
+                }
+            } else update();
+        }
         return virtualRegister;
     }
 

@@ -1,9 +1,8 @@
 package AST.Expression;
 
 import MIPS.Instruction.AddBinInstruction;
-import MIPS.Instruction.BranchInstruction;
+import MIPS.Instruction.ArithmeticInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
 
 import java.util.ArrayList;
 
@@ -54,20 +53,18 @@ public class StageExpression extends ExpressionAction{
         previousAction.Translate();
         rDest = previousAction.rDest;
         for (ExpressionAction now : stageValue) {
-            getBlock().add(new BranchInstruction("beq",rDest,0,"TrapState",false));
             now.Translate();
             int Src2 = now.src();
             if (now.isLiteral()) {
                 Src2 *= 4;
             }
-            else getBlock().add(new RegTerInstruction("mul", Src2, Src2, 4, false));
-            getBlock().add(new RegTerInstruction("add", rDest, rDest, Src2, now.isLiteral())); // calculate delta
+            else getBlock().add(new ArithmeticInstruction("mul", Src2, Src2, 4, false));
+            getBlock().add(new ArithmeticInstruction("add", rDest, rDest, Src2, now.isLiteral())); // calculate delta
             int rSrc1 = rDest;
             rDest = newVReg();
             getBlock().add(new AddBinInstruction("lw",rDest, rSrc1));
             if (stageValue.indexOf(now) == stageValue.size() - 1)
                 getBlock().add(new RegBinInstruction("la",globalAddress,rSrc1,true));
         }
-        getBlock().add(new BranchInstruction("beq",rDest,0,"TrapState",false));
     }
 }

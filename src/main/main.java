@@ -22,6 +22,12 @@ public class main {
 
         IRControler transformer = new IRControler();
         transformer.visit();
+        FileWriter file = new FileWriter("hello.s");
+        BufferedWriter output = new BufferedWriter(file);
+        output.flush();
+        output.write(transformer.virtualPrint());
+        output.close();
+        file.close();
         System.out.println(transformer.virtualPrint());
     }
 }

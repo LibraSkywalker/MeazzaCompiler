@@ -1,18 +1,16 @@
 package AST.Statment;
 
 import AST.ActionNodeBase;
-import AST.Expression.BinaryExpression;
 import AST.Expression.ExpressionAction;
+import MIPS.BasicBlock;
 import MIPS.Instruction.JumpInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import SymbolContainer.Properties;
 import SymbolContainer.Scope;
 
 import static AST.ASTControler.getCurrentScope;
-import static AST.ASTControler.getType;
 import static AST.ASTControler.getVar;
 import static MIPS.IRControler.addInstruction;
-import static RegisterControler.ReservedRegister.returnRegister;
+import static RegisterControler.ReservedRegister.*;
 
 /**
  * Created by Bill on 2016/4/4.
@@ -72,12 +70,29 @@ public class JumpStatment extends ActionNodeBase{
     public void Translate(){
         if (operator.equals("return")){
             if (returnValue != null){
+                returnValue.Translate();
                 if (returnValue.isLiteral())
-                    addInstruction(new RegBinInstruction("li" , returnRegister, returnValue.src(), false));
-                else
-                    addInstruction(new RegBinInstruction("move", returnRegister, returnValue.src(), true));
+                    addInstruction(new RegBinInstruction("li" , v_0, returnValue.src(), false));
+                else{
+                    if (returnValue.src() != v_0)
+                        addInstruction(new RegBinInstruction("move", v_0, returnValue.src(), true));
+                }
             }
+            if (r_a != 31)
+                addInstruction(new RegBinInstruction("move",31,r_a,true));
+            //int fsize = getCurrentScope().returnTo().memberSize() * 4 + 12;
+            //addInstruction(new ArithmeticInstruction("add",s_p,s_p,fsize,false));
             addInstruction(new JumpInstruction());
+        }
+
+        if (operator.equals("continue")){
+            BasicBlock block = getCurrentScope().breakTo().looper;
+            addInstruction(new JumpInstruction("b",block.getLabel()));
+        }
+
+        if (operator.equals("break")){
+            BasicBlock block = getCurrentScope().breakTo().nextblock;
+            addInstruction(new JumpInstruction("b",block.getLabel()));
         }
     }
 

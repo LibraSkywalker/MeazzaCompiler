@@ -205,7 +205,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         FuncSymbol nowFunc = getFunc(now);
         if (nowFunc == null) return tagPos(ctx);
         visitScope(nowFunc.FuncScope);
-
+        putVar("_arg_before_it");
         if (!nowFunc.accept("void")) putVar("@return").setProperties(nowFunc);
         Boolean flag = visitCompound_statement(ctx.compound_statement());
         endScope();
@@ -230,7 +230,10 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
     @Override
     public Boolean visitStatement(MeazzaParser.StatementContext ctx) {
         if (ctx.compound_statement() != null){
-            addAction(visitScope(beginScope()));;
+            System.out.println(ctx.compound_statement().getText());
+            Scope nowScope = beginScope();
+            addAction(nowScope);
+            visitScope(nowScope);
             boolean flag = visitCompound_statement(ctx.compound_statement());
             endScope();
             return flag;
@@ -249,7 +252,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             flag = false;
         }
         nowAction.setControl(controlAction);
-        nowAction.getField(beginScope());
+        nowAction.setField(beginScope());
         visitScope(nowAction.field());
         if (ctx.statement(0).compound_statement() != null){
             flag = flag && visitCompound_statement(ctx.statement(0).compound_statement());
@@ -257,7 +260,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         else flag = flag && visitStatement(ctx.statement(0));
         endScope();
         if (ctx.statement(1) != null) {
-            nowAction.getField2(beginScope());
+            nowAction.setField2(beginScope());
             visitScope(nowAction.field2());
             if (ctx.statement(1).compound_statement() != null)
                 flag = flag && visitCompound_statement(ctx.statement(1).compound_statement());
@@ -295,7 +298,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             LoopStatment nowAction = new LoopStatment();
             nowAction.setControl(controlAction);
 
-            nowAction.getField(beginScope());
+            nowAction.setField(beginScope());
             visitScope(nowAction.field());
             flag = flag && visitStatement(ctx.statement());
 
@@ -347,8 +350,8 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
 
         ExpressionAction looper = null;
         if (ctx.exp3 != null) looper = visitExpression(ctx.exp3);
-
-        nowAction.getField(beginScope());
+        nowAction.setLooper(looper);
+        nowAction.setField(beginScope());
 
         visitScope(nowAction.field());
         if (!visitStatement(ctx.statement())) flag = false;
@@ -356,7 +359,6 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         endScope();
 
         if (flag) {
-            nowAction.field().addAction(looper);
             addAction(nowAction);
         }
         return flag;

@@ -1,19 +1,18 @@
 package MIPS;
 
-import AST.ASTControler;
 import AST.ActionNodeBase;
 import MIPS.Instruction.*;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Scope;
-import SymbolContainer.Symbol;
-import SymbolContainer.TypeSymbol;
 
 import java.util.ArrayList;
 
 import static AST.ASTControler.*;
-import static MIPS.Function.currentBasicBlock;
 import static MIPS.IRControler.*;
+import static MIPS.buildIn.buildIn_data;
+import static MIPS.buildIn.buildIn_text;
 import static RegisterControler.ReservedRegister.*;
+import static RegisterControler.VirtualRegister.newVReg;
 
 /**
  * Created by Bill on 2016/5/2.
@@ -25,6 +24,7 @@ public class TextControler {
 
     public String toString(){
         String str = ".text\n\n";
+        str += buildIn_text;
         for (Function now : functionList)
             str += now.toString();
         return str;
@@ -32,6 +32,7 @@ public class TextControler {
 
     public String virtualPrint(){
         String str = ".text\n";
+        str += buildIn_text;
         for (Function now : functionList)
             str += now.virtualPrint();
         return str;
@@ -39,19 +40,31 @@ public class TextControler {
 
     void visit(){
         addFunction("main");
-        addInstruction(new RegTerInstruction("add",globalAllocator, globalPointer,getGlobeScope().memberSize() + 1,false));
+        addInstruction(new JumpInstruction("jal","_buffer_init"));
+        addInstruction(new RegBinInstruction("li",a_0,4,false));
+        addInstruction(new RegBinInstruction("li",v_0,sbrk,false));
+        addInstruction(new SystemCall());
+        addInstruction(new RegBinInstruction("li",a_0,getGlobeScope().memberSize() * 4,false));
+        addInstruction(new RegBinInstruction("li",v_0,sbrk,false));
+        addInstruction(new SystemCall());
+        addInstruction(new RegBinInstruction("move",globalVariable, v_0, true)); // assemble global varible area
 
         for (ActionNodeBase now = popAction(); now != null; now = popAction()){
             System.err.println(now + "***");
             now.Translate();
         }
 
+        addInstruction(new JumpInstruction("jal","main_1"));
+        addInstruction(new RegBinInstruction("li",v_0,exitcode,false));
+        addInstruction(new SystemCall());  //visit main and exit
+
+        addBlock();
+        visitFunc(getFunc("main"));
+
         Scope curScope = getGlobeScope();
         for (FuncSymbol now : curScope.dict3){
-            if (!now.isPrimitive()){
-                if (now.name().equals("main"))
-                    addBlock();
-                else addFunction(now.name());
+            if (!now.isPrimitive() && !now.name().equals("main")) {
+                addFunction(now.name());
                 visitFunc(now);
             }
         }
@@ -59,7 +72,27 @@ public class TextControler {
 
     void visitFunc(FuncSymbol nowFunc){
         //introduce
+        //int fsize = nowFunc.FuncScope.memberSize() * 4 + 12;
+        //addInstruction(new ArithmeticInstruction("sub",s_p,s_p,fsize,false));
+
+        if (r_a == 31) {
+            int returnValue = newVReg();
+            addInstruction(new RegBinInstruction("move", returnValue, r_a, true)); //save pre return
+            r_a = returnValue;
+        }
+        for (int i = 0; i < 5; i++){
+            visitScope(nowFunc.FuncScope);
+            int rDest = nowFunc.FuncScope.update(i);
+            if (rDest > 0) addInstruction(new RegBinInstruction("move",rDest,a_0 + i,true));
+            System.err.println(rDest + "!");
+            endScope();
+        }
         nowFunc.FuncScope.Translate();
+        //addInstruction(new ArithmeticInstruction("add",s_p,s_p,fsize,false));
+        if (r_a != 31)
+            addInstruction(new RegBinInstruction("move",31,r_a,true));
+        addInstruction(new JumpInstruction());
+        r_a = 31;
         //cleanup
     }
 }

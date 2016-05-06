@@ -2,12 +2,8 @@ package AST.Expression;
 
 import MIPS.Instruction.AddBinInstruction;
 import MIPS.Instruction.RegBinInstruction;
-import MIPS.Instruction.RegTerInstruction;
 
-import static MIPS.IRControler.addData;
-import static MIPS.IRControler.getBlock;
-import static MIPS.IRControler.getDataBlock;
-import static RegisterControler.ReservedRegister.globalAllocator;
+import static MIPS.IRControler.*;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -53,7 +49,10 @@ public class Literal extends ExpressionAction{
 
     public int Reg(){
         rDest = newVReg();
-        getBlock().add(new RegBinInstruction("li",rDest,value(),false));
+        if (properties.accept("string"))
+            addInstruction(new AddBinInstruction("la",rDest,_value));
+        else
+            addInstruction(new RegBinInstruction("li",rDest,value(),false));
         return rDest;
     }
 }

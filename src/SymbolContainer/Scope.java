@@ -1,10 +1,13 @@
 package SymbolContainer;
 
 import AST.ActionNodeBase;
+import MIPS.BasicBlock;
 
 import java.util.*;
 
 import static AST.ASTControler.getCurrentScope;
+import static AST.ASTControler.visitScope;
+import static RegisterControler.ReservedRegister.a_0;
 
 
 /**
@@ -12,14 +15,21 @@ import static AST.ASTControler.getCurrentScope;
  */
 public class Scope extends ActionNodeBase{
     Scope prevScope,lastScope;
+    public BasicBlock looper,nextblock;
     int type;
     Dictionary<String, Symbol> dict;
-    ArrayList<VariableSymbol> dict2;
+    public ArrayList<VariableSymbol> dict2;
     public ArrayList<FuncSymbol> dict3;
     ArrayList<ActionNodeBase> actionList;
     int nowActionIndex;
     int NORMAL = 0, FUNC = 1, LOOP = 2, BRANCH = 3;
 
+
+    public String print(){
+        if (prevScope == null)
+            return this.toString() + " ";
+        return prevScope.print() + this.toString() + " ";
+    }
 
     public Scope(){
         nowActionIndex = 0;
@@ -32,10 +42,29 @@ public class Scope extends ActionNodeBase{
     }
 
     public void Translate(){
+        visitScope(this);
+        //System.out.println("!" + type + ": " + actionList.size());
         for(ActionNodeBase now : actionList){
-            System.err.println("! " + now);
             now.Translate();
         }
+        endScope();
+    }
+
+    public boolean isParameter(VariableSymbol now){
+        if (dict2.indexOf(now) >= dict2.indexOf(getVar("_arg_before_it"))) return false;
+        if (dict2.indexOf(now) != 0 && dict2.indexOf(getVar("_arg_before_it")) > 5) return false;
+        return true;
+    }
+
+    public int update(int now){
+        if (getVar("_arg_before_it") == null) return 0;
+        if (dict2.indexOf(getVar("_arg_before_it")) <= now) return 0;
+        if (dict2.indexOf(getVar("_arg_before_it")) > 5){
+            if (now == 0) return getVar("_arg_before_it").update();
+            else return 0;
+        }
+        if (dict2.get(now).getVirtualRegister() != a_0 + now) return 0;
+        return dict2.get(now).update();
     }
 
     public boolean contains(FuncSymbol now){
@@ -100,7 +129,7 @@ public class Scope extends ActionNodeBase{
         return now;
     }
 
-    public Scope visitScope(){
+    public Scope gotoScope(){
         nowActionIndex = 0;
         lastScope = getCurrentScope();
         return this;
@@ -123,6 +152,7 @@ public class Scope extends ActionNodeBase{
     }
 
     public Scope returnTo(){
+        this.print();
         Scope nowScope = this;
         while ( nowScope != null && nowScope.type != FUNC)
             nowScope = nowScope.prevScope;
@@ -182,7 +212,9 @@ public class Scope extends ActionNodeBase{
             System.err.println("Variable: " + now + " definition failed");
             return null;
         }
-        dict2.add(nowSymbol);
+        Scope control = returnTo();
+        if (control == null) control = this;
+        control.dict2.add(nowSymbol);
         return getVar(now);
     }
 

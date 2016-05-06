@@ -13,10 +13,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.omg.CORBA.SystemException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -62,7 +59,13 @@ public class test  {
 
             IRControler transformer = new IRControler();
             transformer.visit();
-            System.out.println(transformer.virtualPrint());
+            FileWriter file = new FileWriter("hello.s");
+            BufferedWriter output = new BufferedWriter(file);
+            output.flush();
+            output.write(transformer.virtualPrint());
+            output.close();
+            file.close();
+            //System.out.println(transformer.virtualPrint());
 
             if (!shouldPass) fail("Should not pass.");
         } catch (Exception e) {

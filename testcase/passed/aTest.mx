@@ -1,5 +1,31 @@
 
+int f(int x){
+	return x * f(x - 1)
+}
+
 int main(){
-    string str = "hahaha";
+    int i;
+    int x = 0;
+	x = f(6);
+    for (i = 1; i <= 100; i++){
+		int j;
+		j = i;
+        i = i + 1;
+		j = i + 1;
+        x = x + j;
+		x = f(x);
+        if (x > 100) {
+			x = 0;
+			--i;
+			if (j > 0){
+				return 1;
+			}
+			else{
+				return 2;
+			}
+			return 0;
+		}	
+    }
+    println(toString(i));
     return 0;
 }
