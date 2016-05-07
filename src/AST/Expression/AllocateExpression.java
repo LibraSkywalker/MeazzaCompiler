@@ -8,10 +8,11 @@ import MIPS.Instruction.SystemCall;
 import java.util.ArrayList;
 
 import static AST.ASTControler.getCurrentScope;
+import static AST.ASTControler.getGlobeScope;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.a_0;
-import static RegisterControler.ReservedRegister.v_0;
+import static RegisterControler.RegisterName.a_0;
+import static RegisterControler.RegisterName.v_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 
@@ -51,10 +52,6 @@ public class AllocateExpression extends ExpressionAction{
             Src2 = preAction.src();
             isReg = !preAction.isLiteral();
         } //array
-
-        int rDest = getCurrentScope().returnTo().update(0);
-        if (rDest > 0)
-            addInstruction(new RegBinInstruction("move", rDest, a_0, true));
 
         addInstruction(new RegBinInstruction("li",a_0,4,false));
         addInstruction(new RegBinInstruction("li",v_0,9,false));

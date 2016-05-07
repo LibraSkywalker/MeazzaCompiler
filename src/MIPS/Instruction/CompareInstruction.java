@@ -3,13 +3,18 @@ package MIPS.Instruction;
 import MIPS.Function;
 import RegisterControler.VirtualReadWrite;
 
-import static MIPS.IRControler.state;
+import java.util.LinkedList;
+
+import static RegisterControler.RegisterName.*;
+import static RegisterControler.RegisterName.Rdest;
+import static RegisterControler.RegisterName.s_p;
 
 /**
  * Created by Bill on 2016/4/26.
  */
 public class CompareInstruction extends TernaryInstruction{
-    Integer rDest,vDest;
+    Integer vDest;
+    String rDest;
     CompareInstruction(){}
     public CompareInstruction(String OP, int dest, int src1, int src2, boolean isRegister){
         operator = OP;
@@ -18,6 +23,42 @@ public class CompareInstruction extends TernaryInstruction{
         vSrc1 = src1;
         if (isReg) vSrc2 = src2;
         else immediate = src2;
+    }
+
+    public int configure(Function func, LinkedList<Instruction> BlockStat, int position){
+        rSrc1 = Translate(func,vSrc1);
+        rSrc2 = Translate(func,vSrc2);
+        rDest = Translate(func,vDest);
+        if (rDest.equals("")) { //delete
+            BlockStat.remove(this);
+            return position - 1;
+        }
+        if (rSrc1.equals("Memory")){
+            int pos = func.localState.Dic[SaveInAddress].indexOf(vSrc1) * 4;
+            Instruction now = new AddBinInstruction("lw",Rsrc1,s_p,pos);
+            BlockStat.add(position,now);
+            now.configure(func,BlockStat,position);
+            rSrc1 = Rsrc1.toString();
+            position++;
+        }
+
+        if (rSrc2.equals("Memory")){
+            int pos = func.localState.Dic[SaveInAddress].indexOf(vSrc2) * 4;
+            Instruction now = new AddBinInstruction("lw",Rsrc2,s_p,pos);
+            BlockStat.add(position,now);
+            now.configure(func,BlockStat,position);
+            rSrc2 = Rsrc2.toString();
+            position++;
+        }
+        if (rDest.equals("Memory")){
+            int pos = func.localState.Dic[SaveInAddress].indexOf(vDest) * 4;
+            Instruction now = new AddBinInstruction("sw",Rdest,s_p,pos);
+            BlockStat.add(position + 1,now);
+            now.configure(func,BlockStat,position + 1);
+            rDest = Rdest.toString();
+            position++;
+        }
+        return position;
     }
 
     public String toString(){
@@ -37,8 +78,8 @@ public class CompareInstruction extends TernaryInstruction{
 
     @Override
     public void globalize(Function Func) {
-        if (vSrc1 != null) Func.state.update(vSrc1);
-        if (vSrc2 != null) Func.state.update(vSrc2);
-        Func.state.set(vDest);
+        if (vSrc1 != null) Func.localState.update(vSrc1);
+        if (vSrc2 != null) Func.localState.update(vSrc2);
+        Func.localState.set(vDest);
     }
 }

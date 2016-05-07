@@ -1,12 +1,11 @@
 package MIPS;
 
-import MIPS.BasicBlock;
+import MIPS.Instruction.ArithmeticInstruction;
 import RegisterControler.RegisterStatic;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-import static MIPS.IRControler.state;
+import static RegisterControler.RegisterName.s_p;
 
 /**
  * Created by Bill on 2016/4/28.
@@ -16,7 +15,7 @@ public class Function {
     static BasicBlock currentBasicBlock;
     Integer number = 0;
     public String FuncName;
-    public RegisterStatic state = new RegisterStatic();
+    public RegisterStatic localState = new RegisterStatic();
     BasicBlock getCurrentBasicBlock() {
         return currentBasicBlock;
     }
@@ -67,25 +66,43 @@ public class Function {
         }
     }
 
+    void allocateStack(){
+        if (localState.numToSave() == 0)
+            return;
+        int fsize = localState.numToSave() * 4;
+        basicBlocks.getFirst().addFirst(new ArithmeticInstruction("sub",s_p,s_p,fsize,false));
+        for (BasicBlock now : basicBlocks){
+            now.cleanUp(fsize);
+        }
+    }
+
     public void classify(){
         eliminate();
-
         for (BasicBlock now : basicBlocks){
             now.update();
-            state.load(now.usage);
+            localState.load(now.usage);
             now.globalize(this);
+        }
+    }
+
+    public void save(){
+        localState.save();
+    }
+
+    public void configure(){
+        for (BasicBlock now : basicBlocks){
+            now.configure(this);
         }
     }
 
     public String virtualPrint(){
         String str = "";
-        classify();
         for (BasicBlock now : basicBlocks){
             str += now.printUsage();
             str += now.virtualPrint();
             str += "\n";
         }
-        str += state.toString();
+        str += localState.toString();
         return str;
     }
 

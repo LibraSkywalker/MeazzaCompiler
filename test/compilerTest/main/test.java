@@ -59,12 +59,32 @@ public class test  {
 
             IRControler transformer = new IRControler();
             transformer.visit();
+
+
             FileWriter file = new FileWriter("hello.s");
             BufferedWriter output = new BufferedWriter(file);
             output.flush();
             output.write(transformer.virtualPrint());
             output.close();
             file.close();
+
+            transformer.RegisterAllocate();
+
+            file = new FileWriter("hello2.s");
+            output = new BufferedWriter(file);
+            output.flush();
+            output.write(transformer.virtualPrint());
+            output.close();
+            file.close();
+
+
+            file = new FileWriter("data.s");
+            output = new BufferedWriter(file);
+            output.flush();
+            output.write(transformer.toString());
+            output.close();
+            file.close();
+
             //System.out.println(transformer.virtualPrint());
 
             if (!shouldPass) fail("Should not pass.");

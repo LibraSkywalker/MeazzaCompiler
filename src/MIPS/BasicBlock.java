@@ -1,15 +1,11 @@
 package MIPS;
 
-import AST.Expression.CompareExpression;
 import MIPS.Instruction.*;
-import RegisterControler.RegisterStatic;
 import RegisterControler.VirtualReadWrite;
 
 import java.util.LinkedList;
 
-import static MIPS.IRControler.state;
-import static RegisterControler.ReservedRegister.global;
-import static RegisterControler.ReservedRegister.local;
+import static RegisterControler.RegisterName.s_p;
 
 /**
  * Created by Bill on 2016/4/26.
@@ -29,6 +25,20 @@ public class BasicBlock {
         label = now;
     }
 
+    public void addFirst(Instruction now) {
+        BlockStat.addFirst(now);
+    }
+
+    public void cleanUp(int fsize){
+        for (int i = 0; i < BlockStat.size(); i++){
+            Instruction now = BlockStat.get(i);
+            if (now instanceof JumpInstruction && now.operator.equals("jr")) {
+                BlockStat.add(i, new ArithmeticInstruction("add", s_p, s_p, fsize, false));
+                i++;
+            }
+        }
+    }
+
     public void add(Instruction now){
         BlockStat.add(now);
     }
@@ -44,6 +54,13 @@ public class BasicBlock {
                     BlockStat.remove(pre);
                 }
             }
+        }
+    }
+
+    void configure(Function func){
+        for(int i = 0; i < BlockStat.size(); i++){
+            Instruction now = BlockStat.get(i);
+            i = now.configure(func,BlockStat,BlockStat.indexOf(now));
         }
     }
 

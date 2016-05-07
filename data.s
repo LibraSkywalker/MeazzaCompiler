@@ -8,6 +8,7 @@ _buffer: .word 0
 
 
 .text
+
 _buffer_init:
 	li $a0, 256
 	li $v0, 9
@@ -347,8 +348,6 @@ func_stringLess:
 	_less_compare_final:
 	jr $ra
 
-# Read:
-# Write:
 main:
 	jal _buffer_init
 	li $4 4
@@ -361,222 +360,174 @@ main:
 	li $4 4
 	li $2 9
 	syscall
-	li $32 4
-	sw $32 0($2)
-	sll $4 $32 2
+	li $3 4
+	sw $3 0($2)
+	sll $4 $3 2
 	li $2 9
 	syscall
-	move $33 $2
-	lw $34 0($23)
+	move $3 $2
+	lw $4 0($23)
 	la $30 0($23)
-	move $34 $33
-	sw $34 0($30)
+	move $4 $3
+	sw $4 0($30)
 	jal main_0
 	li $2 10
 	syscall
 
-# Read:
-# Write:
 main_0:
-	move $36 $31
+	move $s2 $31
 	li $4 4
 	li $2 9
 	syscall
-	li $37 4
-	sw $37 0($2)
-	sll $4 $37 2
+	li $3 4
+	sw $3 0($2)
+	sll $4 $3 2
 	li $2 9
 	syscall
-	move $38 $2
-	move $40 $38
-	lw $35 0($23)
-	lw $41 0($40)
-	la $30 0($40)
-	move $41 $35
-	sw $41 0($30)
-	lw $35 0($23)
-	lw $42 4($40)
-	la $30 4($40)
-	move $42 $35
-	sw $42 0($30)
-	lw $35 0($23)
-	lw $43 8($40)
-	la $30 8($40)
-	move $43 $35
-	sw $43 0($30)
-	lw $35 0($23)
-	lw $44 12($40)
-	la $30 12($40)
-	move $44 $35
-	sw $44 0($30)
-	move $4 $40
+	move $3 $2
+	move $s0 $3
+	lw $3 0($23)
+	lw $4 0($s0)
+	la $30 0($s0)
+	move $4 $3
+	sw $4 0($30)
+	lw $3 0($23)
+	lw $4 4($s0)
+	la $30 4($s0)
+	move $4 $3
+	sw $4 0($30)
+	lw $3 0($23)
+	lw $4 8($s0)
+	la $30 8($s0)
+	move $4 $3
+	sw $4 0($30)
+	lw $3 0($23)
+	lw $4 12($s0)
+	la $30 12($s0)
+	move $4 $3
+	sw $4 0($30)
+	move $4 $s0
 	jal func__array.size
-	move $45 $2
-	move $4 $45
+	move $3 $2
+	move $4 $3
 	jal func_toString
 	move $4 $2
 	jal func_println
-	li $47 0
-	lw $48 0($40)
-	la $30 0($40)
-	move $4 $48
+	li $s1 0
+	lw $3 0($s0)
+	la $30 0($s0)
+	move $4 $3
 	jal func__array.size
-	move $49 $2
-	slt $50 $47 $49
-	beq $50 0 main_1
+	move $3 $2
+	bge $s1 $3 main_1
 
-# Read:
-# Write:
 main_0_loop:
 	jal func_getInt
-	lw $51 0($40)
-	mul $47 $47 4
-	add $51 $51 $47
-	lw $52 0($51)
-	la $30 0($51)
-	move $52 $2
-	sw $52 0($30)
+	lw $3 0($s0)
+	mul $s1 $s1 4
+	add $3 $3 $s1
+	lw $4 0($3)
+	la $30 0($3)
+	move $4 $2
+	sw $4 0($30)
 
-# Read:
-# Write:
 main_0_loopTail:
-	move $53 $47
-	add $47 $47 1
-	lw $54 0($40)
-	la $30 0($40)
-	move $4 $54
+	add $s1 $s1 1
+	lw $3 0($s0)
+	la $30 0($s0)
+	move $4 $3
 	jal func__array.size
-	move $55 $2
-	slt $56 $47 $55
-	bne $56 0 main_0_loop
+	move $3 $2
+	blt $s1 $3 main_0_loop
 
-# Read:
-# Write:
 main_1:
-	li $47 0
-	lw $57 4($40)
-	la $30 4($40)
-	move $4 $57
+	li $s1 0
+	lw $3 4($s0)
+	la $30 4($s0)
+	move $4 $3
 	jal func__array.size
-	move $58 $2
-	slt $59 $47 $58
-	beq $59 0 main_2
+	move $3 $2
+	bge $s1 $3 main_2
 
-# Read:
-# Write:
 main_1_loop:
-	lw $60 4($40)
-	mul $47 $47 4
-	add $60 $60 $47
-	lw $61 0($60)
-	la $30 0($60)
-	move $4 $61
+	lw $3 4($s0)
+	mul $s1 $s1 4
+	add $3 $3 $s1
+	lw $4 0($3)
+	la $30 0($3)
+	move $4 $4
 	jal func_toString
 	move $4 $2
 	jal func_print
 
-# Read:
-# Write:
 main_1_loopTail:
-	move $62 $47
-	add $47 $47 1
-	lw $63 4($40)
-	la $30 4($40)
-	move $4 $63
+	add $s1 $s1 1
+	lw $3 4($s0)
+	la $30 4($s0)
+	move $4 $3
 	jal func__array.size
-	move $64 $2
-	slt $65 $47 $64
-	bne $65 0 main_1_loop
+	move $3 $2
+	blt $s1 $3 main_1_loop
 
-# Read:
-# Write:
 main_2:
 	la $4 String0
 	jal func_println
-	li $47 0
-	lw $66 8($40)
-	la $30 8($40)
-	move $4 $66
+	li $s1 0
+	lw $3 8($s0)
+	la $30 8($s0)
+	move $4 $3
 	jal func__array.size
-	move $67 $2
-	slt $68 $47 $67
-	beq $68 0 main_3
+	move $3 $2
+	bge $s1 $3 main_3
 
-# Read:
-# Write:
 main_2_loop:
-	lw $69 8($40)
-	mul $47 $47 4
-	add $69 $69 $47
-	lw $70 0($69)
-	la $30 0($69)
-	li $70 0
-	sw $70 0($30)
+	lw $3 8($s0)
+	mul $s1 $s1 4
+	add $3 $3 $s1
+	lw $4 0($3)
+	la $30 0($3)
+	li $4 0
+	sw $4 0($30)
 
-# Read:
-# Write:
 main_2_loopTail:
-	move $71 $47
-	add $47 $47 1
-	lw $72 8($40)
-	la $30 8($40)
-	move $4 $72
+	add $s1 $s1 1
+	lw $3 8($s0)
+	la $30 8($s0)
+	move $4 $3
 	jal func__array.size
-	move $73 $2
-	slt $74 $47 $73
-	bne $74 0 main_2_loop
+	move $3 $2
+	blt $s1 $3 main_2_loop
 
-# Read:
-# Write:
 main_3:
-	li $47 0
-	lw $75 12($40)
-	la $30 12($40)
-	move $4 $75
+	li $s1 0
+	lw $3 12($s0)
+	la $30 12($s0)
+	move $4 $3
 	jal func__array.size
-	move $76 $2
-	slt $77 $47 $76
-	beq $77 0 main_4
+	move $3 $2
+	bge $s1 $3 main_4
 
-# Read:
-# Write:
 main_3_loop:
-	lw $78 12($40)
-	mul $47 $47 4
-	add $78 $78 $47
-	lw $79 0($78)
-	la $30 0($78)
-	move $4 $79
+	lw $3 12($s0)
+	mul $s1 $s1 4
+	add $3 $3 $s1
+	lw $4 0($3)
+	la $30 0($3)
+	move $4 $4
 	jal func_toString
 	move $4 $2
 	jal func_print
 
-# Read:
-# Write:
 main_3_loopTail:
-	move $80 $47
-	add $47 $47 1
-	lw $81 12($40)
-	la $30 12($40)
-	move $4 $81
+	add $s1 $s1 1
+	lw $3 12($s0)
+	la $30 12($s0)
+	move $4 $3
 	jal func__array.size
-	move $82 $2
-	slt $83 $47 $82
-	bne $83 0 main_3_loop
+	move $3 $2
+	blt $s1 $3 main_3_loop
 
-# Read:
-# Write:
 main_4:
-	move $31 $36
+	move $31 $s2
 	jr $ra
 
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:

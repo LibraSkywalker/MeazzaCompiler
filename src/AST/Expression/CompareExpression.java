@@ -4,9 +4,8 @@ package AST.Expression;
 import MIPS.Instruction.*;
 
 import static MIPS.IRControler.addInstruction;
-import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.a_0;
-import static RegisterControler.ReservedRegister.v_0;
+import static RegisterControler.RegisterName.a_0;
+import static RegisterControler.RegisterName.v_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**

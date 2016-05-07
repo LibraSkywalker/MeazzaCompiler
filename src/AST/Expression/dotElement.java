@@ -8,9 +8,9 @@ import SymbolContainer.FuncSymbol;
 import static AST.ASTControler.*;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.a_0;
-import static RegisterControler.ReservedRegister.globalAddress;
-import static RegisterControler.ReservedRegister.v_0;
+import static RegisterControler.RegisterName.a_0;
+import static RegisterControler.RegisterName.globalAddress;
+import static RegisterControler.RegisterName.v_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -74,15 +74,15 @@ public class DotElement extends BinaryExpression{
         if (((SymbolElement) rightAction).element instanceof FuncSymbol){
             String FuncName = ((SymbolElement) rightAction).element.name();
             if (FuncName.equals("size")){
-                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,false));
+                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,true));
                 addInstruction(new JumpInstruction("jal","func__array.size"));
             }
             if (leftAction.accept("string")){
-                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,false));
+                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,true));
                 addInstruction(new JumpInstruction("jal","func_string." + FuncName));
             }
             rDest = newVReg();
-            addInstruction(new RegBinInstruction("move",rDest,v_0,false));
+            addInstruction(new RegBinInstruction("move",rDest,v_0,true));
             //System.err.println("Inside function doen't support now");
         }
         else {

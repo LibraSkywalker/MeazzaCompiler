@@ -6,8 +6,9 @@ import MIPS.Instruction.RegBinInstruction;
 
 import java.util.ArrayList;
 
+import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.globalAddress;
+import static RegisterControler.RegisterName.globalAddress;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -55,16 +56,21 @@ public class StageExpression extends ExpressionAction{
         for (ExpressionAction now : stageValue) {
             now.Translate();
             int Src2 = now.src();
-            if (now.isLiteral()) {
-                Src2 *= 4;
-            }
-            else getBlock().add(new ArithmeticInstruction("mul", Src2, Src2, 4, false));
-            getBlock().add(new ArithmeticInstruction("add", rDest, rDest, Src2, now.isLiteral())); // calculate delta
             int rSrc1 = rDest;
             rDest = newVReg();
-            getBlock().add(new AddBinInstruction("lw",rDest, rSrc1));
-            if (stageValue.indexOf(now) == stageValue.size() - 1)
-                getBlock().add(new RegBinInstruction("la",globalAddress,rSrc1,true));
+            if (now.isLiteral()) {
+                Src2 *= 4;
+                addInstruction(new AddBinInstruction("lw",rDest, rSrc1,Src2));
+                if (stageValue.indexOf(now) == stageValue.size() - 1)
+                    addInstruction(new AddBinInstruction("la",globalAddress,rSrc1,Src2));
+            }
+            else {
+                addInstruction(new ArithmeticInstruction("mul", Src2, Src2, 4, false));
+                addInstruction(new ArithmeticInstruction("add",rSrc1,rSrc1,Src2,true));
+                addInstruction(new AddBinInstruction("lw",rDest, rSrc1));
+                if (stageValue.indexOf(now) == stageValue.size() - 1)
+                    addInstruction(new AddBinInstruction("la",globalAddress,rSrc1));
+            }
         }
     }
 }

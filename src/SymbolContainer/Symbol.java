@@ -2,10 +2,9 @@ package SymbolContainer;
 
 import MIPS.Instruction.AddBinInstruction;
 
-import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getVar;
 import static MIPS.IRControler.addInstruction;
-import static RegisterControler.ReservedRegister.a_0;
+import static RegisterControler.RegisterName.a_0;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**

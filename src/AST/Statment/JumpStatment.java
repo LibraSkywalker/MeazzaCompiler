@@ -10,7 +10,7 @@ import SymbolContainer.Scope;
 import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getVar;
 import static MIPS.IRControler.addInstruction;
-import static RegisterControler.ReservedRegister.*;
+import static RegisterControler.RegisterName.*;
 
 /**
  * Created by Bill on 2016/4/4.

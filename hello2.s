@@ -347,8 +347,8 @@ func_stringLess:
 	_less_compare_final:
 	jr $ra
 
-# Read:
-# Write:
+# Read: 2 32 23 33 30 34
+# Write: 4 2 23 32 33 34 30
 main:
 	jal _buffer_init
 	li $4 4
@@ -375,8 +375,8 @@ main:
 	li $2 10
 	syscall
 
-# Read:
-# Write:
+# Read: 31 2 37 38 23 40 35 30 41 42 43 44 45 48 47 49
+# Write: 36 4 2 37 38 40 35 41 30 42 43 44 45 47 48 49
 main_0:
 	move $36 $31
 	li $4 4
@@ -422,11 +422,10 @@ main_0:
 	move $4 $48
 	jal func__array.size
 	move $49 $2
-	slt $50 $47 $49
-	beq $50 0 main_1
+	bge $47 $49 main_1
 
-# Read:
-# Write:
+# Read: 40 47 51 2 30 52
+# Write: 51 47 52 30
 main_0_loop:
 	jal func_getInt
 	lw $51 0($40)
@@ -437,21 +436,19 @@ main_0_loop:
 	move $52 $2
 	sw $52 0($30)
 
-# Read:
-# Write:
+# Read: 47 40 54 2 55
+# Write: 53 47 54 30 4 55
 main_0_loopTail:
-	move $53 $47
 	add $47 $47 1
 	lw $54 0($40)
 	la $30 0($40)
 	move $4 $54
 	jal func__array.size
 	move $55 $2
-	slt $56 $47 $55
-	bne $56 0 main_0_loop
+	blt $47 $55 main_0_loop
 
-# Read:
-# Write:
+# Read: 40 57 2 47 58
+# Write: 47 57 30 4 58
 main_1:
 	li $47 0
 	lw $57 4($40)
@@ -459,11 +456,10 @@ main_1:
 	move $4 $57
 	jal func__array.size
 	move $58 $2
-	slt $59 $47 $58
-	beq $59 0 main_2
+	bge $47 $58 main_2
 
-# Read:
-# Write:
+# Read: 40 47 60 61 2
+# Write: 60 47 61 30 4
 main_1_loop:
 	lw $60 4($40)
 	mul $47 $47 4
@@ -475,21 +471,19 @@ main_1_loop:
 	move $4 $2
 	jal func_print
 
-# Read:
-# Write:
+# Read: 47 40 63 2 64
+# Write: 62 47 63 30 4 64
 main_1_loopTail:
-	move $62 $47
 	add $47 $47 1
 	lw $63 4($40)
 	la $30 4($40)
 	move $4 $63
 	jal func__array.size
 	move $64 $2
-	slt $65 $47 $64
-	bne $65 0 main_1_loop
+	blt $47 $64 main_1_loop
 
-# Read:
-# Write:
+# Read: 40 66 2 47 67
+# Write: 4 47 66 30 67
 main_2:
 	la $4 String0
 	jal func_println
@@ -499,11 +493,10 @@ main_2:
 	move $4 $66
 	jal func__array.size
 	move $67 $2
-	slt $68 $47 $67
-	beq $68 0 main_3
+	bge $47 $67 main_3
 
-# Read:
-# Write:
+# Read: 40 47 69 30 70
+# Write: 69 47 70 30
 main_2_loop:
 	lw $69 8($40)
 	mul $47 $47 4
@@ -513,21 +506,19 @@ main_2_loop:
 	li $70 0
 	sw $70 0($30)
 
-# Read:
-# Write:
+# Read: 47 40 72 2 73
+# Write: 71 47 72 30 4 73
 main_2_loopTail:
-	move $71 $47
 	add $47 $47 1
 	lw $72 8($40)
 	la $30 8($40)
 	move $4 $72
 	jal func__array.size
 	move $73 $2
-	slt $74 $47 $73
-	bne $74 0 main_2_loop
+	blt $47 $73 main_2_loop
 
-# Read:
-# Write:
+# Read: 40 75 2 47 76
+# Write: 47 75 30 4 76
 main_3:
 	li $47 0
 	lw $75 12($40)
@@ -535,11 +526,10 @@ main_3:
 	move $4 $75
 	jal func__array.size
 	move $76 $2
-	slt $77 $47 $76
-	beq $77 0 main_4
+	bge $47 $76 main_4
 
-# Read:
-# Write:
+# Read: 40 47 78 79 2
+# Write: 78 47 79 30 4
 main_3_loop:
 	lw $78 12($40)
 	mul $47 $47 4
@@ -551,32 +541,30 @@ main_3_loop:
 	move $4 $2
 	jal func_print
 
-# Read:
-# Write:
+# Read: 47 40 81 2 82
+# Write: 80 47 81 30 4 82
 main_3_loopTail:
-	move $80 $47
 	add $47 $47 1
 	lw $81 12($40)
 	la $30 12($40)
 	move $4 $81
 	jal func__array.size
 	move $82 $2
-	slt $83 $47 $82
-	bne $83 0 main_3_loop
+	blt $47 $82 main_3_loop
 
-# Read:
-# Write:
+# Read: 36
+# Write: 31
 main_4:
 	move $31 $36
 	jr $ra
 
-# local:
+# local: 2 32 23 33 30 34 31 37 38 35 41 42 43 44 45 48 49 51 52 54 55 57 58 60 61 63 64 66 67 69 70 72 73 75 76 78 79 81 82
 # localSaved:
-# global:
+# global: 40 47 36
 # Save in address:
-# times:
-# local:
+# times: $4: 22  $2: 25  $23: 7  $32: 3  $33: 2  $34: 3  $30: 24  $31: 2  $36: 2  $37: 3  $38: 2  $40: 30  $35: 8  $41: 3  $42: 3  $43: 3  $44: 3  $45: 2  $47: 36  $48: 2  $49: 2  $51: 5  $52: 3  $53: 1  $54: 2  $55: 2  $57: 2  $58: 2  $60: 5  $61: 2  $62: 1  $63: 2  $64: 2  $66: 2  $67: 2  $69: 5  $70: 3  $71: 1  $72: 2  $73: 2  $75: 2  $76: 2  $78: 5  $79: 2  $80: 1  $81: 2  $82: 2 
+# local: 2 32 23 33 30 34 31 37 38 35 41 42 43 44 45 48 49 51 52 54 55 57 58 60 61 63 64 66 67 69 70 72 73 75 76 78 79 81 82
 # localSaved:
-# global:
+# global: 40 47 36
 # Save in address:
-# times:
+# times: $4: 22  $2: 25  $23: 7  $32: 3  $33: 2  $34: 3  $30: 24  $31: 2  $36: 2  $37: 3  $38: 2  $40: 30  $35: 8  $41: 3  $42: 3  $43: 3  $44: 3  $45: 2  $47: 36  $48: 2  $49: 2  $51: 5  $52: 3  $53: 1  $54: 2  $55: 2  $57: 2  $58: 2  $60: 5  $61: 2  $62: 1  $63: 2  $64: 2  $66: 2  $67: 2  $69: 5  $70: 3  $71: 1  $72: 2  $73: 2  $75: 2  $76: 2  $78: 5  $79: 2  $80: 1  $81: 2  $82: 2 

@@ -7,7 +7,7 @@ import java.util.*;
 
 import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.visitScope;
-import static RegisterControler.ReservedRegister.a_0;
+import static RegisterControler.RegisterName.a_0;
 
 
 /**

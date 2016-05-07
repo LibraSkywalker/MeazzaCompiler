@@ -3,7 +3,11 @@ package MIPS.Instruction;
 import MIPS.Function;
 import RegisterControler.VirtualReadWrite;
 
-import static MIPS.IRControler.state;
+import java.util.LinkedList;
+
+import static RegisterControler.RegisterName.*;
+import static RegisterControler.RegisterName.Rdest;
+import static RegisterControler.RegisterName.s_p;
 
 /**
  * Created by Bill on 2016/4/26.
@@ -11,6 +15,30 @@ import static MIPS.IRControler.state;
 public class BranchInstruction extends TernaryInstruction {
     String label;
     BranchInstruction(){}
+
+    public int configure(Function func, LinkedList<Instruction> BlockStat, int position){
+        rSrc1 = Translate(func,vSrc1);
+        rSrc2 = Translate(func,vSrc2);
+        if (rSrc1.equals("Memory")){
+            int pos = func.localState.Dic[SaveInAddress].indexOf(vSrc1) * 4;
+            Instruction now = new AddBinInstruction("lw",Rsrc1,s_p,pos);
+            BlockStat.add(position,now);
+            now.configure(func,BlockStat,position);
+            rSrc1 = Rsrc1.toString();
+            position++;
+        }
+
+        if (rSrc2.equals("Memory")){
+            int pos = func.localState.Dic[SaveInAddress].indexOf(vSrc2) * 4;
+            Instruction now = new AddBinInstruction("lw",Rsrc2,s_p,pos);
+            BlockStat.add(position,now);
+            now.configure(func,BlockStat,position);
+            rSrc2 = Rsrc2.toString();
+            position++;
+        }
+        return position;
+    }
+
     public BranchInstruction(String OP,int src1,int src2, String lbl,boolean isRegister){
         operator = OP;
         isReg = isRegister;
@@ -61,7 +89,7 @@ public class BranchInstruction extends TernaryInstruction {
 
     @Override
     public void globalize(Function Func) {
-        if (vSrc1 != null) Func.state.update(vSrc1);
-        if (vSrc2 != null) Func.state.update(vSrc2);
+        if (vSrc1 != null) Func.localState.update(vSrc1);
+        if (vSrc2 != null) Func.localState.update(vSrc2);
     }
 }

@@ -1,15 +1,7 @@
 package MIPS;
 
-import AST.ASTControler;
-import AST.ActionNodeBase;
 import MIPS.Instruction.Instruction;
-import MIPS.Instruction.RegBinInstruction;
 import RegisterControler.RegisterStatic;
-import SymbolContainer.TypeSymbol;
-
-import static AST.ASTControler.getGlobeScope;
-import static AST.ASTControler.popAction;
-import static RegisterControler.ReservedRegister.globalAddress;
 
 /**
  * Created by Bill on 2016/4/28.
@@ -17,7 +9,6 @@ import static RegisterControler.ReservedRegister.globalAddress;
 public class IRControler {
     static DataControler data = new DataControler();
     static TextControler text = new TextControler();
-    public static RegisterStatic state = new RegisterStatic();
     public void visit(){
         text.visit();
     }
@@ -45,6 +36,10 @@ public class IRControler {
     public static void addFunction(String name){
         text.currentFunction = new Function(name);
         text.functionList.add(text.currentFunction);
+    }
+
+    public void RegisterAllocate(){
+        text.RegisterAllocate();
     }
 
     public static void addBlock(String name){

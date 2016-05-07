@@ -2,6 +2,7 @@ package MIPS;
 
 import AST.ActionNodeBase;
 import MIPS.Instruction.*;
+import RegisterControler.RegisterStatic;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Scope;
 
@@ -9,9 +10,8 @@ import java.util.ArrayList;
 
 import static AST.ASTControler.*;
 import static MIPS.IRControler.*;
-import static MIPS.buildIn.buildIn_data;
 import static MIPS.buildIn.buildIn_text;
-import static RegisterControler.ReservedRegister.*;
+import static RegisterControler.RegisterName.*;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -20,7 +20,7 @@ import static RegisterControler.VirtualRegister.newVReg;
 public class TextControler {
     Function currentFunction;
     ArrayList<Function> functionList = new ArrayList<>();
-
+    public static RegisterStatic GlobalState = new RegisterStatic();
 
     public String toString(){
         String str = ".text\n\n";
@@ -35,6 +35,7 @@ public class TextControler {
         str += buildIn_text;
         for (Function now : functionList)
             str += now.virtualPrint();
+        str += GlobalState.toString();
         return str;
     }
 
@@ -54,7 +55,7 @@ public class TextControler {
             now.Translate();
         }
 
-        addInstruction(new JumpInstruction("jal","main_1"));
+        addInstruction(new JumpInstruction("jal","main_0"));
         addInstruction(new RegBinInstruction("li",v_0,exitcode,false));
         addInstruction(new SystemCall());  //visit main and exit
 
@@ -84,7 +85,7 @@ public class TextControler {
             visitScope(nowFunc.FuncScope);
             int rDest = nowFunc.FuncScope.update(i);
             if (rDest > 0) addInstruction(new RegBinInstruction("move",rDest,a_0 + i,true));
-            System.err.println(rDest + "!");
+            //System.err.println(rDest + "!");
             endScope();
         }
         nowFunc.FuncScope.Translate();
@@ -94,5 +95,26 @@ public class TextControler {
         addInstruction(new JumpInstruction());
         r_a = 31;
         //cleanup
+    }
+
+    void RegisterAllocate(){
+        for (Function now : functionList){
+            now.classify();
+            GlobalState.load(now.localState);
+        } //classify virtual register
+
+
+        GlobalState.adjust();
+
+        for (Function now : functionList){
+            now.save();
+        }   //if too much
+
+        GlobalState.save();
+        for (Function now : functionList)
+            now.allocateStack();
+        for (Function now : functionList)
+            now.configure();
+
     }
 }

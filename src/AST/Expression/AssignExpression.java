@@ -7,7 +7,7 @@ import SymbolContainer.VariableSymbol;
 import static AST.ASTControler.getGlobeScope;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.globalAddress;
+import static RegisterControler.RegisterName.globalAddress;
 
 
 /**
@@ -20,14 +20,11 @@ public class AssignExpression extends BinaryExpression{
     }
 
     public void Translate(){
-        leftAction.Translate();
         rightAction.Translate();
-
+        leftAction.Translate();
         if (leftAction instanceof SymbolElement)
             ((SymbolElement) leftAction).update();// renaming
 
-        System.err.println(leftAction);
-        System.err.println(rightAction);
         rDest = leftAction.rDest;
         int Src =  rightAction.src();
 
@@ -52,6 +49,7 @@ public class AssignExpression extends BinaryExpression{
         if (leftAction instanceof DotElement)
             addInstruction(new AddBinInstruction("sw", rDest, globalAddress));
             //class
+
     }
 
     public void setLeft(VariableSymbol now){

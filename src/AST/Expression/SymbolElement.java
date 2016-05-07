@@ -3,7 +3,6 @@ package AST.Expression;
 import MIPS.Instruction.*;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Properties;
-import SymbolContainer.Symbol;
 import SymbolContainer.VariableSymbol;
 
 import java.util.ArrayList;
@@ -12,8 +11,7 @@ import static AST.ASTControler.getCurrentScope;
 import static AST.ASTControler.getGlobeScope;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.ReservedRegister.*;
-import static RegisterControler.VirtualRegister.newVReg;
+import static RegisterControler.RegisterName.*;
 
 /**
  * Created by Bill on 2016/4/10.
