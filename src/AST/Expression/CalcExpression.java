@@ -55,7 +55,7 @@ public class CalcExpression extends BinaryExpression {
         int Src2 = rightAction.src();
         boolean isReg = !rightAction.isLiteral();
 
-        System.out.println(rSrc1 + "\n" +Src2 + "\n"+ isReg + "\n" + leftAction + "\n" + rightAction);
+        //System.out.println(rSrc1 + "\n" +Src2 + "\n"+ isReg + "\n" + leftAction + "\n" + rightAction);
         switch (operator){
             case "+": addInstruction(new ArithmeticInstruction("add", rDest, rSrc1, Src2, isReg));
                 return;
@@ -77,8 +77,8 @@ public class CalcExpression extends BinaryExpression {
         if (rightAction.isLiteral()){
             addInstruction(new AddBinInstruction("la",a_0 + 1,((Literal) rightAction).memName()));
         }
-        else addInstruction(new RegBinInstruction("move",a_0 + 1,leftAction.src(),true));
-        addInstruction(new JumpInstruction("jal","func_stringConcatenate"));
+        else addInstruction(new RegBinInstruction("move",a_0 + 1,rightAction.src(),true));
+        addInstruction(new JumpInstruction("jal","func__stringConcatenate"));
         rDest = newVReg();
         addInstruction(new RegBinInstruction("move",rDest,v_0,true));
     }

@@ -8,9 +8,7 @@ import SymbolContainer.FuncSymbol;
 import static AST.ASTControler.*;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
-import static RegisterControler.RegisterName.a_0;
-import static RegisterControler.RegisterName.globalAddress;
-import static RegisterControler.RegisterName.v_0;
+import static RegisterControler.RegisterName.*;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -29,8 +27,9 @@ public class DotElement extends BinaryExpression{
     }
 
     public boolean setEnvironment(){
-        if (leftAction.properties.getDimension() == 0)
+        if (leftAction.properties.getDimension() == 0){
             visitScope(leftAction.getProperties().type().classMembers);
+        }
         return true;
     }
 
@@ -48,6 +47,8 @@ public class DotElement extends BinaryExpression{
     }
 
     public boolean check(){
+        if (!getCurrentScope().equals(leftAction.getProperties().type().classMembers))
+            visitScope(leftAction.getProperties().type().classMembers);
         if (leftAction == null ||
             rightAction == null ||
            !(rightAction instanceof SymbolElement))
@@ -74,12 +75,16 @@ public class DotElement extends BinaryExpression{
         if (((SymbolElement) rightAction).element instanceof FuncSymbol){
             String FuncName = ((SymbolElement) rightAction).element.name();
             if (FuncName.equals("size")){
-                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,true));
+                addInstruction(new RegBinInstruction("move",v_0,leftAction.rDest,true));
                 addInstruction(new JumpInstruction("jal","func__array.size"));
             }
             if (leftAction.accept("string")){
-                addInstruction(new RegBinInstruction("move",a_0,leftAction.rDest,true));
-                addInstruction(new JumpInstruction("jal","func_string." + FuncName));
+                rightAction.Translate();
+                if (leftAction.isLiteral())
+                    addInstruction(new AddBinInstruction("la",v_0,((Literal)leftAction).memName()));
+                else
+                    addInstruction(new RegBinInstruction("move",v_0,leftAction.rDest,true));
+                addInstruction(new JumpInstruction("jal","func__string." + FuncName));
             }
             rDest = newVReg();
             addInstruction(new RegBinInstruction("move",rDest,v_0,true));

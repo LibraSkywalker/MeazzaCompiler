@@ -8,11 +8,44 @@ import org.antlr.v4.runtime.ParserRuleContext;
  * Created by Bill on 2016/4/8.
  */
 public class ASTControler {
-    private static Scope currentScope,globeScope;
+    private static Scope currentScope,globeScope,callee;
+    public static int depth = 0;
     public ASTControler(){
         globeScope = currentScope = new Scope();
         new Builder();
     }
+
+    public static void call(){
+        depth++;
+    }
+
+    public static void revert(){
+        depth--;
+    }
+
+    public static Scope caller(){
+        int dep = depth;
+        Scope now = currentScope;
+        while (dep-- > 0){
+            now = now.getLastScope();
+        }
+        System.err.println("!: " + depth);
+        return now;
+    }
+
+    public static void visitCaller(){
+        callee = currentScope;
+        currentScope = caller();
+        System.err.println("call:");
+        System.err.println("callee: " + callee +"caller: " + currentScope);
+    }
+
+    public static void endCaller(){
+        System.err.println("revert:");
+        System.err.println("callee: " + callee +"caller: " + currentScope);
+        currentScope = callee;
+    }
+
 
     public static Scope getGlobeScope(){
         return globeScope;

@@ -22,6 +22,8 @@ public class Function {
 
     Function(String name) {
         FuncName = name;
+        if (!FuncName.equals("main"))
+            FuncName = "func__" + FuncName;
         addBasicBlock("");
     }
 
@@ -38,7 +40,8 @@ public class Function {
     }
 
     BasicBlock addBasicBlock(String name){
-        BasicBlock now = new BasicBlock(FuncName + name);
+        BasicBlock now;
+        now = new BasicBlock(FuncName + name);
         basicBlocks.add(now);
         currentBasicBlock = now;
         return now;

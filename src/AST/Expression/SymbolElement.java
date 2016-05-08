@@ -83,7 +83,7 @@ public class SymbolElement extends ExpressionAction{
 
         rDest = element.getVirtualRegister();
         if (element.getScope().equals(getGlobeScope()))
-            getBlock().add(new AddBinInstruction("lw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(element)));
+            addInstruction(new AddBinInstruction("lw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(element)));
     }
 
     void callTranslate(){
@@ -124,12 +124,10 @@ public class SymbolElement extends ExpressionAction{
         } // solving parameters
 
         getCurrentScope().print();
-        System.out.println(getCurrentScope().returnTo().print() +": " + getCurrentScope().returnTo().memberSize());
-        if (!element.isPrimitive()) {
-            addInstruction(new JumpInstruction("jal", element.name()));
-        } else {
-            addInstruction(new JumpInstruction("jal", "func_" + element.name())); //// jump in
-        }
+        if (getGlobeScope().getVar(element.name()) == null)
+            return;
+        //System.out.println(getCurrentScope().returnTo().print() +": " + getCurrentScope().returnTo().memberSize());
+        addInstruction(new JumpInstruction("jal", "func__" + element.name())); //// jump in
         rDest = v_0;
     }
     void update(){

@@ -25,7 +25,7 @@ public abstract class Instruction {
     String Translate(Function func,Integer virtualRegister){
         if (virtualRegister == null) return "undefined";
         if (virtualRegister < 32) {
-            System.out.println(virtualRegister);
+            //System.out.println(virtualRegister);
             return virtualRegister.toString();
         }
         if (GlobalState.property(virtualRegister) == SaveInAddress)

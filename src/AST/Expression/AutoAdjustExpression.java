@@ -1,9 +1,14 @@
 package AST.Expression;
 
+import MIPS.Instruction.AddBinInstruction;
 import MIPS.Instruction.ArithmeticInstruction;
 import MIPS.Instruction.RegBinInstruction;
 
+import static AST.ASTControler.getGlobeScope;
+import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
+import static RegisterControler.RegisterName.globalAddress;
+import static RegisterControler.RegisterName.globalVariable;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -45,7 +50,7 @@ public class AutoAdjustExpression extends UnaryExpression {
 
         if (!isReg) rSrc = ((Literal)childAction).Reg();
 
-        if (!isPre){
+        if (isPre){
             getBlock().add(new RegBinInstruction("move", rDest , rSrc,true));
         }
         else rDest = rSrc;
@@ -55,5 +60,18 @@ public class AutoAdjustExpression extends UnaryExpression {
         } else {
             getBlock().add(new ArithmeticInstruction("sub",rSrc ,rSrc ,1 ,false));
         }
+
+        if ((childAction instanceof SymbolElement) && ((SymbolElement) childAction).element.getScope().equals(getGlobeScope())){
+            addInstruction(new AddBinInstruction("sw",rSrc ,globalVariable, 4 * getGlobeScope().indexOfMember(((SymbolElement) childAction).element)));
+        } //global
+
+        if (childAction instanceof StageExpression)
+            addInstruction(new AddBinInstruction("sw", rSrc, globalAddress));
+        //array
+
+        if (childAction instanceof DotElement)
+            addInstruction(new AddBinInstruction("sw", rSrc, globalAddress));
+        //class
+
     }
 }

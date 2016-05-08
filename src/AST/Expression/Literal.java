@@ -23,7 +23,11 @@ public class Literal extends ExpressionAction{
         return "CONST: " + properties.toString() + " " + _value;
     }
     public int length(){
-        return _value.length();
+        int escape = 0;
+        for (int i = 0;i < _value.length();i++)
+            if (_value.charAt(i) == '\\' && _value.charAt(i + 1) != '\\')
+                escape++;
+        return _value.length() - escape;
     }
 
     int value(){
@@ -42,7 +46,7 @@ public class Literal extends ExpressionAction{
     }
     public void Translate(){
         if (properties.accept("string")) {
-            addData(_value.length());
+            addData(length());
             _value = addData(_value);
         }
     }

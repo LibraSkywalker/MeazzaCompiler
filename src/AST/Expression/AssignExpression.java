@@ -8,6 +8,7 @@ import static AST.ASTControler.getGlobeScope;
 import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
 import static RegisterControler.RegisterName.globalAddress;
+import static RegisterControler.RegisterName.globalVariable;
 
 
 /**
@@ -39,7 +40,7 @@ public class AssignExpression extends BinaryExpression{
             getBlock().add(new RegBinInstruction("move", rDest, Src, true));
 
         if ((leftAction instanceof SymbolElement) && ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope())){
-            getBlock().add(new AddBinInstruction("sw", rDest, globalAddress));
+            addInstruction(new AddBinInstruction("sw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(((SymbolElement) leftAction).element)));
         } //global
 
         if (leftAction instanceof StageExpression)

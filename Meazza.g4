@@ -27,6 +27,8 @@ CHAR_DATA : [\'] (CCHAR | Translate) [\'];
 STRING_DATA: [\"] ( SCHAR | Translate)* [\"];
 
 
+Translate : [\\][/\\\'\"\?nr];
+
 fragment
 CCHAR : ~['\\\r\n];
 
@@ -42,8 +44,6 @@ ID_head: [_a-zA-Z];
 
 fragment
 ID_tail: [_a-zA-Z0-9];
-
-Translate : [\\][/\\\'\"\?nr];
 
 WS : [ \n\t\r]+ -> skip;
 

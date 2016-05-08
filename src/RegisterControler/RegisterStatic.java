@@ -54,6 +54,7 @@ public class RegisterStatic {
     public void load(VirtualReadWrite usage){
 
         for (Integer x : usage.reader){
+            //System.out.println("!! " + x);
             if (!used.contains(x)) used.add(x);
             if (StateOfVReg[x] == null){
                 StateOfVReg[x] = new Property();
@@ -82,7 +83,7 @@ public class RegisterStatic {
         for (Integer now : lastState.total) {
             if (!total.contains(now)) {
                 total.add(now);
-                System.out.println(StateOfVReg[now] + "@");
+                //System.out.println(StateOfVReg[now] + "@");
                 StateOfVReg[now] = new Property();
             }
             StateOfVReg[now].times += lastState.StateOfVReg[now].times;
@@ -106,19 +107,19 @@ public class RegisterStatic {
     }
 
     public void set(int x){
-        System.out.println("Register $" + x + " settled");
-        System.out.println("color change from " + ColorOfVReg[x] + " to " + currentColor);
+        //System.out.println("Register $" + x + " settled");
+        //System.out.println("color change from " + ColorOfVReg[x] + " to " + currentColor);
         ColorOfVReg[x] = currentColor.copy();
     }
 
     public void update(int x){
-        System.out.println("Register $" + x + " visited");
+        //System.out.println("Register $" + x + " visited");
 
         if (x < 32){
             StateOfVReg[x].property = local;
             return;
         }
-        System.out.println("color" + x +": " + ColorOfVReg[x] + " required: " + currentColor);
+        //System.out.println("color" + x +": " + ColorOfVReg[x] + " required: " + currentColor);
         if (ColorOfVReg[x].selfColor != currentColor.selfColor){
             StateOfVReg[x].property = SaveInAddress;
         } else {

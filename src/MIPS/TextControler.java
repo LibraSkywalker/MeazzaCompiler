@@ -41,7 +41,6 @@ public class TextControler {
 
     void visit(){
         addFunction("main");
-        addInstruction(new JumpInstruction("jal","_buffer_init"));
         addInstruction(new RegBinInstruction("li",a_0,4,false));
         addInstruction(new RegBinInstruction("li",v_0,sbrk,false));
         addInstruction(new SystemCall());
@@ -51,7 +50,7 @@ public class TextControler {
         addInstruction(new RegBinInstruction("move",globalVariable, v_0, true)); // assemble global varible area
 
         for (ActionNodeBase now = popAction(); now != null; now = popAction()){
-            System.err.println(now + "***");
+            //System.err.println(now + "***");
             now.Translate();
         }
 

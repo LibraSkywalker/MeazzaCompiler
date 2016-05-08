@@ -168,6 +168,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
         }
         else if (ctx.ID() != null){
             if (ctx.fop == null) {
+                //System.err.println(ctx.ID().getText() + " " + getVar(ctx.ID().getText()));
                 SymbolElement nowAction = new SymbolElement(getVar(ctx.ID().getText()));
                 return nowAction.check() ? nowAction : null;
             }
@@ -175,9 +176,14 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
                 SymbolElement nowAction = new SymbolElement(getFunc(ctx.ID().getText()));
                 if (!nowAction.check()) return null;
                 if (!nowAction.checkParameter(ctx.expression().size())) return null;
-                for (int i = 0; i < ctx.expression().size(); i++)
-                    if (!nowAction.checkParameter(visitExpression(ctx.expression(i)),i))
+                if (getGlobeScope().getFunc(ctx.ID().getText()) == null)
+                    endScope();
+                for (int i = 0; i < ctx.expression().size(); i++) {
+                    if (!nowAction.checkParameter(visitExpression(ctx.expression(i)), i)){
+                        tagPos(ctx);
                         return null;
+                    }
+                }
                 return nowAction.check() ? nowAction : null;
             }
         }
@@ -190,7 +196,6 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             if (x.boolData != null) nowAction.setProperties("bool");
             if (x.nullData != null) nowAction.setProperties("@null");
             nowAction.getValue(ctx.const_expression().getText());
-            System.err.println(nowAction);
             return nowAction;
         }
         else if (ctx.oop != null){
@@ -230,7 +235,6 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
     @Override
     public Boolean visitStatement(MeazzaParser.StatementContext ctx) {
         if (ctx.compound_statement() != null){
-            System.out.println(ctx.compound_statement().getText());
             Scope nowScope = beginScope();
             addAction(nowScope);
             visitScope(nowScope);

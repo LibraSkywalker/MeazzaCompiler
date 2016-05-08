@@ -65,11 +65,13 @@ public class StageExpression extends ExpressionAction{
                     addInstruction(new AddBinInstruction("la",globalAddress,rSrc1,Src2));
             }
             else {
-                addInstruction(new ArithmeticInstruction("mul", Src2, Src2, 4, false));
-                addInstruction(new ArithmeticInstruction("add",rSrc1,rSrc1,Src2,true));
-                addInstruction(new AddBinInstruction("lw",rDest, rSrc1));
+                int rSrc2 = newVReg();
+                int rSrc3 = newVReg();
+                addInstruction(new ArithmeticInstruction("mul", rSrc2, Src2, 4, false));
+                addInstruction(new ArithmeticInstruction("add",rSrc3,rSrc1,rSrc2,true));
+                addInstruction(new AddBinInstruction("lw",rDest, rSrc3));
                 if (stageValue.indexOf(now) == stageValue.size() - 1)
-                    addInstruction(new AddBinInstruction("la",globalAddress,rSrc1));
+                    addInstruction(new AddBinInstruction("la",globalAddress,rSrc3));
             }
         }
     }

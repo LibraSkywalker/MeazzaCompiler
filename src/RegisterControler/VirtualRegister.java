@@ -7,7 +7,7 @@ import static MIPS.TextControler.GlobalState;
  */
 public class VirtualRegister {
     static int VReg = 32;
-    static int[][] tempRegister = {{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},{24,0},{25,0}};
+    static int[][] tempRegister = {{2,0},{24,0},{25,0},{4,0},{5,0},{6,0},{7,0},{8,0}};
     static int [] map = new int[500000];
     public static int newVReg(){
         return VReg++;
@@ -20,7 +20,7 @@ public class VirtualRegister {
             return tempRegister[now][0];
         }
         else {
-            for (int i = 1; i < 9; i++)
+            for (int i = 1; i < 8; i++)
                 if (tempRegister[i][1] == 0){
                     map[virtualRegister] = i;
                     tempRegister[i][1] = GlobalState.times(virtualRegister) - 1;

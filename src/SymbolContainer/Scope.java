@@ -31,6 +31,10 @@ public class Scope extends ActionNodeBase{
         return prevScope.print() + this.toString() + " ";
     }
 
+    public Scope getLastScope() {
+        return lastScope;
+    }
+
     public Scope(){
         nowActionIndex = 0;
         prevScope = lastScope = null;
@@ -84,11 +88,14 @@ public class Scope extends ActionNodeBase{
     }
 
     public Symbol get(String now){
+        if (now.equals("rt0")){
+            now = now;
+        }
         Scope nowScope = this;
         while (nowScope != null && nowScope.dict.get(now) == null) {
-           // System.out.println(nowScope + now);
             nowScope = nowScope.prevScope;
         }
+
         return (nowScope == null) ? null : nowScope.dict.get(now);
     }
 
@@ -151,6 +158,10 @@ public class Scope extends ActionNodeBase{
         type = BRANCH;
     }
 
+    public void setLastScope(Scope lastScope) {
+        this.lastScope = lastScope;
+    }
+
     public Scope returnTo(){
         this.print();
         Scope nowScope = this;
@@ -196,6 +207,9 @@ public class Scope extends ActionNodeBase{
 
 
     public boolean put(String now,Symbol nowSymbol){
+        if (now.equals("rt0")){
+            now = now;
+        }
         Symbol prevSymbol = get(now);
         if (prevSymbol == null || !prevSymbol.primitive && dict.get(now) == null){
             dict.put(now,nowSymbol);

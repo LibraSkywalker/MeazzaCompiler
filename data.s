@@ -2,19 +2,15 @@
 
 _end: .asciiz "\n"
 	.align 2
-_buffer: .word 0
-	length0: 	.word 	0
-	String0: 	.asciiz 	""
+_buffer: .space 256
+	.align 2
+	length0: 	.word 	1
+	String0: 	.asciiz 	" "
+	length1: 	.word 	1
+	String1: 	.asciiz 	"\n"
 
 
 .text
-
-_buffer_init:
-	li $a0, 256
-	li $v0, 9
-	syscall
-	sw $v0, _buffer
-	jr $ra
 
 # copy the string in $a0 to buffer in $a1, with putting '\0' in the end of the buffer
 ###### Checked ######
@@ -33,14 +29,16 @@ _string_copy:
 
 # string arg in $a0
 ###### Checked ######
-func_print:
+# Change(5/4): you don't need to preserve reg before calling it
+func__print:
 	li $v0, 4
 	syscall
 	jr $ra
 
 # string arg in $a0
 ###### Checked ######
-func_println:
+# Change(5/4): you don't need to preserve reg before calling it
+func__println:
 	li $v0, 4
 	syscall
 	la $a0, _end
@@ -65,13 +63,12 @@ _count_string_length:
 
 # non arg, string in $v0
 ###### Checked ######
-# used $a0, $a1, $v0, $t0
-func_getString:
+# used $a0, $a1, $t0, $v0, (used in _count_string_length) $v1
+func__getString:
 	subu $sp, $sp, 4
 	sw $ra, 0($sp)
 
-
-	lw $a0, _buffer
+	la $a0, _buffer
 	li $a1, 255
 	li $v0, 8
 	syscall
@@ -84,7 +81,7 @@ func_getString:
 	syscall
 	sw $a1, 0($v0)
 	add $v0, $v0, 4
-	lw $a0, _buffer
+	la $a0, _buffer
 	move $a1, $v0
 	move $t0, $v0
 	jal _string_copy
@@ -96,7 +93,8 @@ func_getString:
 
 # non arg, int in $v0
 ###### Checked ######
-func_getInt:
+# Change(5/4): you don't need to preserve reg before calling it
+func__getInt:
 	li $v0, 5
 	syscall
 	jr $ra
@@ -104,10 +102,17 @@ func_getInt:
 # int arg in $a0
 ###### Checked ######
 # Bug fixed(5/2): when the arg is a neg number
-# used $a0, $t0, $t1, $t2, $t3, $t5, $v0, $v1
-func_toString:
-	# subu $sp, $sp, 4
-	# sw $ra, 0($sp)
+# Change(5/4): use less regs, you don't need to preserve reg before calling it
+# used $v0, $v1
+func__toString:
+	subu $sp, $sp, 24
+	sw $a0, 0($sp)
+	sw $t0, 4($sp)
+	sw $t1, 8($sp)
+	sw $t2, 12($sp)
+	sw $t3, 16($sp)
+	sw $t5, 20($sp)
+
 	# first count the #digits
 	li $t0, 0			# $t0 = 0 if the number is a negnum
 	bgez $a0, _skip_set_less_than_zero
@@ -162,6 +167,15 @@ func_toString:
 	_skip_place_neg:
 	# lw $ra, 0($sp)
 	# addu $sp, $sp, 4
+
+	lw $a0, 0($sp)
+	lw $t0, 4($sp)
+	lw $t1, 8($sp)
+	lw $t2, 12($sp)
+	lw $t3, 16($sp)
+	lw $t5, 20($sp)
+
+	addu $sp, $sp, 24
 	jr $ra
 
 	_set_zero:
@@ -173,59 +187,80 @@ func_toString:
 	add $v0, $v0, 4
 	li $a0, 48
 	sb $a0, 0($v0)
+
+	lw $a0, 0($sp)
+	lw $t0, 4($sp)
+	lw $t1, 8($sp)
+	lw $t2, 12($sp)
+	lw $t3, 16($sp)
+	lw $t5, 20($sp)
+
+	addu $sp, $sp, 24
 	jr $ra
 
 
-# string arg in $a0
+# string arg in $v0
 # the zero in the end of the string will not be counted
 ###### Checked ######
-func_string.length:
-	lw $v0, -4($a0)
+# you don't need to preserve reg before calling it
+func__string.length:
+	lw $v0, -4($v0)
 	jr $ra
 
 # string arg in $a0, left in $a1, right in $a2
 ###### Checked ######
-# used $a0, $a1, $t0, $t1, $t2, $t3, $t4, $v0,
-func_string.substring:
+# used $a0, $a1, $t0, $t1, $t2, $v1, $v0
+func__string.substring:
 	subu $sp, $sp, 4
 	sw $ra, 0($sp)
 
-	move $t0, $a0
-
-	sub $t1, $a2, $a1
+	move $t0, $v0
+	move $t3, $a0
+	sub $t1, $a1, $a0
 	add $t1, $t1, 1		# $t1 is the length of the substring
 	add $a0, $t1, 5
 	li $v0, 9
 	syscall
 	sw $t1, 0($v0)
-	add $v0, $v0, 4
+	add $v1, $v0, 4
 
-	add $a0, $t0, $a1
-	add $t2, $t0, $a2
-	lb $t3, 1($t2)		# store the ori_begin + right + 1 char in $t3
+	add $a0, $t0, $t3
+	add $t2, $t0, $a1
+	lb $t1, 1($t2)		# store the ori_begin + right + 1 char in $t1
 	sb $zero, 1($t2)	# change it to 0 for the convenience of copying
-	move $a1, $v0
-	move $t4, $v0
+	move $a1, $v1
 	jal _string_copy
-	move $v0, $t4
-	sb $t3, 1($t2)
+	move $v0, $v1
+	sb $t1, 1($t2)
 
 	lw $ra, 0($sp)
 	addu $sp, $sp, 4
 	jr $ra
-
-# string arg in $a0
+# string arg in
 ###### Checked ######
-# used $t0, $t1, $t2, $v0
-func_string.parseInt:
+# 16/5/4 Fixed a serious bug: can not parse negtive number
+# used $v0, $v1
+func__string.parseInt:
+	move $a0, $v0
 	li $v0, 0
+
+	lb $t1, 0($a0)
+	li $t2, 45
+	bne $t1, $t2, _skip_parse_neg
+	li $t1, 1			#if there is a '-' sign, $t1 = 1
+	add $a0, $a0, 1
+	j _skip_set_t1_zero
+
+	_skip_parse_neg:
+	li $t1, 0
+	_skip_set_t1_zero:
 	move $t0, $a0
 	li $t2, 1
 
 	_count_number_pos:
-	lb $t1, 0($t0)
-	bgt $t1, 57, _begin_parse_int
-	blt $t1, 48, _begin_parse_int
+	lb $v1, 0($t0)
+	bgt $v1, 57, _begin_parse_int
+	blt $v1, 48, _begin_parse_int
 	add $t0, $t0, 1
 	j _count_number_pos
 
@@ -234,80 +269,102 @@ func_string.parseInt:
 
 	_parsing_int:
 	blt $t0, $a0, _finish_parse_int
-	lb $t1, 0($t0)
-	sub $t1, $t1, 48
-	mul $t1, $t1, $t2
-	add $v0, $v0, $t1
+	lb $v1, 0($t0)
+	sub $v1, $v1, 48
+	mul $v1, $v1, $t2
+	add $v0, $v0, $v1
 	mul $t2, $t2, 10
 	sub $t0, $t0, 1
 	j _parsing_int
 
 	_finish_parse_int:
+	beqz $t1, _skip_neg
+	neg $v0, $v0
+	_skip_neg:
+
 	jr $ra
 
 # string arg in $a0, pos in $a1
 ###### Checked ######
-# used $a0, $v0
-func_string.ord:
-	add $a0, $a0, $a1
-	lb $v0, 0($a0)
+# used $v0, $v1
+func__string.ord:
+	add $v0, $v0, $a0
+	lb $v0, 0($v0)
 	jr $ra
 
 # array arg in $a0
 # used $v0
 func__array.size:
-	lw $v0, -4($a0)
+	lw $v0, -4($v0)
 	jr $ra
 
 # string1 in $a0, string2 in $a1
 ###### Checked ######
-# used $a0, $a1, $t0, $t1, $t2, $t3, $t4, $t5, $v0
-func_stringConcatenate:
+# change(16/5/4): use less regs, you don't need to preserve reg before calling it
+# used $v0, $v1
+func__stringConcatenate:
 
-	subu $sp, $sp, 4
+	subu $sp, $sp, 24
 	sw $ra, 0($sp)
-
-	move $t2, $a0
-	move $t3, $a1
+	sw $a0, 4($sp)
+	sw $a1, 8($sp)
+	sw $t0, 12($sp)
+	sw $t1, 16($sp)
+	sw $t2, 20($sp)
 
 	lw $t0, -4($a0)		# $t0 is the length of lhs
 	lw $t1, -4($a1)		# $t1 is the length of rhs
-	add $t5, $t0, $t1
-	add $a0, $t5, 5
+	add $t2, $t0, $t1
+
+	move $t1, $a0
+
+	add $a0, $t2, 5
 	li $v0, 9
 	syscall
-	sw $t5, 0($v0)
-	add $v0, $v0, 4
-	move $t4, $v0
 
-	move $a0, $t2
-	move $a1, $t4
+	sw $t2, 0($v0)
+	move $t2, $a1
+
+	add $v0, $v0, 4
+	move $v1, $v0
+
+	move $a0, $t1
+	move $a1, $v1
 	jal _string_copy
 
-	move $a0, $t3
-	add $a1, $t4, $t0
+	move $a0, $t2
+	add $a1, $v1, $t0
 	# add $a1, $a1, 1
 	jal _string_copy
 
-	move $v0, $t4
+	move $v0, $v1
 	lw $ra, 0($sp)
-	addu $sp, $sp, 4
+	lw $a0, 4($sp)
+	lw $a1, 8($sp)
+	lw $t0, 12($sp)
+	lw $t1, 16($sp)
+	lw $t2, 20($sp)
+	addu $sp, $sp, 24
 	jr $ra
 
 # string1 in $a0, string2 in $a1
 ###### Checked ######
-# used $a0, $a1, $t0, $t1, $v0
-func_stringIsEqual:
+# change(16/5/4): use less regs, you don't need to preserve reg before calling it
+# used $a0, $a1, $v0, $v1
+func__stringIsEqual:
+	# subu $sp, $sp, 8
+	# sw $a0, 0($sp)
+	# sw $a1, 4($sp)
 
-	lw $t0, -4($a0)
-	lw $t1, -4($a1)
-	bne $t0, $t1, _not_equal
+	lw $v0, -4($a0)
+	lw $v1, -4($a1)
+	bne $v0, $v1, _not_equal
 
 	_continue_compare_equal:
-	lb $t0, 0($a0)
-	lb $t1, 0($a1)
-	beqz $t0, _equal
-	bne $t0, $t1, _not_equal
+	lb $v0, 0($a0)
+	lb $v1, 0($a1)
+	beqz $v0, _equal
+	bne $v0, $v1, _not_equal
 	add $a0, $a0, 1
 	add $a1, $a1, 1
 	j _continue_compare_equal
@@ -320,20 +377,27 @@ func_stringIsEqual:
 	li $v0, 1
 
 	_compare_final:
+	# lw $a0, 0($sp)
+	# lw $a1, 4($sp)
+	# addu $sp, $sp, 8
 	jr $ra
 
 
 # string1 in $a0, string2 in $a1
 ###### Checked ######
-# used $a0, $a1, $t0, $t1, $v0
-func_stringLess:
+# change(16/5/4): use less regs, you don't need to preserve reg before calling it
+# used $a0, $a1, $v0, $v1
+func__stringLess:
+	# subu $sp, $sp, 8
+	# sw $a0, 0($sp)
+	# sw $a1, 4($sp)
 
 	_begin_compare_less:
-	lb $t0, 0($a0)
-	lb $t1, 0($a1)
-	blt $t0, $t1, _less_correct
-	bgt $t0, $t1, _less_false
-	beqz $t0, _less_false
+	lb $v0, 0($a0)
+	lb $v1, 0($a1)
+	blt $v0, $v1, _less_correct
+	bgt $v0, $v1, _less_false
+	beqz $v0, _less_false
 	add $a0, $a0, 1
 	add $a1, $a1, 1
 	j _begin_compare_less
@@ -346,188 +410,437 @@ func_stringLess:
 	li $v0, 0
 
 	_less_compare_final:
+
+	# lw $a0, 0($sp)
+	# lw $a1, 4($sp)
+	# addu $sp, $sp, 8
+	jr $ra
+
+# string1 in $a0, string2 in $a1
+# used $a0, $a1, $v0, $v1
+func__stringLarge:
+	subu $sp, $sp, 4
+	sw $ra, 0($sp)
+
+	jal func__stringLess
+
+	xor $v0, $v0, 1
+
+	lw $ra, 0($sp)
+	addu $sp, $sp, 4
+	jr $ra
+
+# string1 in $a0, string2 in $a1
+# used $a0, $a1, $v0, $v1
+func__stringLeq:
+	subu $sp, $sp, 12
+	sw $ra, 0($sp)
+	sw $a0, 4($sp)
+	sw $a1, 8($sp)
+
+	jal func__stringLess
+
+	bnez $v0, _skip_compare_equal_in_Leq
+
+	lw $a0, 4($sp)
+	lw $a1, 8($sp)
+	jal func__stringIsEqual
+
+	_skip_compare_equal_in_Leq:
+	lw $ra, 0($sp)
+	addu $sp, $sp, 12
+	jr $ra
+
+# string1 in $a0, string2 in $a1
+# used $a0, $a1, $v0, $v1
+func__stringGeq:
+	subu $sp, $sp, 12
+	sw $ra, 0($sp)
+	sw $a0, 4($sp)
+	sw $a1, 8($sp)
+
+	jal func__stringLess
+
+	beqz $v0, _skip_compare_equal_in_Geq
+
+	lw $a0, 4($sp)
+	lw $a1, 8($sp)
+	jal func__stringIsEqual
+	xor $v0, $v0, 1
+
+	_skip_compare_equal_in_Geq:
+	xor $v0, $v0, 1
+	lw $ra, 0($sp)
+	addu $sp, $sp, 12
+	jr $ra
+
+# string1 in $a0, string2 in $a1
+# used $a0, $a1, $v0, $v1
+func__stringNeq:
+	subu $sp, $sp, 4
+	sw $ra, 0($sp)
+
+	jal func__stringIsEqual
+
+	xor $v0, $v0, 1
+
+	lw $ra, 0($sp)
+	addu $sp, $sp, 4
 	jr $ra
 
 main:
-	jal _buffer_init
 	li $4 4
 	li $2 9
 	syscall
-	li $4 4
+	li $4 24
 	li $2 9
 	syscall
 	move $23 $2
-	li $4 4
-	li $2 9
-	syscall
-	li $3 4
-	sw $3 0($2)
-	sll $4 $3 2
-	li $2 9
-	syscall
-	move $3 $2
-	lw $4 0($23)
-	la $30 0($23)
-	move $4 $3
-	sw $4 0($30)
 	jal main_0
 	li $2 10
 	syscall
 
 main_0:
-	move $s2 $31
+	move $s3 $31
+	jal func__getInt
+	lw $24 0($23)
+	la $30 0($23)
+	move $24 $2
+	sw $24 0($23)
+	jal func__getInt
+	lw $24 4($23)
+	la $30 4($23)
+	move $24 $2
+	sw $24 4($23)
+	jal func__getString
+	lw $24 8($23)
+	la $30 8($23)
+	move $24 $2
+	sw $24 8($23)
+	lw $t1 0($23)
+	lw $t2 4($23)
+	add $24 $t1 $t2
+	add $24 $24 5
 	li $4 4
 	li $2 9
 	syscall
-	li $3 4
-	sw $3 0($2)
-	sll $4 $3 2
+	sw $24 0($2)
+	sll $4 $24 2
 	li $2 9
 	syscall
-	move $3 $2
-	move $s0 $3
-	lw $3 0($23)
-	lw $4 0($s0)
-	la $30 0($s0)
-	move $4 $3
-	sw $4 0($30)
-	lw $3 0($23)
-	lw $4 4($s0)
-	la $30 4($s0)
-	move $4 $3
-	sw $4 0($30)
-	lw $3 0($23)
-	lw $4 8($s0)
-	la $30 8($s0)
-	move $4 $3
-	sw $4 0($30)
-	lw $3 0($23)
-	lw $4 12($s0)
-	la $30 12($s0)
-	move $4 $3
-	sw $4 0($30)
-	move $4 $s0
-	jal func__array.size
-	move $3 $2
-	move $4 $3
-	jal func_toString
-	move $4 $2
-	jal func_println
-	li $s1 0
-	lw $3 0($s0)
-	la $30 0($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	bge $s1 $3 main_1
+	move $24 $2
+	lw $25 12($23)
+	la $30 12($23)
+	move $25 $24
+	sw $25 12($23)
+	lw $t1 0($23)
+	lw $t2 4($23)
+	add $24 $t1 $t2
+	add $24 $24 5
+	li $4 4
+	li $2 9
+	syscall
+	sw $24 0($2)
+	sll $4 $24 2
+	li $2 9
+	syscall
+	move $24 $2
+	lw $25 16($23)
+	la $30 16($23)
+	move $25 $24
+	sw $25 16($23)
+	lw $t1 0($23)
+	lw $t2 4($23)
+	add $24 $t1 $t2
+	add $24 $24 5
+	li $4 4
+	li $2 9
+	syscall
+	sw $24 0($2)
+	sll $4 $24 2
+	li $2 9
+	syscall
+	move $24 $2
+	lw $25 20($23)
+	la $30 20($23)
+	move $25 $24
+	sw $25 20($23)
+	li $s0 1
+	lw $t1 0($23)
+	bgt $s0 $t1 main_1
 
 main_0_loop:
-	jal func_getInt
-	lw $3 0($s0)
-	mul $s1 $s1 4
-	add $3 $3 $s1
-	lw $4 0($3)
-	la $30 0($3)
+	jal func__getInt
+	lw $24 20($23)
+	mul $25 $s0 4
+	add $25 $24 $25
+	lw $4 0($25)
+	la $30 0($25)
 	move $4 $2
 	sw $4 0($30)
+	lw $25 12($23)
+	mul $4 $s0 4
+	add $4 $25 $4
+	lw $5 0($4)
+	la $30 0($4)
+	li $5 0
+	sw $5 0($30)
+	lw $4 16($23)
+	mul $5 $s0 4
+	add $5 $4 $5
+	lw $6 0($5)
+	la $30 0($5)
+	li $6 0
+	sw $6 0($30)
 
 main_0_loopTail:
-	add $s1 $s1 1
-	lw $3 0($s0)
-	la $30 0($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	blt $s1 $3 main_0_loop
+	add $s0 $s0 1
+	lw $t1 0($23)
+	ble $s0 $t1 main_0_loop
 
 main_1:
-	li $s1 0
-	lw $3 4($s0)
-	la $30 4($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	bge $s1 $3 main_2
+	li $s0 1
+	lw $t2 4($23)
+	bgt $s0 $t2 main_2
 
 main_1_loop:
-	lw $3 4($s0)
-	mul $s1 $s1 4
-	add $3 $3 $s1
-	lw $4 0($3)
-	la $30 0($3)
-	move $4 $4
-	jal func_toString
-	move $4 $2
-	jal func_print
+	lw $t3 8($23)
+	sub $5 $s0 1
+	move $4 $5
+	move $2 $t3
+	jal func__string.ord
+	move $5 $2
+	lw $24 20($23)
+	lw $t1 0($23)
+	add $6 $s0 $t1
+	mul $6 $6 4
+	add $6 $24 $6
+	lw $7 0($6)
+	la $30 0($6)
+	move $7 $5
+	sw $7 0($30)
+	lw $25 12($23)
+	lw $t1 0($23)
+	add $5 $s0 $t1
+	mul $5 $5 4
+	add $5 $25 $5
+	lw $6 0($5)
+	la $30 0($5)
+	li $6 0
+	sw $6 0($30)
+	lw $4 16($23)
+	lw $t1 0($23)
+	add $5 $s0 $t1
+	mul $5 $5 4
+	add $5 $4 $5
+	lw $6 0($5)
+	la $30 0($5)
+	li $6 0
+	sw $6 0($30)
 
 main_1_loopTail:
-	add $s1 $s1 1
-	lw $3 4($s0)
-	la $30 4($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	blt $s1 $3 main_1_loop
+	add $s0 $s0 1
+	lw $t2 4($23)
+	ble $s0 $t2 main_1_loop
 
 main_2:
-	la $4 String0
-	jal func_println
-	li $s1 0
-	lw $3 8($s0)
-	la $30 8($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	bge $s1 $3 main_3
+	li $s1 1
+	lw $t1 0($23)
+	add $5 $t1 1
+	move $s2 $5
+	li $s0 2
+	lw $t1 0($23)
+	bgt $s0 $t1 main_3
 
 main_2_loop:
-	lw $3 8($s0)
-	mul $s1 $s1 4
-	add $3 $3 $s1
-	lw $4 0($3)
-	la $30 0($3)
-	li $4 0
-	sw $4 0($30)
+	move $4 $s1
+	move $5 $s0
+	jal func__merge
+	move $s1 $2
 
 main_2_loopTail:
-	add $s1 $s1 1
-	lw $3 8($s0)
-	la $30 8($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	blt $s1 $3 main_2_loop
+	add $s0 $s0 1
+	lw $t1 0($23)
+	ble $s0 $t1 main_2_loop
 
 main_3:
-	li $s1 0
-	lw $3 12($s0)
-	la $30 12($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	bge $s1 $3 main_4
+	lw $t1 0($23)
+	add $5 $t1 2
+	move $s0 $5
+	lw $t1 0($23)
+	lw $t2 4($23)
+	add $5 $t1 $t2
+	bgt $s0 $5 main_4
 
 main_3_loop:
-	lw $3 12($s0)
-	mul $s1 $s1 4
-	add $3 $3 $s1
-	lw $4 0($3)
-	la $30 0($3)
-	move $4 $4
-	jal func_toString
-	move $4 $2
-	jal func_print
+	move $4 $s2
+	move $5 $s0
+	jal func__merge
+	move $s2 $2
 
 main_3_loopTail:
-	add $s1 $s1 1
-	lw $3 12($s0)
-	la $30 12($s0)
-	move $4 $3
-	jal func__array.size
-	move $3 $2
-	blt $s1 $3 main_3_loop
+	add $s0 $s0 1
+	lw $t1 0($23)
+	lw $t2 4($23)
+	add $5 $t1 $t2
+	ble $s0 $5 main_3_loop
 
 main_4:
-	move $31 $s2
+	lw $24 20($23)
+	mul $5 $s1 4
+	add $5 $24 $5
+	lw $6 0($5)
+	la $30 0($5)
+	move $4 $6
+	jal func__toString
+	move $4 $2
+	jal func__print
+	la $4 String0
+	jal func__print
+	lw $t3 8($23)
+	lw $t1 0($23)
+	sub $5 $s2 $t1
+	sub $5 $5 1
+	move $4 $5
+	lw $t1 0($23)
+	sub $5 $s2 $t1
+	sub $5 $5 1
+	move $5 $5
+	move $2 $t3
+	jal func__string.substring
+	move $5 $2
+	move $4 $5
+	jal func__print
+	la $4 String1
+	jal func__print
+	move $4 $s1
+	move $5 $s2
+	jal func__merge
+	move $4 $2
+	jal func__toString
+	move $4 $2
+	jal func__println
+	li $2 0
+	move $31 $s3
+	jr $ra
+	move $31 $s3
+	jr $ra
+
+func__merge:
+	sub $29 $29 8
+	move $31 $31
+	sw $31 4($29)
+	move $31 $4
+	sw $31 0($29)
+	move $t1 $5
+	li $5 0
+	lw $2 0($29)
+	beq $5 $2 func__merge_branch_then
+
+func__merge_branch_else:
+	b func__merge_0
+
+func__merge_branch_then:
+	move $2 $t1
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__merge_0:
+	li $5 0
+	beq $5 $t1 func__merge_0_branch_then
+
+func__merge_0_branch_else:
+	b func__merge_1
+
+func__merge_0_branch_then:
+	lw $3 0($29)
+	move $2 $3
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__merge_1:
+	lw $24 20($23)
+	lw $3 0($29)
+	mul $5 $3 4
+	add $5 $24 $5
+	lw $6 0($5)
+	la $30 0($5)
+	lw $24 20($23)
+	mul $5 $t1 4
+	add $24 $24 $5
+	lw $5 0($24)
+	la $30 0($24)
+	blt $6 $5 func__merge_1_branch_then
+
+func__merge_1_branch_else:
+	b func__merge_2
+
+func__merge_1_branch_then:
+	lw $3 0($29)
+	move $24 $3
+	move $31 $t1
+	sw $31 0($29)
+	move $t1 $24
+
+func__merge_2:
+	lw $4 16($23)
+	lw $3 0($29)
+	mul $24 $3 4
+	add $24 $4 $24
+	lw $5 0($24)
+	la $30 0($24)
+	move $4 $5
+	move $5 $t1
+	jal func__merge
+	lw $4 16($23)
+	lw $3 0($29)
+	mul $24 $3 4
+	add $24 $4 $24
+	lw $5 0($24)
+	la $30 0($24)
+	move $5 $2
+	sw $5 0($30)
+	lw $25 12($23)
+	lw $3 0($29)
+	mul $24 $3 4
+	add $24 $25 $24
+	lw $5 0($24)
+	la $30 0($24)
+	move $24 $5
+	lw $4 16($23)
+	lw $3 0($29)
+	mul $5 $3 4
+	add $5 $4 $5
+	lw $6 0($5)
+	la $30 0($5)
+	lw $25 12($23)
+	lw $3 0($29)
+	mul $5 $3 4
+	add $25 $25 $5
+	lw $5 0($25)
+	la $30 0($25)
+	move $5 $6
+	sw $5 0($30)
+	lw $4 16($23)
+	lw $3 0($29)
+	mul $25 $3 4
+	add $25 $4 $25
+	lw $4 0($25)
+	la $30 0($25)
+	move $4 $24
+	sw $4 0($30)
+	lw $3 0($29)
+	move $2 $3
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
 	jr $ra
 
