@@ -15,7 +15,7 @@ public abstract class ExpressionAction extends ActionNodeBase {
     }
     
     public int src(){
-        return isLiteral() ? ((Literal)this).value() : this.rDest;
+        return this instanceof Literal ? ((Literal)this).value() : this.rDest;
     }
     
     

@@ -24,6 +24,9 @@ public class Properties {
         return dimension >= 0 ;
     }
 
+    public String toString(){
+        return type() + " " + dimension + ":";
+    }
     public int getDimension(){
         return dimension;
     }

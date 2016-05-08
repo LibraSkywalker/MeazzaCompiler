@@ -7,7 +7,7 @@ import static MIPS.TextControler.GlobalState;
  */
 public class VirtualRegister {
     static int VReg = 32;
-    static int[][] tempRegister = {{2,0},{24,0},{25,0},{4,0},{5,0},{6,0},{7,0},{8,0}};
+    static int[][] tempRegister = {{0,0},{24,0},{25,0},{7,0},{8,0},{5,0},{6,0},{4,0}};
     static int [] map = new int[500000];
     public static int newVReg(){
         return VReg++;

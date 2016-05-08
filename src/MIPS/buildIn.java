@@ -8,7 +8,8 @@ public class buildIn {
             "_end: .asciiz \"\\n\"\n" +
             "\t.align 2\n" +
             "_buffer: .space 256\n" +
-            "\t.align 2\n";
+            "\t.align 2\n" +
+            "VReg: .space 3600\n";
 
     static String buildIn_text = "# copy the string in $a0 to buffer in $a1, with putting '\\0' in the end of the buffer\n" +
             "###### Checked ######\n" +

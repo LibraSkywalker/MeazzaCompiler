@@ -47,7 +47,9 @@ public class DotElement extends BinaryExpression{
     }
 
     public boolean check(){
-        if (!getCurrentScope().equals(leftAction.getProperties().type().classMembers))
+        //System.err.println(leftAction + " " + leftAction.getProperties().type().classMembers);
+        if (!getCurrentScope().equals(leftAction.getProperties().type().classMembers) &&
+                leftAction.properties.getDimension() == 0)
             visitScope(leftAction.getProperties().type().classMembers);
         if (leftAction == null ||
             rightAction == null ||

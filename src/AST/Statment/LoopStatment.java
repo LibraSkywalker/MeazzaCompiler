@@ -39,22 +39,26 @@ public class LoopStatment extends SpecialStatment {
         getCurrentScope().nextblock = block4;
 
         visitBlock(block1);
-        if (control != null) control.Translate();
+        if (control != null) {
+            control.Translate();
+            int rSrc1 = control.src();
+            if (control.isLiteral()) rSrc1 = ((Literal) control).Reg();
+            addInstruction(new BranchInstruction("beq",rSrc1,0,block4.getLabel(),false)); //block 1 -> block2 or block4
 
-        int rSrc1 = control.src(),rSrc2;
-        if (control.isLiteral()) rSrc1 = ((Literal) control).Reg();
-        addInstruction(new BranchInstruction("beq",rSrc1,0,block4.getLabel(),false)); //block 1 -> block2 or block4
+        }
 
         visitBlock(block2);
         field.Translate();  // block2 -> block3
 
         visitBlock(block3);
         if (looper != null) looper.Translate();
-        if (control != null) control.Translate();
-
-        rSrc2 = control.src();
-        if (control.isLiteral()) rSrc2 = ((Literal) control).Reg();
-        addInstruction(new BranchInstruction("bne",rSrc2,0,block2.getLabel(),false)); // block3 -> block2 or block4
+        if (control != null){
+            int rSrc2;
+            control.Translate();
+            rSrc2 = control.src();
+            if (control.isLiteral()) rSrc2 = ((Literal) control).Reg();
+            addInstruction(new BranchInstruction("bne",rSrc2,0,block2.getLabel(),false)); // block3 -> block2 or block4
+        }
 
         visitBlock(block4);
     }

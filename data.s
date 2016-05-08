@@ -4,10 +4,7 @@ _end: .asciiz "\n"
 	.align 2
 _buffer: .space 256
 	.align 2
-	length0: 	.word 	1
-	String0: 	.asciiz 	" "
-	length1: 	.word 	1
-	String1: 	.asciiz 	"\n"
+VReg: .space 3600
 
 
 .text
@@ -492,7 +489,7 @@ main:
 	li $4 4
 	li $2 9
 	syscall
-	li $4 24
+	li $4 0
 	li $2 9
 	syscall
 	move $23 $2
@@ -501,346 +498,87 @@ main:
 	syscall
 
 main_0:
-	move $s3 $31
-	jal func__getInt
-	lw $24 0($23)
-	la $30 0($23)
-	move $24 $2
-	sw $24 0($23)
-	jal func__getInt
-	lw $24 4($23)
-	la $30 4($23)
-	move $24 $2
-	sw $24 4($23)
-	jal func__getString
-	lw $24 8($23)
-	la $30 8($23)
-	move $24 $2
-	sw $24 8($23)
-	lw $t1 0($23)
-	lw $t2 4($23)
-	add $24 $t1 $t2
-	add $24 $24 5
-	li $4 4
+	move $s0 $31
+	li $4 60
 	li $2 9
 	syscall
-	sw $24 0($2)
-	sll $4 $24 2
-	li $2 9
-	syscall
-	move $24 $2
-	lw $25 12($23)
-	la $30 12($23)
-	move $25 $24
-	sw $25 12($23)
-	lw $t1 0($23)
-	lw $t2 4($23)
-	add $24 $t1 $t2
-	add $24 $24 5
-	li $4 4
-	li $2 9
-	syscall
-	sw $24 0($2)
-	sll $4 $24 2
-	li $2 9
-	syscall
-	move $24 $2
-	lw $25 16($23)
-	la $30 16($23)
-	move $25 $24
-	sw $25 16($23)
-	lw $t1 0($23)
-	lw $t2 4($23)
-	add $24 $t1 $t2
-	add $24 $24 5
-	li $4 4
-	li $2 9
-	syscall
-	sw $24 0($2)
-	sll $4 $24 2
-	li $2 9
-	syscall
-	move $24 $2
-	lw $25 20($23)
-	la $30 20($23)
-	move $25 $24
-	sw $25 20($23)
-	li $s0 1
-	lw $t1 0($23)
-	bgt $s0 $t1 main_1
-
-main_0_loop:
-	jal func__getInt
-	lw $24 20($23)
-	mul $25 $s0 4
-	add $25 $24 $25
-	lw $4 0($25)
-	la $30 0($25)
 	move $4 $2
-	sw $4 0($30)
-	lw $25 12($23)
-	mul $4 $s0 4
-	add $4 $25 $4
-	lw $5 0($4)
-	la $30 0($4)
-	li $5 0
-	sw $5 0($30)
-	lw $4 16($23)
-	mul $5 $s0 4
-	add $5 $4 $5
-	lw $6 0($5)
-	la $30 0($5)
-	li $6 0
-	sw $6 0($30)
-
-main_0_loopTail:
-	add $s0 $s0 1
-	lw $t1 0($23)
-	ble $s0 $t1 main_0_loop
-
-main_1:
-	li $s0 1
-	lw $t2 4($23)
-	bgt $s0 $t2 main_2
-
-main_1_loop:
-	lw $t3 8($23)
-	sub $5 $s0 1
-	move $4 $5
-	move $2 $t3
-	jal func__string.ord
-	move $5 $2
-	lw $24 20($23)
-	lw $t1 0($23)
-	add $6 $s0 $t1
-	mul $6 $6 4
-	add $6 $24 $6
-	lw $7 0($6)
-	la $30 0($6)
-	move $7 $5
-	sw $7 0($30)
-	lw $25 12($23)
-	lw $t1 0($23)
-	add $5 $s0 $t1
-	mul $5 $5 4
-	add $5 $25 $5
-	lw $6 0($5)
-	la $30 0($5)
-	li $6 0
-	sw $6 0($30)
-	lw $4 16($23)
-	lw $t1 0($23)
-	add $5 $s0 $t1
-	mul $5 $5 4
-	add $5 $4 $5
-	lw $6 0($5)
-	la $30 0($5)
-	li $6 0
-	sw $6 0($30)
-
-main_1_loopTail:
-	add $s0 $s0 1
-	lw $t2 4($23)
-	ble $s0 $t2 main_1_loop
-
-main_2:
-	li $s1 1
-	lw $t1 0($23)
-	add $5 $t1 1
-	move $s2 $5
-	li $s0 2
-	lw $t1 0($23)
-	bgt $s0 $t1 main_3
-
-main_2_loop:
-	move $4 $s1
-	move $5 $s0
-	jal func__merge
-	move $s1 $2
-
-main_2_loopTail:
-	add $s0 $s0 1
-	lw $t1 0($23)
-	ble $s0 $t1 main_2_loop
-
-main_3:
-	lw $t1 0($23)
-	add $5 $t1 2
-	move $s0 $5
-	lw $t1 0($23)
-	lw $t2 4($23)
-	add $5 $t1 $t2
-	bgt $s0 $5 main_4
-
-main_3_loop:
-	move $4 $s2
-	move $5 $s0
-	jal func__merge
-	move $s2 $2
-
-main_3_loopTail:
-	add $s0 $s0 1
-	lw $t1 0($23)
-	lw $t2 4($23)
-	add $5 $t1 $t2
-	ble $s0 $5 main_3_loop
-
-main_4:
-	lw $24 20($23)
-	mul $5 $s1 4
-	add $5 $24 $5
-	lw $6 0($5)
-	la $30 0($5)
-	move $4 $6
-	jal func__toString
-	move $4 $2
-	jal func__print
-	la $4 String0
-	jal func__print
-	lw $t3 8($23)
-	lw $t1 0($23)
-	sub $5 $s2 $t1
-	sub $5 $5 1
-	move $4 $5
-	lw $t1 0($23)
-	sub $5 $s2 $t1
-	sub $5 $5 1
-	move $5 $5
-	move $2 $t3
-	jal func__string.substring
-	move $5 $2
-	move $4 $5
-	jal func__print
-	la $4 String1
-	jal func__print
-	move $4 $s1
-	move $5 $s2
-	jal func__merge
+	li $24 1
+	sw $24 0($4)
+	li $24 2
+	sw $24 4($4)
+	li $24 3
+	sw $24 8($4)
+	li $24 4
+	sw $24 12($4)
+	li $24 5
+	sw $24 16($4)
+	li $24 6
+	sw $24 20($4)
+	li $24 7
+	sw $24 24($4)
+	li $24 8
+	sw $24 28($4)
+	li $24 9
+	sw $24 32($4)
+	li $24 10
+	sw $24 36($4)
+	li $24 11
+	sw $24 40($4)
+	li $24 12
+	sw $24 44($4)
+	li $24 13
+	sw $24 48($4)
+	li $24 14
+	sw $24 52($4)
+	li $24 15
+	sw $24 56($4)
+	jal func__a
 	move $4 $2
 	jal func__toString
 	move $4 $2
 	jal func__println
 	li $2 0
-	move $31 $s3
+	move $31 $s0
 	jr $ra
-	move $31 $s3
-	jr $ra
-
-func__merge:
-	sub $29 $29 8
-	move $31 $31
-	sw $31 4($29)
-	move $31 $4
-	sw $31 0($29)
-	move $t1 $5
-	li $5 0
-	lw $2 0($29)
-	beq $5 $2 func__merge_branch_then
-
-func__merge_branch_else:
-	b func__merge_0
-
-func__merge_branch_then:
-	move $2 $t1
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
+	move $31 $s0
 	jr $ra
 
-func__merge_0:
-	li $5 0
-	beq $5 $t1 func__merge_0_branch_then
-
-func__merge_0_branch_else:
-	b func__merge_1
-
-func__merge_0_branch_then:
-	lw $3 0($29)
-	move $2 $3
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
+func__a:
+	move $24 $31
+	move $25 $4
+	lw $7 0($25)
+	lw $8 4($25)
+	add $7 $7 $8
+	lw $8 8($25)
+	add $7 $7 $8
+	lw $8 12($25)
+	add $7 $7 $8
+	lw $8 16($25)
+	add $7 $7 $8
+	lw $8 20($25)
+	add $7 $7 $8
+	lw $8 24($25)
+	add $7 $7 $8
+	lw $8 28($25)
+	add $7 $7 $8
+	lw $8 32($25)
+	add $7 $7 $8
+	lw $8 36($25)
+	add $7 $7 $8
+	lw $8 40($25)
+	add $7 $7 $8
+	lw $8 44($25)
+	add $7 $7 $8
+	lw $8 48($25)
+	add $7 $7 $8
+	lw $8 52($25)
+	add $7 $7 $8
+	lw $25 56($25)
+	add $25 $7 $25
+	move $2 $25
+	move $31 $24
 	jr $ra
-
-func__merge_1:
-	lw $24 20($23)
-	lw $3 0($29)
-	mul $5 $3 4
-	add $5 $24 $5
-	lw $6 0($5)
-	la $30 0($5)
-	lw $24 20($23)
-	mul $5 $t1 4
-	add $24 $24 $5
-	lw $5 0($24)
-	la $30 0($24)
-	blt $6 $5 func__merge_1_branch_then
-
-func__merge_1_branch_else:
-	b func__merge_2
-
-func__merge_1_branch_then:
-	lw $3 0($29)
-	move $24 $3
-	move $31 $t1
-	sw $31 0($29)
-	move $t1 $24
-
-func__merge_2:
-	lw $4 16($23)
-	lw $3 0($29)
-	mul $24 $3 4
-	add $24 $4 $24
-	lw $5 0($24)
-	la $30 0($24)
-	move $4 $5
-	move $5 $t1
-	jal func__merge
-	lw $4 16($23)
-	lw $3 0($29)
-	mul $24 $3 4
-	add $24 $4 $24
-	lw $5 0($24)
-	la $30 0($24)
-	move $5 $2
-	sw $5 0($30)
-	lw $25 12($23)
-	lw $3 0($29)
-	mul $24 $3 4
-	add $24 $25 $24
-	lw $5 0($24)
-	la $30 0($24)
-	move $24 $5
-	lw $4 16($23)
-	lw $3 0($29)
-	mul $5 $3 4
-	add $5 $4 $5
-	lw $6 0($5)
-	la $30 0($5)
-	lw $25 12($23)
-	lw $3 0($29)
-	mul $5 $3 4
-	add $25 $25 $5
-	lw $5 0($25)
-	la $30 0($25)
-	move $5 $6
-	sw $5 0($30)
-	lw $4 16($23)
-	lw $3 0($29)
-	mul $25 $3 4
-	add $25 $4 $25
-	lw $4 0($25)
-	la $30 0($25)
-	move $4 $24
-	sw $4 0($30)
-	lw $3 0($29)
-	move $2 $3
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
+	move $31 $24
 	jr $ra
 

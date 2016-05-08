@@ -39,4 +39,8 @@ public class FuncSymbol extends VariableSymbol {
         return nowSymbol;
     }
 
+    public String toString(){
+        return properties.toString() + " " + name;
+    }
+
 }

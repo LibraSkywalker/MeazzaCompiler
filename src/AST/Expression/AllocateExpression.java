@@ -66,7 +66,7 @@ public class AllocateExpression extends ExpressionAction{
 
         getBlock().add(new AddBinInstruction("sw", rSrc2, v_0)); //save length
 
-        addInstruction(new ArithmeticInstruction("sll",a_0,rSrc2,2,false));
+        addInstruction(new ArithmeticInstruction("mul",a_0,rSrc2,4,false));
         addInstruction(new RegBinInstruction("li",v_0,9,false));
         addInstruction(new SystemCall()); // allocate
 

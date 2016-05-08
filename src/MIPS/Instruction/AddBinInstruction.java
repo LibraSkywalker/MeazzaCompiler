@@ -34,6 +34,18 @@ public class AddBinInstruction extends BinaryInstruction {
             rSrc = Rsrc1.toString();
             position++;
         }
+
+        if (rSrc.equals("localMemory")){
+            int pos = func.localState.Dic[local].indexOf(vSrc) * 4;
+            Instruction now1 = new AddBinInstruction("la",Rsrc1,"VReg");
+            Instruction now2 = new AddBinInstruction("lw",Rsrc1,Rsrc1,pos);
+            BlockStat.add(position,now2);
+            now2.configure(func,BlockStat,position);
+            BlockStat.add(position,now1);
+            now1.configure(func,BlockStat,position);
+            rSrc = Rsrc1.toString();
+            position += 2;
+        }
         if (rDest.equals("Memory")){
             int pos = func.localState.Dic[SaveInAddress].indexOf(vDest) * 4;
             if (operator.equals("sw")){
@@ -49,6 +61,27 @@ public class AddBinInstruction extends BinaryInstruction {
                 position++;
                 rDest = Rdest.toString();
             }
+        }
+        if (rDest.equals("localMemory")){
+            int pos = func.localState.Dic[local].indexOf(vDest) * 4;
+            if (operator.equals("sw")){
+                Instruction now1 = new AddBinInstruction("la",Rdest,"VReg");
+                Instruction now = new AddBinInstruction("lw",Rdest,Rdest,pos);
+                BlockStat.add(position,now);
+                now.configure(func,BlockStat,position);
+                BlockStat.add(position,now1);
+                now1.configure(func,BlockStat,position);
+                rDest = Rsrc2.toString();
+            } else {
+                Instruction now1 = new AddBinInstruction("la",Rsrc1,"VReg");
+                Instruction now = new AddBinInstruction("sw",Rdest,Rsrc1,pos);
+                BlockStat.add(position + 1,now1);
+                BlockStat.add(position + 2,now);
+                now.configure(func,BlockStat,position + 2);
+                now1.configure(func,BlockStat,position + 1);
+                rDest = Rdest.toString();
+            }
+            position += 2;
         }
         return position;
     }

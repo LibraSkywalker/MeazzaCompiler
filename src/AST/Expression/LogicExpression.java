@@ -4,6 +4,7 @@ import MIPS.BasicBlock;
 import MIPS.Instruction.ArithmeticInstruction;
 
 import static MIPS.IRControler.addBlock;
+import static MIPS.IRControler.addInstruction;
 import static MIPS.IRControler.getBlock;
 import static RegisterControler.VirtualRegister.newVReg;
 

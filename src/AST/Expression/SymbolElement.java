@@ -106,7 +106,7 @@ public class SymbolElement extends ExpressionAction{
             ExpressionAction now = actionList.get(i);
             now.Translate();
             if (paraSize > 5){
-                int rSrc = now.isLiteral() ? now.src() : ((Literal) now).Reg();
+                int rSrc = now.isLiteral() ? ((Literal) now).Reg() : now.src() ;
                 addInstruction(new AddBinInstruction("sw",rSrc,a_0,i * 4));
             }
             else {
