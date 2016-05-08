@@ -78,9 +78,9 @@ public class CompareExpression extends BinaryExpression{
         // choose order
 
         if (operator.equals("!=") || operator.equals("==")){
-            addInstruction(new JumpInstruction("jal","func__stringIsEqual"));
+            addInstruction(new JumpInstruction("Jal","func__stringIsEqual"));
         } else {
-            addInstruction(new JumpInstruction("jal","func__stringLess"));
+            addInstruction(new JumpInstruction("Jal","func__stringLess"));
         }
 
         // choose operation
