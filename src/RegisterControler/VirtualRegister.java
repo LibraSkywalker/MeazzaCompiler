@@ -10,9 +10,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import static MIPS.IRControler.getBlock;
+import static MIPS.IRControler.getFunction;
 import static MIPS.TextControler.GlobalState;
-import static RegisterControler.RegisterName.global;
-import static RegisterControler.RegisterName.localSaved;
+import static RegisterControler.RegisterName.*;
 
 /**
  * Created by Bill on 2016/4/26.
@@ -43,6 +43,9 @@ public class VirtualRegister {
         void use(){
             times--;
         }
+        public String toString(){
+            return "<" + name + "," + times + ">";
+        }
     }
     static LinkedList<RegisterState> newRegister = new LinkedList<>(),
                                     usedRegister = new LinkedList<>(),
@@ -55,16 +58,17 @@ public class VirtualRegister {
         InMemory.clear();
         usedRegister.clear();
         newRegister.clear();
+        for (int i = 0 ; i < 50000; i++) map[i] = null;
         newRegister.add(new RegisterState(24));
         newRegister.add(new RegisterState(25));
 
-        for (int i = nowFunc.localState.Dic[localSaved].size();i < 8;i++)
+        for (int i = nowFunc.localState.Dic[localSaved].size();i < 7;i++)
             newRegister.add(new RegisterState(9 + i)); //t1 + i unused localSaved
 
+        newRegister.add(new RegisterState(7));
+        newRegister.add(new RegisterState(6));
         newRegister.add(new RegisterState(4));
         newRegister.add(new RegisterState(5));
-        newRegister.add(new RegisterState(6));
-        newRegister.add(new RegisterState(7));
 
         for (int i = GlobalState.Dic[global].size();i < 7;i++)
             newRegister.add(new RegisterState(16 + i)); //s0 + i  unused global
@@ -76,12 +80,12 @@ public class VirtualRegister {
     static RegisterState ForceOrder(Instruction last){
         if (!newRegister.isEmpty()){
             RegisterState now = newRegister.pop();
-            usedRegister.push(now);
+            usedRegister.add(now);
             return now;
         }
         else {
             RegisterState pre = usedRegister.pop();
-            InMemory.push(pre);
+            InMemory.add(pre);
             RegisterState now = new RegisterState(pre.name);
             pre.rename();
 
@@ -93,7 +97,7 @@ public class VirtualRegister {
             past.configure();
             getBlock().BlockStat.add(getBlock().BlockStat.indexOf(last),past);
 
-            usedRegister.push(now);
+            usedRegister.add(now);
             return now;
         }
     }
@@ -101,7 +105,9 @@ public class VirtualRegister {
     public static Integer order(Instruction last,int virtualRegister){
         if (map[virtualRegister] == null){
             map[virtualRegister] = ForceOrder(last);
-            map[virtualRegister].set(GlobalState.times(virtualRegister));
+            map[virtualRegister].set(getFunction().localState.times(virtualRegister));
+            System.err.println(virtualRegister);
+            System.err.println(GlobalState.times(virtualRegister));
             map[virtualRegister].use();
         }else {
             if (InMemory.contains(map[virtualRegister])){
@@ -125,9 +131,21 @@ public class VirtualRegister {
         RegisterState now = map[virtualRegister];
         if (now.clean()){
             map[virtualRegister] = null;
-            newRegister.push(now);
+            newRegister.add(now);
             usedRegister.remove(now);
+            InMemory.remove(now);
         }
+
+
+        if (virtualRegister == 33){
+            System.err.println(last.virtualPrint());
+            System.err.println(virtualRegister);
+            System.err.println(newRegister);
+            System.err.println(usedRegister);
+            System.err.println(now);
+            System.err.println(now.clean());
+        }
+
         return now.name;
     }
 

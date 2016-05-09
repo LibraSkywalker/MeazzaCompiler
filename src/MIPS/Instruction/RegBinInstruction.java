@@ -45,7 +45,7 @@ public class RegBinInstruction extends BinaryInstruction{
 
         if (rDest.equals("Memory")){
             int pos = getFunction().localState.Dic[SaveInAddress].indexOf(vDest) * 4;
-            Instruction now = new AddBinInstruction("sw",Rsrc1,s_p,pos);
+            Instruction now = new AddBinInstruction("sw",Rdest,s_p,pos);
             getBlock().BlockStat.add(getBlock().BlockStat.indexOf(this) + 1,now);
             rDest = Rdest.toString();
         }

@@ -5,10 +5,22 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
-	length0: 	.word 	1
-	String0: 	.asciiz 	" "
-	length1: 	.word 	1
-	String1: 	.asciiz 	" "
+	length0: 	.word 	79
+	String0: 	.asciiz 	"Sorry, the number n must be a number s.t. there exists i satisfying n=1+2+...+i"
+	length1: 	.word 	12
+	String1: 	.asciiz 	"Let's start!"
+	length2: 	.word 	5
+	String2: 	.asciiz 	"step "
+	length3: 	.word 	1
+	String3: 	.asciiz 	":"
+	length4: 	.word 	7
+	String4: 	.asciiz 	"Total: "
+	length5: 	.word 	8
+	String5: 	.asciiz 	" step(s)"
+	length6: 	.word 	1
+	String6: 	.asciiz 	" "
+	length7: 	.word 	0
+	String7: 	.asciiz 	""
 
 
 .text
@@ -490,1616 +502,704 @@ func__stringNeq:
 	jr $ra
 
 main:
+	sub $29 $29 8
 	li $4 4
 	li $2 9
 	syscall
-	li $4 12
+	li $4 36
 	li $2 9
 	syscall
 	move $23 $2
-	lw $24 0($23)
-	la $30 0($23)
-	li $24 1
-	sw $24 0($23)
-	lw $24 4($23)
-	la $30 4($23)
-	li $24 1
-	sw $24 4($23)
-	lw $24 8($23)
-	la $30 8($23)
-	li $24 1
-	sw $24 8($23)
+	lw $24 16($23)
+	la $30 16($23)
+	li $24 48271
+	sw $24 16($23)
+	lw $25 20($23)
+	la $30 20($23)
+	li $25 2147483647
+	sw $25 20($23)
+	lw $12 32($23)
+	la $30 32($23)
+	li $12 1
+	sw $12 32($23)
 	jal main_0
 	li $2 10
 	syscall
 
 main_0:
-	move $s2 $31
-	lw $t1 8($23)
-	li $24 1
-	sll $24 $24 29
-	slt $24 $t1 $24
-	lw $t1 8($23)
-	li $25 1
-	sll $25 $25 29
-	neg $25 $25
-	sgt $25 $t1 $25
-	and $25 $24 $25
-	beq $25 0 main_1
-
-main_0_loop:
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $25 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $25 $15
-	add $15 $14 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	sub $25 $14 $25
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $25 $14
-	add $14 $15 $14
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $15 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $25 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $16 $25
-	add $25 $15 $25
-	sub $25 $14 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $15 $t1 $24
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $14 $15
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $14 $16
-	sub $16 $15 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $15 $14
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $14 $15
-	sub $15 $16 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $16 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $14 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $4 $t1 $24
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $14 $4
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $4 $14
-	sub $14 $16 $14
-	add $14 $15 $14
-	sub $14 $25 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $25 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $25 $16
-	add $16 $15 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $15 $t1 $24
-	lw $13 4($23)
-	add $15 $15 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	sub $25 $15 $25
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $15 $t1 $24
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $25 $15
-	add $15 $16 $15
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $16 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $4 $24 $13
-	sub $4 $25 $4
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $4 $25
-	add $25 $16 $25
-	sub $25 $15 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $15 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $16 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $4 $24 $13
-	sub $4 $16 $4
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $4 $16
-	add $16 $15 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $4 $t1 $24
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $15 $4
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $4 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $4 $t1 $24
-	lw $13 4($23)
-	add $4 $4 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $5 $24 $13
-	sub $5 $4 $5
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $4 $t1 $24
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $5 $4
-	add $4 $15 $4
-	sub $4 $16 $4
-	sub $4 $25 $4
-	add $4 $14 $4
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $14 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $14 $16
-	sub $16 $25 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $25 $14
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	sub $25 $14 $25
-	sub $25 $16 $25
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $16 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $14 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $15 $t1 $24
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $14 $15
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $15 $14
-	sub $14 $16 $14
-	add $14 $25 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $16 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $15 $t1 $24
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $16 $15
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $15 $16
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $25 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $15 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $5 $t1 $24
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $15 $5
-	lw $24 0($23)
-	lw $13 4($23)
-	add $15 $24 $13
-	sub $15 $5 $15
-	sub $15 $25 $15
-	add $15 $16 $15
-	add $15 $14 $15
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $14 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	sub $25 $14 $25
-	add $25 $16 $25
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $14 $24 $13
-	sub $14 $16 $14
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $16 $t1 $24
-	lw $13 4($23)
-	add $16 $16 $13
-	add $16 $14 $16
-	add $16 $25 $16
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $25 $14
-	lw $24 0($23)
-	lw $13 4($23)
-	add $25 $24 $13
-	sub $25 $14 $25
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $5 $24 $13
-	sub $5 $14 $5
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $14 $t1 $24
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $5 $14
-	add $14 $25 $14
-	sub $14 $16 $14
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $16 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $5 $24 $13
-	sub $5 $25 $5
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $25 $t1 $24
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $5 $25
-	add $25 $16 $25
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $5 $t1 $24
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $16 $5
-	lw $24 0($23)
-	lw $13 4($23)
-	add $16 $24 $13
-	sub $16 $5 $16
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $5 $t1 $24
-	lw $13 4($23)
-	add $5 $5 $13
-	lw $24 0($23)
-	lw $13 4($23)
-	add $6 $24 $13
-	sub $6 $5 $6
-	lw $t1 8($23)
-	lw $24 0($23)
-	sub $5 $t1 $24
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $6 $5
-	add $5 $16 $5
-	sub $5 $25 $5
-	sub $5 $14 $5
-	add $5 $15 $5
-	sub $5 $4 $5
-	lw $24 0($23)
+	move $31 $31
+	sw $31 0($29)
+	li $s0 0
+	li $s1 0
+	li $31 0
+	sw $31 4($29)
+	li $13 3
+	mul $14 $13 7
+	mul $15 $14 10
+	lw $7 0($23)
 	la $30 0($23)
-	move $24 $5
-	sw $24 0($23)
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $24 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $24 $4
-	add $4 $5 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	sub $24 $5 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $24 $5
-	add $5 $4 $5
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $4 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $24 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $15 $24
-	add $24 $4 $24
-	sub $24 $5 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $5 $4
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $5 $15
-	sub $15 $4 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $4 $5
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $5 $4
-	sub $4 $15 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $15 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $5 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $5 $14
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $14 $5
-	sub $5 $15 $5
-	add $5 $4 $5
-	sub $5 $24 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $24 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $24 $15
-	add $15 $4 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $13 4($23)
-	add $4 $4 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	sub $24 $4 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $24 $4
-	add $4 $15 $4
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $15 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $14 $t2 $13
-	sub $14 $24 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $14 $24
-	add $24 $15 $24
-	sub $24 $4 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $4 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $15 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $14 $t2 $13
-	sub $14 $15 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $14 $15
-	add $15 $4 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $4 $14
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $14 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $13 4($23)
-	add $14 $14 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $25 $t2 $13
-	sub $25 $14 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $13 4($23)
-	add $14 $14 $13
-	add $14 $25 $14
-	add $14 $4 $14
-	sub $14 $15 $14
-	sub $14 $24 $14
-	add $14 $5 $14
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $5 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $5 $15
-	sub $15 $24 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $24 $5
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	sub $24 $5 $24
-	sub $24 $15 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $15 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $5 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $5 $4
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $4 $5
-	sub $5 $15 $5
-	add $5 $24 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $15 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $13 4($23)
-	add $4 $4 $13
-	add $4 $15 $4
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $4 $15
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $24 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $4 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $4 $25
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $4 $t2 $13
-	sub $4 $25 $4
-	sub $4 $24 $4
-	add $4 $15 $4
-	add $4 $5 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $5 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	sub $24 $5 $24
-	add $24 $15 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $5 $t2 $13
-	sub $5 $15 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $15 $t1 $t2
-	lw $13 4($23)
-	add $15 $15 $13
-	add $15 $5 $15
-	add $15 $24 $15
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $24 $5
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $24 $t2 $13
-	sub $24 $5 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $25 $t2 $13
-	sub $25 $5 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $13 4($23)
-	add $5 $5 $13
-	add $5 $25 $5
-	add $5 $24 $5
-	sub $5 $15 $5
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $15 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $25 $t2 $13
-	sub $25 $24 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $13 4($23)
-	add $24 $24 $13
-	add $24 $25 $24
-	add $24 $15 $24
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $15 $25
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $15 $t2 $13
-	sub $15 $25 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $13 4($23)
-	add $25 $25 $13
-	lw $t2 0($23)
-	lw $13 4($23)
-	add $16 $t2 $13
-	sub $16 $25 $16
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $13 4($23)
-	add $25 $25 $13
-	add $25 $16 $25
-	add $25 $15 $25
-	sub $25 $24 $25
-	sub $25 $5 $25
-	add $25 $4 $25
-	sub $25 $14 $25
-	lw $13 4($23)
+	move $7 $15
+	sw $7 0($23)
+	lw $6 4($23)
 	la $30 4($23)
-	move $13 $25
-	sw $13 4($23)
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $13 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $13 $14
-	add $14 $25 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	sub $13 $25 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	add $25 $13 $25
-	add $25 $14 $25
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $14 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $13 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $13 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $4 $13
-	add $13 $14 $13
-	sub $13 $25 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $t3 4($23)
-	add $14 $14 $t3
-	add $14 $25 $14
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $25 $4
-	sub $4 $14 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	add $25 $14 $25
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $25 $14
-	sub $14 $4 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $4 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $25 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $t3 4($23)
-	add $5 $5 $t3
-	add $5 $25 $5
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $5 $25
-	sub $25 $4 $25
-	add $25 $14 $25
-	sub $25 $13 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $13 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $13 $4
-	add $4 $14 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $t3 4($23)
-	add $14 $14 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	sub $13 $14 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $t3 4($23)
-	add $14 $14 $t3
-	add $14 $13 $14
-	add $14 $4 $14
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $4 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $13 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $5 $t2 $t3
-	sub $5 $13 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $5 $13
-	add $13 $4 $13
-	sub $13 $14 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $14 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $4 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $5 $t2 $t3
-	sub $5 $4 $5
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $5 $4
-	add $4 $14 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $t3 4($23)
-	add $5 $5 $t3
-	add $5 $14 $5
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $5 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $t3 4($23)
-	add $5 $5 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $24 $t2 $t3
-	sub $24 $5 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $5 $t1 $t2
-	lw $t3 4($23)
-	add $5 $5 $t3
-	add $5 $24 $5
-	add $5 $14 $5
-	sub $5 $4 $5
-	sub $5 $13 $5
-	add $5 $25 $5
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $25 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $25 $4
-	sub $4 $13 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	add $25 $13 $25
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	sub $13 $25 $13
-	sub $13 $4 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $4 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $25 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $t3 4($23)
-	add $14 $14 $t3
-	add $14 $25 $14
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $14 $25
-	sub $25 $4 $25
-	add $25 $13 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $13 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $4 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $14 $t1 $t2
-	lw $t3 4($23)
-	add $14 $14 $t3
-	add $14 $4 $14
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $14 $4
-	sub $4 $13 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $13 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $14 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $t3 4($23)
-	add $24 $24 $t3
-	add $24 $14 $24
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $14 $t2 $t3
-	sub $14 $24 $14
-	sub $14 $13 $14
-	add $14 $4 $14
-	add $14 $25 $14
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $25 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	sub $13 $25 $13
-	add $13 $4 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $25 $t2 $t3
-	sub $25 $4 $25
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $4 $t1 $t2
-	lw $t3 4($23)
-	add $4 $4 $t3
-	add $4 $25 $4
-	add $4 $13 $4
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	add $25 $13 $25
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $13 $t2 $t3
-	sub $13 $25 $13
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $24 $t2 $t3
-	sub $24 $25 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $25 $t1 $t2
-	lw $t3 4($23)
-	add $25 $25 $t3
-	add $25 $24 $25
-	add $25 $13 $25
-	sub $25 $4 $25
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $4 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $13 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $24 $t2 $t3
-	sub $24 $13 $24
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $13 $t1 $t2
-	lw $t3 4($23)
-	add $13 $13 $t3
-	add $13 $24 $13
-	add $13 $4 $13
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $t3 4($23)
-	add $24 $24 $t3
-	add $24 $4 $24
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $4 $t2 $t3
-	sub $4 $24 $4
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $t3 4($23)
-	add $24 $24 $t3
-	lw $t2 0($23)
-	lw $t3 4($23)
-	add $15 $t2 $t3
-	sub $15 $24 $15
-	lw $t1 8($23)
-	lw $t2 0($23)
-	sub $24 $t1 $t2
-	lw $t3 4($23)
-	add $24 $24 $t3
-	add $24 $15 $24
-	add $24 $4 $24
-	sub $24 $13 $24
-	sub $24 $25 $24
-	add $24 $14 $24
-	sub $24 $5 $24
-	lw $t1 8($23)
-	la $30 8($23)
-	move $t1 $24
-	sw $t1 8($23)
+	li $6 0
+	sw $6 4($23)
+	li $4 4
+	li $2 9
+	syscall
+	li $4 100
+	sw $4 0($2)
+	mul $4 $4 8
+	li $2 9
+	syscall
+	move $5 $2
+	lw $24 12($23)
+	la $30 12($23)
+	move $24 $5
+	sw $24 12($23)
+	lw $25 20($23)
+	lw $12 16($23)
+	div $13 $25 $12
+	lw $14 24($23)
+	la $30 24($23)
+	move $14 $13
+	sw $14 24($23)
+	lw $25 20($23)
+	lw $12 16($23)
+	rem $15 $25 $12
+	lw $7 28($23)
+	la $30 28($23)
+	move $7 $15
+	sw $7 28($23)
+	lw $t1 0($23)
+	move $4 $t1
+	jal func__pd
+	xor $6 $2 1
+	bne $6 0 main_0_branch_then
 
-main_0_loopTail:
-	lw $t4 8($23)
-	li $24 1
-	sll $24 $24 29
-	slt $24 $t4 $24
-	lw $t4 8($23)
-	li $25 1
-	sll $25 $25 29
-	neg $25 $25
-	sgt $25 $t4 $25
-	and $25 $24 $25
-	bne $25 0 main_0_loop
+main_0_branch_else:
+	b main_1
+
+main_0_branch_then:
+	la $4 String0
+	jal func__println
+	li $2 1
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
 
 main_1:
-	lw $t2 0($23)
+	la $4 String1
+	jal func__println
+	li $4 3654898
+	jal func__initialize
+	jal func__random
+	rem $4 $2 10
+	add $5 $4 1
+	lw $24 8($23)
+	la $30 8($23)
+	move $24 $5
+	sw $24 8($23)
+	lw $t2 8($23)
 	move $4 $t2
 	jal func__toString
 	move $4 $2
-	la $5 String0
-	jal func__stringConcatenate
-	move $s0 $2
-	lw $t3 4($23)
-	move $4 $t3
+	jal func__println
+	lw $t2 8($23)
+	sub $13 $t2 1
+	bge $s0 $13 main_2
+
+main_1_loop:
+	jal func__random
+	rem $14 $2 10
+	add $25 $14 1
+	lw $t3 12($23)
+	mul $12 $s0 4
+	add $15 $t3 $12
+	lw $7 0($15)
+	la $30 0($15)
+	move $7 $25
+	sw $7 0($30)
+	lw $t3 12($23)
+	mul $6 $s0 4
+	add $4 $t3 $6
+	lw $5 0($4)
+	la $30 0($4)
+	add $24 $5 $s1
+	lw $t1 0($23)
+	ble $24 $t1 main_3
+
+main_1_loop_loop:
+	jal func__random
+	rem $13 $2 10
+	add $14 $13 1
+	lw $t3 12($23)
+	mul $12 $s0 4
+	add $15 $t3 $12
+	lw $25 0($15)
+	la $30 0($15)
+	move $25 $14
+	sw $25 0($30)
+
+main_1_loop_loopTail:
+	lw $t3 12($23)
+	mul $7 $s0 4
+	add $6 $t3 $7
+	lw $4 0($6)
+	la $30 0($6)
+	add $5 $4 $s1
+	lw $t1 0($23)
+	bgt $5 $t1 main_1_loop_loop
+
+main_3:
+	lw $t3 12($23)
+	mul $24 $s0 4
+	add $13 $t3 $24
+	lw $12 0($13)
+	la $30 0($13)
+	add $15 $s1 $12
+	move $s1 $15
+
+main_1_loopTail:
+	add $s0 $s0 1
+	lw $t2 8($23)
+	sub $14 $t2 1
+	blt $s0 $14 main_1_loop
+
+main_2:
+	lw $t1 0($23)
+	sub $25 $t1 $s1
+	lw $t3 12($23)
+	lw $t2 8($23)
+	sub $7 $t2 1
+	mul $6 $7 4
+	add $4 $t3 $6
+	lw $5 0($4)
+	la $30 0($4)
+	move $5 $25
+	sw $5 0($30)
+	jal func__show
+	jal func__merge
+	jal func__win
+	xor $24 $2 1
+	beq $24 0 main_4
+
+main_2_loop:
+	lw $3 4($29)
+	add $31 $3 1
+	sw $31 4($29)
+	lw $3 4($29)
+	move $4 $3
 	jal func__toString
-	move $4 $s0
+	la $4 String2
 	move $5 $2
 	jal func__stringConcatenate
-	move $24 $2
-	move $4 $24
-	la $5 String1
+	move $13 $2
+	move $4 $13
+	la $5 String3
 	jal func__stringConcatenate
-	move $s1 $2
-	lw $t4 8($23)
-	move $4 $t4
+	move $12 $2
+	move $4 $12
+	jal func__println
+	jal func__move
+	jal func__merge
+	jal func__show
+
+main_2_loopTail:
+	jal func__win
+	xor $15 $2 1
+	bne $15 0 main_2_loop
+
+main_4:
+	lw $3 4($29)
+	move $4 $3
 	jal func__toString
-	move $4 $s1
+	la $4 String4
 	move $5 $2
 	jal func__stringConcatenate
-	move $24 $2
-	move $4 $24
+	move $14 $2
+	move $4 $14
+	la $5 String5
+	jal func__stringConcatenate
+	move $7 $2
+	move $4 $7
 	jal func__println
 	li $2 0
-	move $31 $s2
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 8
 	jr $ra
-	move $31 $s2
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__random:
+	sub $29 $29 8
+	move $31 $31
+	sw $31 4($29)
+	lw $24 16($23)
+	lw $s2 32($23)
+	lw $25 24($23)
+	rem $9 $s2 $25
+	mul $10 $24 $9
+	lw $11 28($23)
+	lw $s2 32($23)
+	lw $25 24($23)
+	div $12 $s2 $25
+	mul $13 $11 $12
+	sub $14 $10 $13
+	move $31 $14
+	sw $31 0($29)
+	lw $3 0($29)
+	bge $3 0 func__random_branch_then
+
+func__random_branch_else:
+	lw $15 20($23)
+	lw $3 0($29)
+	add $7 $3 $15
+	lw $s2 32($23)
+	la $30 32($23)
+	move $s2 $7
+	sw $s2 32($23)
+	b func__random_0
+
+func__random_branch_then:
+	lw $6 32($23)
+	la $30 32($23)
+	lw $3 0($29)
+	move $6 $3
+	sw $6 32($23)
+
+func__random_0:
+	lw $4 32($23)
+	move $2 $4
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__initialize:
+	move $24 $31
+	move $25 $4
+	lw $9 32($23)
+	la $30 32($23)
+	move $9 $25
+	sw $9 32($23)
+	move $31 $24
+	jr $ra
+
+func__swap:
+	move $24 $31
+	move $25 $4
+	move $10 $5
+	lw $t1 12($23)
+	mul $11 $25 4
+	add $12 $t1 $11
+	lw $13 0($12)
+	la $30 0($12)
+	move $14 $13
+	lw $t1 12($23)
+	mul $15 $10 4
+	add $7 $t1 $15
+	lw $6 0($7)
+	la $30 0($7)
+	lw $t1 12($23)
+	mul $4 $25 4
+	add $5 $t1 $4
+	lw $11 0($5)
+	la $30 0($5)
+	move $11 $6
+	sw $11 0($30)
+	lw $t1 12($23)
+	mul $12 $10 4
+	add $13 $t1 $12
+	lw $15 0($13)
+	la $30 0($13)
+	move $15 $14
+	sw $15 0($30)
+	move $31 $24
+	jr $ra
+
+func__pd:
+	sub $29 $29 8
+	move $31 $31
+	sw $31 4($29)
+	move $31 $4
+	sw $31 0($29)
+	lw $24 4($23)
+	lw $2 0($29)
+	bgt $24 $2 func__pd_0
+
+func__pd_loop:
+	lw $24 4($23)
+	lw $24 4($23)
+	add $25 $24 1
+	mul $9 $24 $25
+	div $10 $9 2
+	lw $3 0($29)
+	beq $3 $10 func__pd_loop_branch_then
+
+func__pd_loop_branch_else:
+	b func__pd_1
+
+func__pd_loop_branch_then:
+	li $2 1
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__pd_1:
+
+func__pd_loopTail:
+	lw $24 4($23)
+	add $24 $24 1
+	sw $24 4($23)
+	lw $24 4($23)
+	lw $2 0($29)
+	ble $24 $2 func__pd_loop
+
+func__pd_0:
+	li $2 0
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+	lw $3 4($29)
+	move $31 $3
+	add $29 $29 8
+	jr $ra
+
+func__show:
+	sub $29 $29 4
+	move $31 $31
+	sw $31 0($29)
+	li $s3 0
+	lw $t1 8($23)
+	bge $s3 $t1 func__show_0
+
+func__show_loop:
+	lw $t2 12($23)
+	mul $24 $s3 4
+	add $25 $t2 $24
+	lw $11 0($25)
+	la $30 0($25)
+	move $4 $11
+	jal func__toString
+	move $4 $2
+	la $5 String6
+	jal func__stringConcatenate
+	move $12 $2
+	move $4 $12
+	jal func__print
+
+func__show_loopTail:
+	add $s3 $s3 1
+	lw $t1 8($23)
+	blt $s3 $t1 func__show_loop
+
+func__show_0:
+	la $4 String7
+	jal func__println
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+
+func__win:
+	sub $29 $29 4
+	move $31 $31
+	sw $31 0($29)
+	li $4 4
+	li $2 9
+	syscall
+	li $24 100
+	sw $24 0($2)
+	mul $4 $24 8
+	li $2 9
+	syscall
+	move $25 $2
+	move $t4 $25
+	lw $t1 8($23)
+	lw $14 4($23)
+	bne $t1 $14 func__win_branch_then
+
+func__win_branch_else:
+	b func__win_0
+
+func__win_branch_then:
+	li $2 0
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+
+func__win_0:
+	li $t2 0
+	lw $t1 8($23)
+	bge $t2 $t1 func__win_1
+
+func__win_0_loop:
+	lw $t3 12($23)
+	mul $15 $t2 4
+	add $7 $t3 $15
+	lw $6 0($7)
+	la $30 0($7)
+	mul $4 $t2 4
+	add $5 $t4 $4
+	lw $24 0($5)
+	la $30 0($5)
+	move $24 $6
+	sw $24 0($30)
+
+func__win_0_loopTail:
+	add $t2 $t2 1
+	lw $t1 8($23)
+	blt $t2 $t1 func__win_0_loop
+
+func__win_1:
+	li $t5 0
+	lw $t1 8($23)
+	sub $25 $t1 1
+	bge $t5 $25 func__win_2
+
+func__win_1_loop:
+	add $14 $t5 1
+	move $t2 $14
+	lw $t1 8($23)
+	bge $t2 $t1 func__win_3
+
+func__win_1_loop_loop:
+	mul $15 $t5 4
+	add $7 $t4 $15
+	lw $4 0($7)
+	la $30 0($7)
+	mul $5 $t2 4
+	add $6 $t4 $5
+	lw $24 0($6)
+	la $30 0($6)
+	bgt $4 $24 func__win_1_loop_loop_branch_then
+
+func__win_1_loop_loop_branch_else:
+	b func__win_4
+
+func__win_1_loop_loop_branch_then:
+	mul $25 $t5 4
+	add $14 $t4 $25
+	lw $15 0($14)
+	la $30 0($14)
+	move $7 $15
+	mul $5 $t2 4
+	add $6 $t4 $5
+	lw $4 0($6)
+	la $30 0($6)
+	mul $24 $t5 4
+	add $25 $t4 $24
+	lw $14 0($25)
+	la $30 0($25)
+	move $14 $4
+	sw $14 0($30)
+	mul $15 $t2 4
+	add $5 $t4 $15
+	lw $6 0($5)
+	la $30 0($5)
+	move $6 $7
+	sw $6 0($30)
+
+func__win_4:
+
+func__win_1_loop_loopTail:
+	add $t2 $t2 1
+	lw $t1 8($23)
+	blt $t2 $t1 func__win_1_loop_loop
+
+func__win_3:
+
+func__win_1_loopTail:
+	add $t5 $t5 1
+	lw $t1 8($23)
+	sub $24 $t1 1
+	blt $t5 $24 func__win_1_loop
+
+func__win_2:
+	li $t5 0
+	lw $t1 8($23)
+	bge $t5 $t1 func__win_5
+
+func__win_2_loop:
+	mul $25 $t5 4
+	add $4 $t4 $25
+	lw $14 0($4)
+	la $30 0($4)
+	add $15 $t5 1
+	bne $14 $15 func__win_2_loop_branch_then
+
+func__win_2_loop_branch_else:
+	b func__win_6
+
+func__win_2_loop_branch_then:
+	li $2 0
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+
+func__win_6:
+
+func__win_2_loopTail:
+	add $t5 $t5 1
+	lw $t1 8($23)
+	blt $t5 $t1 func__win_2_loop
+
+func__win_5:
+	li $2 1
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+
+func__merge:
+	sub $29 $29 4
+	move $31 $31
+	sw $31 0($29)
+	li $s4 0
+	lw $t1 8($23)
+	bge $s4 $t1 func__merge_0
+
+func__merge_loop:
+	lw $t2 12($23)
+	mul $24 $s4 4
+	add $25 $t2 $24
+	lw $12 0($25)
+	la $30 0($25)
+	beq $12 0 func__merge_loop_branch_then
+
+func__merge_loop_branch_else:
+	b func__merge_1
+
+func__merge_loop_branch_then:
+	add $13 $s4 1
+	move $s5 $13
+	lw $t1 8($23)
+	bge $s5 $t1 func__merge_2
+
+func__merge_loop_branch_then_loop:
+	lw $t2 12($23)
+	mul $14 $s5 4
+	add $15 $t2 $14
+	lw $7 0($15)
+	la $30 0($15)
+	bne $7 0 func__merge_loop_branch_then_loop_branch_then
+
+func__merge_loop_branch_then_loop_branch_else:
+	b func__merge_3
+
+func__merge_loop_branch_then_loop_branch_then:
+	move $4 $s4
+	move $5 $s5
+	jal func__swap
+	b func__merge_2
+
+func__merge_3:
+
+func__merge_loop_branch_then_loopTail:
+	add $s5 $s5 1
+	lw $t1 8($23)
+	blt $s5 $t1 func__merge_loop_branch_then_loop
+
+func__merge_2:
+
+func__merge_1:
+
+func__merge_loopTail:
+	add $s4 $s4 1
+	lw $t1 8($23)
+	blt $s4 $t1 func__merge_loop
+
+func__merge_0:
+	li $s4 0
+	lw $t1 8($23)
+	bge $s4 $t1 func__merge_4
+
+func__merge_0_loop:
+	lw $t2 12($23)
+	mul $6 $s4 4
+	add $4 $t2 $6
+	lw $5 0($4)
+	la $30 0($4)
+	beq $5 0 func__merge_0_loop_branch_then
+
+func__merge_0_loop_branch_else:
+	b func__merge_5
+
+func__merge_0_loop_branch_then:
+	lw $t1 8($23)
+	la $30 8($23)
+	move $t1 $s4
+	sw $t1 8($23)
+	b func__merge_0
+
+func__merge_5:
+
+func__merge_0_loopTail:
+	add $s4 $s4 1
+	lw $t3 8($23)
+	blt $s4 $t3 func__merge_0_loop
+
+func__merge_4:
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
+	jr $ra
+
+func__move:
+	sub $29 $29 4
+	move $31 $31
+	sw $31 0($29)
+	li $s6 0
+	lw $t1 8($23)
+	bge $s6 $t1 func__move_0
+
+func__move_loop:
+	lw $t2 12($23)
+	mul $24 $s6 4
+	add $25 $t2 $24
+	lw $11 0($25)
+	la $30 0($25)
+	sub $11 $11 1
+	sw $11 0($30)
+	add $12 $s6 1
+	move $s6 $12
+
+func__move_loopTail:
+	lw $t1 8($23)
+	blt $s6 $t1 func__move_loop
+
+func__move_0:
+	lw $t1 8($23)
+	lw $t2 12($23)
+	lw $t1 8($23)
+	mul $13 $t1 4
+	add $14 $t2 $13
+	lw $15 0($14)
+	la $30 0($14)
+	move $15 $t1
+	sw $15 0($30)
+	lw $t1 8($23)
+	add $t1 $t1 1
+	sw $t1 8($23)
+	lw $3 0($29)
+	move $31 $3
+	add $29 $29 4
 	jr $ra
 

@@ -100,9 +100,9 @@ public class Function {
     }
 
     public void configure(){
+        BuildAllocater(this);
         for (BasicBlock now : basicBlocks){
             currentBasicBlock = now;
-            BuildAllocater(this);
             now.configure();
         }
     }

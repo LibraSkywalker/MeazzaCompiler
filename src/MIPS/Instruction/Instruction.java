@@ -38,9 +38,7 @@ public abstract class Instruction {
         if (GlobalState.property(virtualRegister) == global)
             return "s" + GlobalState.Dic[global].indexOf(virtualRegister) ;
         if (GlobalState.property(virtualRegister) == local){
-            Integer result = order(this,virtualRegister);
-            if (result != -1) return result.toString();
-            else return "localMemory";
+            return order(this,virtualRegister).toString();
         }
         return "+++";
     }
