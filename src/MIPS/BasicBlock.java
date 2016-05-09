@@ -12,7 +12,7 @@ import static RegisterControler.RegisterName.s_p;
  */
 public class BasicBlock {
     String label;
-    LinkedList<Instruction> BlockStat = new LinkedList<>();
+    public LinkedList<Instruction> BlockStat = new LinkedList<>();
     VirtualReadWrite usage = new VirtualReadWrite();
 
     public BasicBlock(){}
@@ -57,10 +57,11 @@ public class BasicBlock {
         }
     }
 
-    void configure(Function func){
-        for(int i = 0; i < BlockStat.size(); i++){
+    void configure(){
+        for(int i = 0; i < BlockStat.size();){
             Instruction now = BlockStat.get(i);
-            i = now.configure(func,BlockStat,BlockStat.indexOf(now));
+            now.configure();
+            i = (BlockStat.contains(now)) ? BlockStat.indexOf(now) + 1 : i;
         }
     }
 

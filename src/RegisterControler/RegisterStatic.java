@@ -134,7 +134,7 @@ public class RegisterStatic {
         for (Integer x : used)
             if (GlobalState.StateOfVReg[x].property == localSaved)
                 count++;
-        while (count-- > 9){
+        while (count-- > 8){
             int min = 0;
             for (Integer x : used)
                 if (GlobalState.StateOfVReg[x].property == localSaved)

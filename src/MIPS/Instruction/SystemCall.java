@@ -17,8 +17,7 @@ public class SystemCall extends Instruction{
         return "syscall\n";
     }
 
-    public int configure(Function func, LinkedList<Instruction> BlockStat, int position){
-        return position;
+    public void configure(){
     }
 
     public void update(VirtualReadWrite usage){

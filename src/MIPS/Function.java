@@ -6,6 +6,7 @@ import RegisterControler.RegisterStatic;
 import java.util.LinkedList;
 
 import static RegisterControler.RegisterName.s_p;
+import static RegisterControler.VirtualRegister.BuildAllocater;
 
 /**
  * Created by Bill on 2016/4/28.
@@ -26,6 +27,11 @@ public class Function {
             FuncName = "func__" + FuncName;
         addBasicBlock("");
     }
+
+    BasicBlock nextBlock(){
+        return basicBlocks.get(basicBlocks.indexOf(currentBasicBlock));
+    }
+
 
     BasicBlock visitBlock(BasicBlock now){
         currentBasicBlock = now;
@@ -82,6 +88,7 @@ public class Function {
     public void classify(){
         eliminate();
         for (BasicBlock now : basicBlocks){
+            currentBasicBlock = now;
             now.update();
             localState.load(now.usage);
             now.globalize(this);
@@ -94,7 +101,9 @@ public class Function {
 
     public void configure(){
         for (BasicBlock now : basicBlocks){
-            now.configure(this);
+            currentBasicBlock = now;
+            BuildAllocater(this);
+            now.configure();
         }
     }
 

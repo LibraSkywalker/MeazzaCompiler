@@ -98,6 +98,7 @@ public class TextControler {
 
     void RegisterAllocate(){
         for (Function now : functionList){
+            currentFunction = now;
             now.classify();
             GlobalState.load(now.localState);
         } //classify virtual register
@@ -106,14 +107,20 @@ public class TextControler {
         GlobalState.adjust();
 
         for (Function now : functionList){
+            currentFunction = now;
             now.save();
         }   //if too much
 
         GlobalState.save();
-        for (Function now : functionList)
+        for (Function now : functionList) {
+
+            currentFunction = now;
             now.allocateStack();
-        for (Function now : functionList)
+        }
+        for (Function now : functionList){
+            currentFunction = now;
             now.configure();
+        }
 
     }
 }

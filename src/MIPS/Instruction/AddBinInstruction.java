@@ -5,6 +5,8 @@ import RegisterControler.VirtualReadWrite;
 
 import java.util.LinkedList;
 
+import static MIPS.IRControler.getBlock;
+import static MIPS.IRControler.getFunction;
 import static RegisterControler.RegisterName.*;
 
 /**
@@ -19,71 +21,34 @@ public class AddBinInstruction extends BinaryInstruction {
         vSrc = _address;
     }
 
-    public int configure(Function func,LinkedList<Instruction> BlockStat,int position){
-        rSrc = Translate(func,vSrc);
-        rDest = Translate(func,vDest);
+    public void configure(){
+        rSrc = Translate(vSrc);
+        rDest = Translate(vDest);
         if (rDest.equals("")) { //delete
-            BlockStat.remove(this);
-            return position - 1;
+            getBlock().BlockStat.remove(this);
+            return;
         }
         if (rSrc.equals("Memory")){
-            int pos = func.localState.Dic[SaveInAddress].indexOf(vSrc) * 4;
+            int pos = getFunction().localState.Dic[SaveInAddress].indexOf(vSrc) * 4;
             Instruction now = new AddBinInstruction("lw",Rsrc1,s_p,pos);
-            BlockStat.add(position,now);
-            now.configure(func,BlockStat,position);
+            getBlock().BlockStat.add(getBlock().BlockStat.indexOf(this),now);
+            now.configure();
             rSrc = Rsrc1.toString();
-            position++;
         }
 
-        if (rSrc.equals("localMemory")){
-            int pos = func.localState.Dic[local].indexOf(vSrc) * 4;
-            Instruction now1 = new AddBinInstruction("la",Rsrc1,"VReg");
-            Instruction now2 = new AddBinInstruction("lw",Rsrc1,Rsrc1,pos);
-            BlockStat.add(position,now2);
-            now2.configure(func,BlockStat,position);
-            BlockStat.add(position,now1);
-            now1.configure(func,BlockStat,position);
-            rSrc = Rsrc1.toString();
-            position += 2;
-        }
         if (rDest.equals("Memory")){
-            int pos = func.localState.Dic[SaveInAddress].indexOf(vDest) * 4;
+            int pos = getFunction().localState.Dic[SaveInAddress].indexOf(vDest) * 4;
             if (operator.equals("sw")){
                 Instruction now = new AddBinInstruction("lw",Rsrc2,s_p,pos);
-                BlockStat.add(position,now);
-                now.configure(func,BlockStat,position);
-                position++;
+                getBlock().BlockStat.add(getBlock().BlockStat.indexOf(this),now);
+                now.configure();
                 rDest = Rsrc2.toString();
             } else {
                 Instruction now = new AddBinInstruction("sw",Rdest,s_p,pos);
-                BlockStat.add(position + 1,now);
-                now.configure(func,BlockStat,position + 1);
-                position++;
+                getBlock().BlockStat.add(getBlock().BlockStat.indexOf(this) + 1,now);
                 rDest = Rdest.toString();
             }
         }
-        if (rDest.equals("localMemory")){
-            int pos = func.localState.Dic[local].indexOf(vDest) * 4;
-            if (operator.equals("sw")){
-                Instruction now1 = new AddBinInstruction("la",Rdest,"VReg");
-                Instruction now = new AddBinInstruction("lw",Rdest,Rdest,pos);
-                BlockStat.add(position,now);
-                now.configure(func,BlockStat,position);
-                BlockStat.add(position,now1);
-                now1.configure(func,BlockStat,position);
-                rDest = Rsrc2.toString();
-            } else {
-                Instruction now1 = new AddBinInstruction("la",Rsrc1,"VReg");
-                Instruction now = new AddBinInstruction("sw",Rdest,Rsrc1,pos);
-                BlockStat.add(position + 1,now1);
-                BlockStat.add(position + 2,now);
-                now.configure(func,BlockStat,position + 2);
-                now1.configure(func,BlockStat,position + 1);
-                rDest = Rdest.toString();
-            }
-            position += 2;
-        }
-        return position;
     }
 
     public AddBinInstruction(String OP, int dest, int _address, int imm){

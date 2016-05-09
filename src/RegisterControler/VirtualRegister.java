@@ -1,17 +1,143 @@
 package RegisterControler;
 
+import MIPS.BasicBlock;
+import MIPS.Function;
+import MIPS.Instruction.AddBinInstruction;
+import MIPS.Instruction.Instruction;
+import com.sun.deploy.cache.InMemoryLocalApplicationProperties;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import static MIPS.IRControler.getBlock;
 import static MIPS.TextControler.GlobalState;
+import static RegisterControler.RegisterName.global;
+import static RegisterControler.RegisterName.localSaved;
 
 /**
  * Created by Bill on 2016/4/26.
  */
 public class VirtualRegister {
     static int VReg = 32;
-    static int[][] tempRegister = {{0,0},{24,0},{25,0},{7,0},{8,0},{5,0},{6,0},{4,0}};
-    static int [] map = new int[500000];
+
+    static class RegisterState{
+        int times;
+        int name;
+        RegisterState(){}
+        RegisterState(int _name){
+            name = _name;
+        }
+        public RegisterState(int _times,int _name){
+            times = _times;
+            name = _name;
+        }
+        void rename(){
+            name = newVReg();
+        }
+        boolean clean(){
+            return times == 0;
+        }
+        void set(int _times){
+            times = _times;
+        }
+        void use(){
+            times--;
+        }
+    }
+    static LinkedList<RegisterState> newRegister = new LinkedList<>(),
+                                    usedRegister = new LinkedList<>(),
+                                    InMemory = new LinkedList<>();
+    static RegisterState [] map = new RegisterState[500000];
+
+
+    public static void BuildAllocater(Function nowFunc){
+        VReg = 0;
+        InMemory.clear();
+        usedRegister.clear();
+        newRegister.clear();
+        newRegister.add(new RegisterState(24));
+        newRegister.add(new RegisterState(25));
+
+        for (int i = nowFunc.localState.Dic[localSaved].size();i < 8;i++)
+            newRegister.add(new RegisterState(9 + i)); //t1 + i unused localSaved
+
+        newRegister.add(new RegisterState(4));
+        newRegister.add(new RegisterState(5));
+        newRegister.add(new RegisterState(6));
+        newRegister.add(new RegisterState(7));
+
+        for (int i = GlobalState.Dic[global].size();i < 7;i++)
+            newRegister.add(new RegisterState(16 + i)); //s0 + i  unused global
+    }
     public static int newVReg(){
         return VReg++;
     }
+
+    static RegisterState ForceOrder(Instruction last){
+        if (!newRegister.isEmpty()){
+            RegisterState now = newRegister.pop();
+            usedRegister.push(now);
+            return now;
+        }
+        else {
+            RegisterState pre = usedRegister.pop();
+            InMemory.push(pre);
+            RegisterState now = new RegisterState(pre.name);
+            pre.rename();
+
+            Instruction past = new AddBinInstruction("la",8,"VReg"); // t_0
+            past.configure();
+            getBlock().BlockStat.add(getBlock().BlockStat.indexOf(last),past);
+
+            past = new AddBinInstruction("sw",now.name,8,pre.name * 4);
+            past.configure();
+            getBlock().BlockStat.add(getBlock().BlockStat.indexOf(last),past);
+
+            usedRegister.push(now);
+            return now;
+        }
+    }
+
+    public static Integer order(Instruction last,int virtualRegister){
+        if (map[virtualRegister] == null){
+            map[virtualRegister] = ForceOrder(last);
+            map[virtualRegister].set(GlobalState.times(virtualRegister));
+            map[virtualRegister].use();
+        }else {
+            if (InMemory.contains(map[virtualRegister])){
+                RegisterState pre = map[virtualRegister];
+                RegisterState now = ForceOrder(last);
+
+                Instruction past = new AddBinInstruction("la",now.name,"VReg");
+                past.configure();
+                getBlock().BlockStat.add(getBlock().BlockStat.indexOf(last),past);
+
+                past = new AddBinInstruction("lw",now.name,now.name,pre.name * 4);
+                past.configure();
+                getBlock().BlockStat.add(getBlock().BlockStat.indexOf(last),past);
+
+                now.set(map[virtualRegister].times);
+                now.use();
+                map[virtualRegister] = now;
+            }
+            else map[virtualRegister].use();
+        }
+        RegisterState now = map[virtualRegister];
+        if (now.clean()){
+            map[virtualRegister] = null;
+            newRegister.push(now);
+            usedRegister.remove(now);
+        }
+        return now.name;
+    }
+
+
+
+
+    /*
+    static int[][] tempRegister = {{0,0},{24,0},{25,0},{7,0},{8,0},{5,0},{6,0},{4,0}};
+
     public static Integer order(int virtualRegister){
         int now = map[virtualRegister];
         if (now != 0){
@@ -29,4 +155,5 @@ public class VirtualRegister {
             return -1;
         }
     }
+    */
 }

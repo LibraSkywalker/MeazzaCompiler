@@ -21,8 +21,7 @@ public class JumpInstruction extends Instruction {
         isReg = true;
     }
 
-    public int configure(Function func, LinkedList<Instruction> BlockStat, int position){
-        return position;
+    public void configure(){
     }
 
     public JumpInstruction(String op, String lbl){
