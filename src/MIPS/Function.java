@@ -38,6 +38,18 @@ public class Function {
         return now;
     }
 
+    public String nextLoop(){
+        String tmp = currentBasicBlock.label;
+        tmp = tmp.substring(0,tmp.lastIndexOf("loop") - 1);
+        return tmp + "_loopTail";
+    }
+
+    public String breakTo(){
+        String tmp = currentBasicBlock.label;
+        tmp = tmp.substring(0,tmp.lastIndexOf("loop") - 1);
+        return tmp + "_next";
+    }
+
     BasicBlock addBasicBlock(){
         BasicBlock now = new BasicBlock(FuncName + "_"+ number++);
         basicBlocks.add(basicBlocks.indexOf(getCurrentBasicBlock()) + 1,now);

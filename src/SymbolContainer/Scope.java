@@ -15,7 +15,6 @@ import static RegisterControler.RegisterName.a_0;
  */
 public class Scope extends ActionNodeBase{
     Scope prevScope,lastScope;
-    public BasicBlock looper,nextblock;
     int type;
     Dictionary<String, Symbol> dict;
     public ArrayList<VariableSymbol> dict2;

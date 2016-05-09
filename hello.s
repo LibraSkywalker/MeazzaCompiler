@@ -5,22 +5,8 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
-	length0: 	.word 	79
-	String0: 	.asciiz 	"Sorry, the number n must be a number s.t. there exists i satisfying n=1+2+...+i"
-	length1: 	.word 	12
-	String1: 	.asciiz 	"Let's start!"
-	length2: 	.word 	5
-	String2: 	.asciiz 	"step "
-	length3: 	.word 	1
-	String3: 	.asciiz 	":"
-	length4: 	.word 	7
-	String4: 	.asciiz 	"Total: "
-	length5: 	.word 	8
-	String5: 	.asciiz 	" step(s)"
-	length6: 	.word 	1
-	String6: 	.asciiz 	" "
-	length7: 	.word 	0
-	String7: 	.asciiz 	""
+	length0: 	.word 	13
+	String0: 	.asciiz 	"no solution!\n"
 
 
 .text
@@ -506,22 +492,36 @@ main:
 	li $4 4
 	li $2 9
 	syscall
-	li $4 36
+	li $4 64
 	li $2 9
 	syscall
 	move $23 $2
-	lw $32 16($23)
-	la $30 16($23)
-	li $32 48271
-	sw $32 16($23)
-	lw $34 20($23)
-	la $30 20($23)
-	li $34 2147483647
-	sw $34 20($23)
-	lw $36 32($23)
+	li $4 4
+	li $2 9
+	syscall
+	li $32 12000
+	sw $32 0($2)
+	mul $4 $32 8
+	li $2 9
+	syscall
+	move $33 $2
+	lw $34 32($23)
 	la $30 32($23)
-	li $36 1
-	sw $36 32($23)
+	move $34 $33
+	sw $34 32($23)
+	li $4 4
+	li $2 9
+	syscall
+	li $36 12000
+	sw $36 0($2)
+	mul $4 $36 8
+	li $2 9
+	syscall
+	move $37 $2
+	lw $38 36($23)
+	la $30 36($23)
+	move $38 $37
+	sw $38 36($23)
 	jal main_0
 	li $2 10
 	syscall
@@ -529,281 +529,261 @@ main:
 # Read:
 # Write:
 main_0:
-	move $38 $31
-	li $40 0
-	li $42 0
-	li $44 0
-	li $46 3
-	mul $45 $46 7
-	mul $47 $45 10
-	lw $48 0($23)
+	move $40 $31
+	li $4 106
+	jal func__origin
+	jal func__getInt
+	lw $41 0($23)
 	la $30 0($23)
-	move $48 $47
-	sw $48 0($23)
-	lw $50 4($23)
-	la $30 4($23)
-	li $50 0
-	sw $50 4($23)
-	li $4 4
-	li $2 9
-	syscall
-	li $52 100
-	sw $52 0($2)
-	mul $4 $52 8
-	li $2 9
-	syscall
-	move $53 $2
-	lw $54 12($23)
-	la $30 12($23)
-	move $54 $53
-	sw $54 12($23)
-	lw $35 20($23)
-	lw $33 16($23)
-	div $56 $35 $33
-	lw $57 24($23)
+	move $41 $2
+	sw $41 0($23)
+	lw $42 0($23)
+	sub $43 $42 1
+	lw $44 20($23)
+	la $30 20($23)
+	move $44 $43
+	sw $44 20($23)
+	lw $46 16($23)
+	la $30 16($23)
+	move $46 $44
+	sw $46 16($23)
+	lw $48 56($23)
+	la $30 56($23)
+	li $48 0
+	sw $48 56($23)
+	lw $49 56($23)
+	lw $42 0($23)
+	slt $50 $49 $42
+	beq $50 0 main_0_next
+
+# Read:
+# Write:
+main_0_loop:
+	lw $51 60($23)
+	la $30 60($23)
+	li $51 0
+	sw $51 60($23)
+	lw $52 60($23)
+	lw $42 0($23)
+	slt $53 $52 $42
+	beq $53 0 main_0_loop_next
+
+# Read:
+# Write:
+main_0_loop_loop:
+	li $55 1
+	neg $54 $55
+	lw $56 52($23)
+	lw $49 56($23)
+	mul $58 $49 4
+	add $59 $56 $58
+	lw $57 0($59)
+	lw $52 60($23)
+	mul $61 $52 4
+	add $62 $57 $61
+	lw $60 0($62)
+	la $30 0($62)
+	move $60 $54
+	sw $60 0($30)
+
+# Read:
+# Write:
+main_0_loop_loopTail:
+	lw $52 60($23)
+	add $52 $52 1
+	sw $52 60($23)
+	lw $52 60($23)
+	lw $42 0($23)
+	slt $64 $52 $42
+	bne $64 0 main_0_loop_loop
+
+# Read:
+# Write:
+main_0_loop_next:
+
+# Read:
+# Write:
+main_0_loopTail:
+	lw $49 56($23)
+	add $49 $49 1
+	sw $49 56($23)
+	lw $49 56($23)
+	lw $42 0($23)
+	slt $66 $49 $42
+	bne $66 0 main_0_loop
+
+# Read:
+# Write:
+main_0_next:
+	lw $67 4($23)
+	lw $68 40($23)
+	sle $69 $67 $68
+	beq $69 0 main_0_next_next
+
+# Read:
+# Write:
+main_0_next_loop:
+	lw $35 32($23)
+	lw $67 4($23)
+	mul $71 $67 4
+	add $72 $35 $71
+	lw $70 0($72)
+	la $30 0($72)
+	lw $73 24($23)
 	la $30 24($23)
-	move $57 $56
-	sw $57 24($23)
-	lw $35 20($23)
-	lw $33 16($23)
-	rem $59 $35 $33
-	lw $60 28($23)
+	move $73 $70
+	sw $73 24($23)
+	lw $39 36($23)
+	lw $67 4($23)
+	mul $76 $67 4
+	add $77 $39 $76
+	lw $75 0($77)
+	la $30 0($77)
+	lw $78 28($23)
 	la $30 28($23)
-	move $60 $59
-	sw $60 28($23)
-	lw $49 0($23)
-	move $4 $49
-	jal func__pd
-	xor $62 $2 1
-	bne $62 0 main_0_branch_then
+	move $78 $75
+	sw $78 28($23)
+	lw $56 52($23)
+	lw $74 24($23)
+	mul $81 $74 4
+	add $82 $56 $81
+	lw $80 0($82)
+	lw $79 28($23)
+	mul $84 $79 4
+	add $85 $80 $84
+	lw $83 0($85)
+	la $30 0($85)
+	lw $86 48($23)
+	la $30 48($23)
+	move $86 $83
+	sw $86 48($23)
+	lw $74 24($23)
+	sub $88 $74 1
+	move $4 $88
+	lw $79 28($23)
+	sub $89 $79 2
+	move $5 $89
+	jal func__addList
+	lw $74 24($23)
+	sub $90 $74 1
+	move $4 $90
+	lw $79 28($23)
+	add $91 $79 2
+	move $5 $91
+	jal func__addList
+	lw $74 24($23)
+	add $92 $74 1
+	move $4 $92
+	lw $79 28($23)
+	sub $93 $79 2
+	move $5 $93
+	jal func__addList
+	lw $74 24($23)
+	add $94 $74 1
+	move $4 $94
+	lw $79 28($23)
+	add $95 $79 2
+	move $5 $95
+	jal func__addList
+	lw $74 24($23)
+	sub $96 $74 2
+	move $4 $96
+	lw $79 28($23)
+	sub $97 $79 1
+	move $5 $97
+	jal func__addList
+	lw $74 24($23)
+	sub $98 $74 2
+	move $4 $98
+	lw $79 28($23)
+	add $99 $79 1
+	move $5 $99
+	jal func__addList
+	lw $74 24($23)
+	add $100 $74 2
+	move $4 $100
+	lw $79 28($23)
+	sub $101 $79 1
+	move $5 $101
+	jal func__addList
+	lw $74 24($23)
+	add $102 $74 2
+	move $4 $102
+	lw $79 28($23)
+	add $103 $79 1
+	move $5 $103
+	jal func__addList
+	lw $104 44($23)
+	seq $105 $104 1
+	bne $105 0 main_0_next_loop_branch_then
 
 # Read:
 # Write:
-main_0_branch_else:
-	b main_1
+main_0_next_loop_branch_else:
+	b main_0_next_loop_next
 
 # Read:
 # Write:
-main_0_branch_then:
+main_0_next_loop_branch_then:
+	b main_0_next_next
+
+# Read:
+# Write:
+main_0_next_loop_next:
+	lw $67 4($23)
+	add $106 $67 1
+	lw $67 4($23)
+	la $30 4($23)
+	move $67 $106
+	sw $67 4($23)
+
+# Read:
+# Write:
+main_0_next_loopTail:
+	lw $107 4($23)
+	lw $68 40($23)
+	sle $108 $107 $68
+	bne $108 0 main_0_next_loop
+
+# Read:
+# Write:
+main_0_next_next:
+	lw $104 44($23)
+	seq $109 $104 1
+	bne $109 0 main_0_next_next_branch_then
+
+# Read:
+# Write:
+main_0_next_next_branch_else:
 	la $4 String0
-	jal func__println
-	li $2 1
-	move $31 $38
-	jr $ra
+	jal func__print
+	b main_0_next_next_next
 
 # Read:
 # Write:
-main_1:
-	la $4 String1
-	jal func__println
-	li $4 3654898
-	jal func__initialize
-	jal func__random
-	rem $63 $2 10
-	add $64 $63 1
-	lw $65 8($23)
-	la $30 8($23)
-	move $65 $64
-	sw $65 8($23)
-	lw $66 8($23)
-	move $4 $66
+main_0_next_next_branch_then:
+	lw $56 52($23)
+	lw $47 16($23)
+	mul $111 $47 4
+	add $112 $56 $111
+	lw $110 0($112)
+	lw $45 20($23)
+	mul $114 $45 4
+	add $115 $110 $114
+	lw $113 0($115)
+	la $30 0($115)
+	move $4 $113
 	jal func__toString
 	move $4 $2
 	jal func__println
-	lw $66 8($23)
-	sub $67 $66 1
-	slt $68 $40 $67
-	beq $68 0 main_2
 
 # Read:
 # Write:
-main_1_loop:
-	jal func__random
-	rem $69 $2 10
-	add $70 $69 1
-	lw $55 12($23)
-	mul $72 $40 4
-	add $73 $55 $72
-	lw $71 0($73)
-	la $30 0($73)
-	move $71 $70
-	sw $71 0($30)
-	lw $55 12($23)
-	mul $75 $40 4
-	add $76 $55 $75
-	lw $74 0($76)
-	la $30 0($76)
-	add $77 $74 $42
-	lw $49 0($23)
-	sgt $78 $77 $49
-	beq $78 0 main_3
-
-# Read:
-# Write:
-main_1_loop_loop:
-	jal func__random
-	rem $79 $2 10
-	add $80 $79 1
-	lw $55 12($23)
-	mul $82 $40 4
-	add $83 $55 $82
-	lw $81 0($83)
-	la $30 0($83)
-	move $81 $80
-	sw $81 0($30)
-
-# Read:
-# Write:
-main_1_loop_loopTail:
-	lw $55 12($23)
-	mul $85 $40 4
-	add $86 $55 $85
-	lw $84 0($86)
-	la $30 0($86)
-	add $87 $84 $42
-	lw $49 0($23)
-	sgt $88 $87 $49
-	bne $88 0 main_1_loop_loop
-
-# Read:
-# Write:
-main_3:
-	lw $55 12($23)
-	mul $90 $40 4
-	add $91 $55 $90
-	lw $89 0($91)
-	la $30 0($91)
-	add $92 $42 $89
-	move $42 $92
-
-# Read:
-# Write:
-main_1_loopTail:
-	add $40 $40 1
-	lw $66 8($23)
-	sub $94 $66 1
-	slt $95 $40 $94
-	bne $95 0 main_1_loop
-
-# Read:
-# Write:
-main_2:
-	lw $49 0($23)
-	sub $96 $49 $42
-	lw $55 12($23)
-	lw $66 8($23)
-	sub $97 $66 1
-	mul $99 $97 4
-	add $100 $55 $99
-	lw $98 0($100)
-	la $30 0($100)
-	move $98 $96
-	sw $98 0($30)
-	jal func__show
-	jal func__merge
-	jal func__win
-	xor $101 $2 1
-	beq $101 0 main_4
-
-# Read:
-# Write:
-main_2_loop:
-	add $44 $44 1
-	move $4 $44
-	jal func__toString
-	la $4 String2
-	move $5 $2
-	jal func__stringConcatenate
-	move $103 $2
-	move $4 $103
-	la $5 String3
-	jal func__stringConcatenate
-	move $104 $2
-	move $4 $104
-	jal func__println
-	jal func__move
-	jal func__merge
-	jal func__show
-
-# Read:
-# Write:
-main_2_loopTail:
-	jal func__win
-	xor $105 $2 1
-	bne $105 0 main_2_loop
-
-# Read:
-# Write:
-main_4:
-	move $4 $44
-	jal func__toString
-	la $4 String4
-	move $5 $2
-	jal func__stringConcatenate
-	move $106 $2
-	move $4 $106
-	la $5 String5
-	jal func__stringConcatenate
-	move $107 $2
-	move $4 $107
-	jal func__println
+main_0_next_next_next:
 	li $2 0
-	move $31 $38
+	move $31 $40
 	jr $ra
-	move $31 $38
-	jr $ra
-
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# Read:
-# Write:
-func__random:
-	move $108 $31
-	lw $33 16($23)
-	lw $37 32($23)
-	lw $58 24($23)
-	rem $109 $37 $58
-	mul $110 $33 $109
-	lw $61 28($23)
-	lw $37 32($23)
-	lw $58 24($23)
-	div $111 $37 $58
-	mul $112 $61 $111
-	sub $113 $110 $112
-	move $115 $113
-	sge $116 $115 0
-	bne $116 0 func__random_branch_then
-
-# Read:
-# Write:
-func__random_branch_else:
-	lw $35 20($23)
-	add $117 $115 $35
-	lw $37 32($23)
-	la $30 32($23)
-	move $37 $117
-	sw $37 32($23)
-	b func__random_0
-
-# Read:
-# Write:
-func__random_branch_then:
-	lw $118 32($23)
-	la $30 32($23)
-	move $118 $115
-	sw $118 32($23)
-
-# Read:
-# Write:
-func__random_0:
-	lw $119 32($23)
-	move $2 $119
-	move $31 $108
-	jr $ra
-	move $31 $108
+	move $31 $40
 	jr $ra
 
 # local:
@@ -813,53 +793,100 @@ func__random_0:
 # times:
 # Read:
 # Write:
-func__initialize:
-	move $120 $31
-	move $121 $4
-	lw $119 32($23)
-	la $30 32($23)
-	move $119 $121
-	sw $119 32($23)
-	move $31 $120
-	jr $ra
+func__origin:
+	move $116 $31
+	move $117 $4
+	li $4 4
+	li $2 9
+	syscall
+	sw $117 0($2)
+	mul $4 $117 8
+	li $2 9
+	syscall
+	move $118 $2
+	lw $56 52($23)
+	la $30 52($23)
+	move $56 $118
+	sw $56 52($23)
+	lw $49 56($23)
+	la $30 56($23)
+	li $49 0
+	sw $49 56($23)
+	lw $120 56($23)
+	slt $121 $120 $117
+	beq $121 0 func__origin_next
 
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
 # Read:
 # Write:
-func__swap:
-	move $123 $31
-	move $124 $4
-	move $125 $5
-	lw $55 12($23)
-	mul $127 $124 4
-	add $128 $55 $127
-	lw $126 0($128)
-	la $30 0($128)
-	move $130 $126
-	lw $55 12($23)
-	mul $132 $125 4
-	add $133 $55 $132
+func__origin_loop:
+	li $4 4
+	li $2 9
+	syscall
+	sw $117 0($2)
+	mul $4 $117 8
+	li $2 9
+	syscall
+	move $122 $2
+	lw $119 52($23)
+	lw $120 56($23)
+	mul $124 $120 4
+	add $125 $119 $124
+	lw $123 0($125)
+	la $30 0($125)
+	move $123 $122
+	sw $123 0($30)
+	lw $52 60($23)
+	la $30 60($23)
+	li $52 0
+	sw $52 60($23)
+	lw $126 60($23)
+	slt $127 $126 $117
+	beq $127 0 func__origin_loop_next
+
+# Read:
+# Write:
+func__origin_loop_loop:
+	lw $119 52($23)
+	lw $120 56($23)
+	mul $129 $120 4
+	add $130 $119 $129
+	lw $128 0($130)
+	lw $126 60($23)
+	mul $132 $126 4
+	add $133 $128 $132
 	lw $131 0($133)
 	la $30 0($133)
-	lw $55 12($23)
-	mul $135 $124 4
-	add $136 $55 $135
-	lw $134 0($136)
-	la $30 0($136)
-	move $134 $131
-	sw $134 0($30)
-	lw $55 12($23)
-	mul $138 $125 4
-	add $139 $55 $138
-	lw $137 0($139)
-	la $30 0($139)
-	move $137 $130
-	sw $137 0($30)
-	move $31 $123
+	li $131 0
+	sw $131 0($30)
+
+# Read:
+# Write:
+func__origin_loop_loopTail:
+	lw $126 60($23)
+	add $126 $126 1
+	sw $126 60($23)
+	lw $126 60($23)
+	slt $135 $126 $117
+	bne $135 0 func__origin_loop_loop
+
+# Read:
+# Write:
+func__origin_loop_next:
+
+# Read:
+# Write:
+func__origin_loopTail:
+	lw $120 56($23)
+	add $120 $120 1
+	sw $120 56($23)
+	lw $120 56($23)
+	slt $137 $120 $117
+	bne $137 0 func__origin_loop
+
+# Read:
+# Write:
+func__origin_next:
+	move $31 $116
 	jr $ra
 
 # local:
@@ -869,57 +896,17 @@ func__swap:
 # times:
 # Read:
 # Write:
-func__pd:
-	move $140 $31
-	move $141 $4
-	lw $51 4($23)
-	sle $142 $51 $141
-	beq $142 0 func__pd_0
-
-# Read:
-# Write:
-func__pd_loop:
-	lw $51 4($23)
-	lw $51 4($23)
-	add $143 $51 1
-	mul $144 $51 $143
-	div $145 $144 2
-	seq $146 $141 $145
-	bne $146 0 func__pd_loop_branch_then
-
-# Read:
-# Write:
-func__pd_loop_branch_else:
-	b func__pd_1
-
-# Read:
-# Write:
-func__pd_loop_branch_then:
-	li $2 1
-	move $31 $140
+func__check:
+	move $138 $31
+	move $139 $4
+	move $140 $5
+	slt $141 $139 $140
+	sge $142 $139 0
+	and $143 $141 $142
+	move $2 $143
+	move $31 $138
 	jr $ra
-
-# Read:
-# Write:
-func__pd_1:
-
-# Read:
-# Write:
-func__pd_loopTail:
-	lw $51 4($23)
-	add $51 $51 1
-	sw $51 4($23)
-	lw $51 4($23)
-	sle $148 $51 $141
-	bne $148 0 func__pd_loop
-
-# Read:
-# Write:
-func__pd_0:
-	li $2 0
-	move $31 $140
-	jr $ra
-	move $31 $140
+	move $31 $138
 	jr $ra
 
 # local:
@@ -929,444 +916,103 @@ func__pd_0:
 # times:
 # Read:
 # Write:
-func__show:
-	move $149 $31
-	li $151 0
-	lw $66 8($23)
-	slt $152 $151 $66
-	beq $152 0 func__show_0
+func__addList:
+	move $144 $31
+	move $145 $4
+	move $146 $5
+	move $4 $145
+	lw $42 0($23)
+	move $5 $42
+	jal func__check
+	move $4 $146
+	lw $42 0($23)
+	move $5 $42
+	jal func__check
+	and $147 $2 $2
+	lw $119 52($23)
+	mul $149 $145 4
+	add $150 $119 $149
+	lw $148 0($150)
+	mul $152 $146 4
+	add $153 $148 $152
+	lw $151 0($153)
+	la $30 0($153)
+	li $155 1
+	neg $154 $155
+	seq $156 $151 $154
+	and $157 $147 $156
+	bne $157 0 func__addList_branch_then
 
 # Read:
 # Write:
-func__show_loop:
-	lw $55 12($23)
-	mul $154 $151 4
-	add $155 $55 $154
-	lw $153 0($155)
-	la $30 0($155)
-	move $4 $153
-	jal func__toString
-	move $4 $2
-	la $5 String6
-	jal func__stringConcatenate
-	move $156 $2
-	move $4 $156
-	jal func__print
+func__addList_branch_else:
+	b func__addList_next
 
 # Read:
 # Write:
-func__show_loopTail:
-	add $151 $151 1
-	lw $66 8($23)
-	slt $158 $151 $66
-	bne $158 0 func__show_loop
-
-# Read:
-# Write:
-func__show_0:
-	la $4 String7
-	jal func__println
-	move $31 $149
-	jr $ra
-
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# Read:
-# Write:
-func__win:
-	move $159 $31
-	li $4 4
-	li $2 9
-	syscall
-	li $160 100
-	sw $160 0($2)
-	mul $4 $160 8
-	li $2 9
-	syscall
-	move $161 $2
-	move $163 $161
-	lw $66 8($23)
-	lw $51 4($23)
-	sne $164 $66 $51
-	bne $164 0 func__win_branch_then
-
-# Read:
-# Write:
-func__win_branch_else:
-	b func__win_0
-
-# Read:
-# Write:
-func__win_branch_then:
-	li $2 0
-	move $31 $159
-	jr $ra
-
-# Read:
-# Write:
-func__win_0:
-	li $165 0
-	lw $66 8($23)
-	slt $166 $165 $66
-	beq $166 0 func__win_1
-
-# Read:
-# Write:
-func__win_0_loop:
-	lw $55 12($23)
-	mul $168 $165 4
-	add $169 $55 $168
+func__addList_branch_then:
+	lw $68 40($23)
+	add $158 $68 1
+	lw $68 40($23)
+	la $30 40($23)
+	move $68 $158
+	sw $68 40($23)
+	lw $35 32($23)
+	lw $159 40($23)
+	mul $161 $159 4
+	add $162 $35 $161
+	lw $160 0($162)
+	la $30 0($162)
+	move $160 $145
+	sw $160 0($30)
+	lw $39 36($23)
+	lw $159 40($23)
+	mul $164 $159 4
+	add $165 $39 $164
+	lw $163 0($165)
+	la $30 0($165)
+	move $163 $146
+	sw $163 0($30)
+	lw $87 48($23)
+	add $166 $87 1
+	lw $119 52($23)
+	mul $168 $145 4
+	add $169 $119 $168
 	lw $167 0($169)
-	la $30 0($169)
-	mul $171 $165 4
-	add $172 $163 $171
+	mul $171 $146 4
+	add $172 $167 $171
 	lw $170 0($172)
 	la $30 0($172)
-	move $170 $167
+	move $170 $166
 	sw $170 0($30)
+	lw $47 16($23)
+	seq $173 $145 $47
+	lw $45 20($23)
+	seq $174 $146 $45
+	and $175 $173 $174
+	bne $175 0 func__addList_branch_then_branch_then
 
 # Read:
 # Write:
-func__win_0_loopTail:
-	add $165 $165 1
-	lw $66 8($23)
-	slt $174 $165 $66
-	bne $174 0 func__win_0_loop
+func__addList_branch_then_branch_else:
+	b func__addList_branch_then_next
 
 # Read:
 # Write:
-func__win_1:
-	li $175 0
-	lw $66 8($23)
-	sub $176 $66 1
-	slt $177 $175 $176
-	beq $177 0 func__win_2
+func__addList_branch_then_branch_then:
+	lw $104 44($23)
+	la $30 44($23)
+	li $104 1
+	sw $104 44($23)
 
 # Read:
 # Write:
-func__win_1_loop:
-	add $178 $175 1
-	move $165 $178
-	lw $66 8($23)
-	slt $179 $165 $66
-	beq $179 0 func__win_3
+func__addList_branch_then_next:
 
 # Read:
 # Write:
-func__win_1_loop_loop:
-	mul $181 $175 4
-	add $182 $163 $181
-	lw $180 0($182)
-	la $30 0($182)
-	mul $184 $165 4
-	add $185 $163 $184
-	lw $183 0($185)
-	la $30 0($185)
-	sgt $186 $180 $183
-	bne $186 0 func__win_1_loop_loop_branch_then
-
-# Read:
-# Write:
-func__win_1_loop_loop_branch_else:
-	b func__win_4
-
-# Read:
-# Write:
-func__win_1_loop_loop_branch_then:
-	mul $188 $175 4
-	add $189 $163 $188
-	lw $187 0($189)
-	la $30 0($189)
-	move $190 $187
-	mul $192 $165 4
-	add $193 $163 $192
-	lw $191 0($193)
-	la $30 0($193)
-	mul $195 $175 4
-	add $196 $163 $195
-	lw $194 0($196)
-	la $30 0($196)
-	move $194 $191
-	sw $194 0($30)
-	mul $198 $165 4
-	add $199 $163 $198
-	lw $197 0($199)
-	la $30 0($199)
-	move $197 $190
-	sw $197 0($30)
-
-# Read:
-# Write:
-func__win_4:
-
-# Read:
-# Write:
-func__win_1_loop_loopTail:
-	add $165 $165 1
-	lw $66 8($23)
-	slt $201 $165 $66
-	bne $201 0 func__win_1_loop_loop
-
-# Read:
-# Write:
-func__win_3:
-
-# Read:
-# Write:
-func__win_1_loopTail:
-	add $175 $175 1
-	lw $66 8($23)
-	sub $203 $66 1
-	slt $204 $175 $203
-	bne $204 0 func__win_1_loop
-
-# Read:
-# Write:
-func__win_2:
-	li $175 0
-	lw $66 8($23)
-	slt $205 $175 $66
-	beq $205 0 func__win_5
-
-# Read:
-# Write:
-func__win_2_loop:
-	mul $207 $175 4
-	add $208 $163 $207
-	lw $206 0($208)
-	la $30 0($208)
-	add $209 $175 1
-	sne $210 $206 $209
-	bne $210 0 func__win_2_loop_branch_then
-
-# Read:
-# Write:
-func__win_2_loop_branch_else:
-	b func__win_6
-
-# Read:
-# Write:
-func__win_2_loop_branch_then:
-	li $2 0
-	move $31 $159
-	jr $ra
-
-# Read:
-# Write:
-func__win_6:
-
-# Read:
-# Write:
-func__win_2_loopTail:
-	add $175 $175 1
-	lw $66 8($23)
-	slt $212 $175 $66
-	bne $212 0 func__win_2_loop
-
-# Read:
-# Write:
-func__win_5:
-	li $2 1
-	move $31 $159
-	jr $ra
-	move $31 $159
-	jr $ra
-
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# Read:
-# Write:
-func__merge:
-	move $213 $31
-	li $215 0
-	lw $66 8($23)
-	slt $216 $215 $66
-	beq $216 0 func__merge_0
-
-# Read:
-# Write:
-func__merge_loop:
-	lw $55 12($23)
-	mul $218 $215 4
-	add $219 $55 $218
-	lw $217 0($219)
-	la $30 0($219)
-	seq $220 $217 0
-	bne $220 0 func__merge_loop_branch_then
-
-# Read:
-# Write:
-func__merge_loop_branch_else:
-	b func__merge_1
-
-# Read:
-# Write:
-func__merge_loop_branch_then:
-	add $221 $215 1
-	move $223 $221
-	lw $66 8($23)
-	slt $224 $223 $66
-	beq $224 0 func__merge_2
-
-# Read:
-# Write:
-func__merge_loop_branch_then_loop:
-	lw $55 12($23)
-	mul $226 $223 4
-	add $227 $55 $226
-	lw $225 0($227)
-	la $30 0($227)
-	sne $228 $225 0
-	bne $228 0 func__merge_loop_branch_then_loop_branch_then
-
-# Read:
-# Write:
-func__merge_loop_branch_then_loop_branch_else:
-	b func__merge_3
-
-# Read:
-# Write:
-func__merge_loop_branch_then_loop_branch_then:
-	move $4 $215
-	move $5 $223
-	jal func__swap
-	b func__merge_2
-
-# Read:
-# Write:
-func__merge_3:
-
-# Read:
-# Write:
-func__merge_loop_branch_then_loopTail:
-	add $223 $223 1
-	lw $66 8($23)
-	slt $230 $223 $66
-	bne $230 0 func__merge_loop_branch_then_loop
-
-# Read:
-# Write:
-func__merge_2:
-
-# Read:
-# Write:
-func__merge_1:
-
-# Read:
-# Write:
-func__merge_loopTail:
-	add $215 $215 1
-	lw $66 8($23)
-	slt $232 $215 $66
-	bne $232 0 func__merge_loop
-
-# Read:
-# Write:
-func__merge_0:
-	li $215 0
-	lw $66 8($23)
-	slt $233 $215 $66
-	beq $233 0 func__merge_4
-
-# Read:
-# Write:
-func__merge_0_loop:
-	lw $55 12($23)
-	mul $235 $215 4
-	add $236 $55 $235
-	lw $234 0($236)
-	la $30 0($236)
-	seq $237 $234 0
-	bne $237 0 func__merge_0_loop_branch_then
-
-# Read:
-# Write:
-func__merge_0_loop_branch_else:
-	b func__merge_5
-
-# Read:
-# Write:
-func__merge_0_loop_branch_then:
-	lw $66 8($23)
-	la $30 8($23)
-	move $66 $215
-	sw $66 8($23)
-	b func__merge_0
-
-# Read:
-# Write:
-func__merge_5:
-
-# Read:
-# Write:
-func__merge_0_loopTail:
-	add $215 $215 1
-	lw $238 8($23)
-	slt $240 $215 $238
-	bne $240 0 func__merge_0_loop
-
-# Read:
-# Write:
-func__merge_4:
-	move $31 $213
-	jr $ra
-
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# Read:
-# Write:
-func__move:
-	move $241 $31
-	li $243 0
-	lw $238 8($23)
-	slt $244 $243 $238
-	beq $244 0 func__move_0
-
-# Read:
-# Write:
-func__move_loop:
-	lw $55 12($23)
-	mul $246 $243 4
-	add $247 $55 $246
-	lw $245 0($247)
-	la $30 0($247)
-	sub $245 $245 1
-	sw $245 0($30)
-	add $249 $243 1
-	move $243 $249
-
-# Read:
-# Write:
-func__move_loopTail:
-	lw $238 8($23)
-	slt $250 $243 $238
-	bne $250 0 func__move_loop
-
-# Read:
-# Write:
-func__move_0:
-	lw $238 8($23)
-	lw $55 12($23)
-	lw $238 8($23)
-	mul $252 $238 4
-	add $253 $55 $252
-	lw $251 0($253)
-	la $30 0($253)
-	move $251 $238
-	sw $251 0($30)
-	lw $238 8($23)
-	add $238 $238 1
-	sw $238 8($23)
-	move $31 $241
+func__addList_next:
+	move $31 $144
 	jr $ra
 
 # local:

@@ -5,22 +5,8 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
-	length0: 	.word 	79
-	String0: 	.asciiz 	"Sorry, the number n must be a number s.t. there exists i satisfying n=1+2+...+i"
-	length1: 	.word 	12
-	String1: 	.asciiz 	"Let's start!"
-	length2: 	.word 	5
-	String2: 	.asciiz 	"step "
-	length3: 	.word 	1
-	String3: 	.asciiz 	":"
-	length4: 	.word 	7
-	String4: 	.asciiz 	"Total: "
-	length5: 	.word 	8
-	String5: 	.asciiz 	" step(s)"
-	length6: 	.word 	1
-	String6: 	.asciiz 	" "
-	length7: 	.word 	0
-	String7: 	.asciiz 	""
+	length0: 	.word 	13
+	String0: 	.asciiz 	"no solution!\n"
 
 
 .text
@@ -502,704 +488,440 @@ func__stringNeq:
 	jr $ra
 
 main:
-	sub $29 $29 8
 	li $4 4
 	li $2 9
 	syscall
-	li $4 36
+	li $4 64
 	li $2 9
 	syscall
 	move $23 $2
-	lw $24 16($23)
-	la $30 16($23)
-	li $24 48271
-	sw $24 16($23)
-	lw $25 20($23)
-	la $30 20($23)
-	li $25 2147483647
-	sw $25 20($23)
-	lw $12 32($23)
-	la $30 32($23)
-	li $12 1
-	sw $12 32($23)
-	jal main_0
-	li $2 10
-	syscall
-
-main_0:
-	move $31 $31
-	sw $31 0($29)
-	li $s0 0
-	li $s1 0
-	li $31 0
-	sw $31 4($29)
-	li $13 3
-	mul $14 $13 7
-	mul $15 $14 10
-	lw $7 0($23)
-	la $30 0($23)
-	move $7 $15
-	sw $7 0($23)
-	lw $6 4($23)
-	la $30 4($23)
-	li $6 0
-	sw $6 4($23)
 	li $4 4
 	li $2 9
 	syscall
-	li $4 100
-	sw $4 0($2)
-	mul $4 $4 8
-	li $2 9
-	syscall
-	move $5 $2
-	lw $24 12($23)
-	la $30 12($23)
-	move $24 $5
-	sw $24 12($23)
-	lw $25 20($23)
-	lw $12 16($23)
-	div $13 $25 $12
-	lw $14 24($23)
-	la $30 24($23)
-	move $14 $13
-	sw $14 24($23)
-	lw $25 20($23)
-	lw $12 16($23)
-	rem $15 $25 $12
-	lw $7 28($23)
-	la $30 28($23)
-	move $7 $15
-	sw $7 28($23)
-	lw $t1 0($23)
-	move $4 $t1
-	jal func__pd
-	xor $6 $2 1
-	bne $6 0 main_0_branch_then
-
-main_0_branch_else:
-	b main_1
-
-main_0_branch_then:
-	la $4 String0
-	jal func__println
-	li $2 1
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-
-main_1:
-	la $4 String1
-	jal func__println
-	li $4 3654898
-	jal func__initialize
-	jal func__random
-	rem $4 $2 10
-	add $5 $4 1
-	lw $24 8($23)
-	la $30 8($23)
-	move $24 $5
-	sw $24 8($23)
-	lw $t2 8($23)
-	move $4 $t2
-	jal func__toString
-	move $4 $2
-	jal func__println
-	lw $t2 8($23)
-	sub $13 $t2 1
-	bge $s0 $13 main_2
-
-main_1_loop:
-	jal func__random
-	rem $14 $2 10
-	add $25 $14 1
-	lw $t3 12($23)
-	mul $12 $s0 4
-	add $15 $t3 $12
-	lw $7 0($15)
-	la $30 0($15)
-	move $7 $25
-	sw $7 0($30)
-	lw $t3 12($23)
-	mul $6 $s0 4
-	add $4 $t3 $6
-	lw $5 0($4)
-	la $30 0($4)
-	add $24 $5 $s1
-	lw $t1 0($23)
-	ble $24 $t1 main_3
-
-main_1_loop_loop:
-	jal func__random
-	rem $13 $2 10
-	add $14 $13 1
-	lw $t3 12($23)
-	mul $12 $s0 4
-	add $15 $t3 $12
-	lw $25 0($15)
-	la $30 0($15)
-	move $25 $14
-	sw $25 0($30)
-
-main_1_loop_loopTail:
-	lw $t3 12($23)
-	mul $7 $s0 4
-	add $6 $t3 $7
-	lw $4 0($6)
-	la $30 0($6)
-	add $5 $4 $s1
-	lw $t1 0($23)
-	bgt $5 $t1 main_1_loop_loop
-
-main_3:
-	lw $t3 12($23)
-	mul $24 $s0 4
-	add $13 $t3 $24
-	lw $12 0($13)
-	la $30 0($13)
-	add $15 $s1 $12
-	move $s1 $15
-
-main_1_loopTail:
-	add $s0 $s0 1
-	lw $t2 8($23)
-	sub $14 $t2 1
-	blt $s0 $14 main_1_loop
-
-main_2:
-	lw $t1 0($23)
-	sub $25 $t1 $s1
-	lw $t3 12($23)
-	lw $t2 8($23)
-	sub $7 $t2 1
-	mul $6 $7 4
-	add $4 $t3 $6
-	lw $5 0($4)
-	la $30 0($4)
-	move $5 $25
-	sw $5 0($30)
-	jal func__show
-	jal func__merge
-	jal func__win
-	xor $24 $2 1
-	beq $24 0 main_4
-
-main_2_loop:
-	lw $3 4($29)
-	add $31 $3 1
-	sw $31 4($29)
-	lw $3 4($29)
-	move $4 $3
-	jal func__toString
-	la $4 String2
-	move $5 $2
-	jal func__stringConcatenate
-	move $13 $2
-	move $4 $13
-	la $5 String3
-	jal func__stringConcatenate
-	move $12 $2
-	move $4 $12
-	jal func__println
-	jal func__move
-	jal func__merge
-	jal func__show
-
-main_2_loopTail:
-	jal func__win
-	xor $15 $2 1
-	bne $15 0 main_2_loop
-
-main_4:
-	lw $3 4($29)
-	move $4 $3
-	jal func__toString
-	la $4 String4
-	move $5 $2
-	jal func__stringConcatenate
-	move $14 $2
-	move $4 $14
-	la $5 String5
-	jal func__stringConcatenate
-	move $7 $2
-	move $4 $7
-	jal func__println
-	li $2 0
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-
-func__random:
-	sub $29 $29 8
-	move $31 $31
-	sw $31 4($29)
-	lw $24 16($23)
-	lw $s2 32($23)
-	lw $25 24($23)
-	rem $9 $s2 $25
-	mul $10 $24 $9
-	lw $11 28($23)
-	lw $s2 32($23)
-	lw $25 24($23)
-	div $12 $s2 $25
-	mul $13 $11 $12
-	sub $14 $10 $13
-	move $31 $14
-	sw $31 0($29)
-	lw $3 0($29)
-	bge $3 0 func__random_branch_then
-
-func__random_branch_else:
-	lw $15 20($23)
-	lw $3 0($29)
-	add $7 $3 $15
-	lw $s2 32($23)
-	la $30 32($23)
-	move $s2 $7
-	sw $s2 32($23)
-	b func__random_0
-
-func__random_branch_then:
-	lw $6 32($23)
-	la $30 32($23)
-	lw $3 0($29)
-	move $6 $3
-	sw $6 32($23)
-
-func__random_0:
-	lw $4 32($23)
-	move $2 $4
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-
-func__initialize:
-	move $24 $31
-	move $25 $4
-	lw $9 32($23)
-	la $30 32($23)
-	move $9 $25
-	sw $9 32($23)
-	move $31 $24
-	jr $ra
-
-func__swap:
-	move $24 $31
-	move $25 $4
-	move $10 $5
-	lw $t1 12($23)
-	mul $11 $25 4
-	add $12 $t1 $11
-	lw $13 0($12)
-	la $30 0($12)
-	move $14 $13
-	lw $t1 12($23)
-	mul $15 $10 4
-	add $7 $t1 $15
-	lw $6 0($7)
-	la $30 0($7)
-	lw $t1 12($23)
-	mul $4 $25 4
-	add $5 $t1 $4
-	lw $11 0($5)
-	la $30 0($5)
-	move $11 $6
-	sw $11 0($30)
-	lw $t1 12($23)
-	mul $12 $10 4
-	add $13 $t1 $12
-	lw $15 0($13)
-	la $30 0($13)
-	move $15 $14
-	sw $15 0($30)
-	move $31 $24
-	jr $ra
-
-func__pd:
-	sub $29 $29 8
-	move $31 $31
-	sw $31 4($29)
-	move $31 $4
-	sw $31 0($29)
-	lw $24 4($23)
-	lw $2 0($29)
-	bgt $24 $2 func__pd_0
-
-func__pd_loop:
-	lw $24 4($23)
-	lw $24 4($23)
-	add $25 $24 1
-	mul $9 $24 $25
-	div $10 $9 2
-	lw $3 0($29)
-	beq $3 $10 func__pd_loop_branch_then
-
-func__pd_loop_branch_else:
-	b func__pd_1
-
-func__pd_loop_branch_then:
-	li $2 1
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-
-func__pd_1:
-
-func__pd_loopTail:
-	lw $24 4($23)
-	add $24 $24 1
-	sw $24 4($23)
-	lw $24 4($23)
-	lw $2 0($29)
-	ble $24 $2 func__pd_loop
-
-func__pd_0:
-	li $2 0
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-	lw $3 4($29)
-	move $31 $3
-	add $29 $29 8
-	jr $ra
-
-func__show:
-	sub $29 $29 4
-	move $31 $31
-	sw $31 0($29)
-	li $s3 0
-	lw $t1 8($23)
-	bge $s3 $t1 func__show_0
-
-func__show_loop:
-	lw $t2 12($23)
-	mul $24 $s3 4
-	add $25 $t2 $24
-	lw $11 0($25)
-	la $30 0($25)
-	move $4 $11
-	jal func__toString
-	move $4 $2
-	la $5 String6
-	jal func__stringConcatenate
-	move $12 $2
-	move $4 $12
-	jal func__print
-
-func__show_loopTail:
-	add $s3 $s3 1
-	lw $t1 8($23)
-	blt $s3 $t1 func__show_loop
-
-func__show_0:
-	la $4 String7
-	jal func__println
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
-	jr $ra
-
-func__win:
-	sub $29 $29 4
-	move $31 $31
-	sw $31 0($29)
-	li $4 4
-	li $2 9
-	syscall
-	li $24 100
+	li $24 12000
 	sw $24 0($2)
 	mul $4 $24 8
 	li $2 9
 	syscall
 	move $25 $2
-	move $t4 $25
-	lw $t1 8($23)
-	lw $14 4($23)
-	bne $t1 $14 func__win_branch_then
+	lw $10 32($23)
+	la $30 32($23)
+	move $10 $25
+	sw $10 32($23)
+	li $4 4
+	li $2 9
+	syscall
+	li $11 12000
+	sw $11 0($2)
+	mul $4 $11 8
+	li $2 9
+	syscall
+	move $12 $2
+	lw $13 36($23)
+	la $30 36($23)
+	move $13 $12
+	sw $13 36($23)
+	jal main_0
+	li $2 10
+	syscall
 
-func__win_branch_else:
-	b func__win_0
+main_0:
+	move $s0 $31
+	li $4 106
+	jal func__origin
+	jal func__getInt
+	lw $14 0($23)
+	la $30 0($23)
+	move $14 $2
+	sw $14 0($23)
+	lw $15 0($23)
+	sub $7 $15 1
+	lw $6 20($23)
+	la $30 20($23)
+	move $6 $7
+	sw $6 20($23)
+	lw $4 16($23)
+	la $30 16($23)
+	move $4 $6
+	sw $4 16($23)
+	lw $5 56($23)
+	la $30 56($23)
+	li $5 0
+	sw $5 56($23)
+	lw $20 56($23)
+	lw $15 0($23)
+	bge $20 $15 main_0_next
 
-func__win_branch_then:
-	li $2 0
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
-	jr $ra
+main_0_loop:
+	lw $21 60($23)
+	la $30 60($23)
+	li $21 0
+	sw $21 60($23)
+	lw $22 60($23)
+	lw $15 0($23)
+	bge $22 $15 main_0_loop_next
 
-func__win_0:
-	li $t2 0
-	lw $t1 8($23)
-	bge $t2 $t1 func__win_1
-
-func__win_0_loop:
-	lw $t3 12($23)
-	mul $15 $t2 4
-	add $7 $t3 $15
+main_0_loop_loop:
+	li $24 1
+	neg $25 $24
+	lw $10 52($23)
+	lw $20 56($23)
+	mul $11 $20 4
+	add $12 $10 $11
+	lw $13 0($12)
+	lw $22 60($23)
+	mul $14 $22 4
+	add $7 $13 $14
 	lw $6 0($7)
 	la $30 0($7)
-	mul $4 $t2 4
-	add $5 $t4 $4
-	lw $24 0($5)
-	la $30 0($5)
-	move $24 $6
-	sw $24 0($30)
-
-func__win_0_loopTail:
-	add $t2 $t2 1
-	lw $t1 8($23)
-	blt $t2 $t1 func__win_0_loop
-
-func__win_1:
-	li $t5 0
-	lw $t1 8($23)
-	sub $25 $t1 1
-	bge $t5 $25 func__win_2
-
-func__win_1_loop:
-	add $14 $t5 1
-	move $t2 $14
-	lw $t1 8($23)
-	bge $t2 $t1 func__win_3
-
-func__win_1_loop_loop:
-	mul $15 $t5 4
-	add $7 $t4 $15
-	lw $4 0($7)
-	la $30 0($7)
-	mul $5 $t2 4
-	add $6 $t4 $5
-	lw $24 0($6)
-	la $30 0($6)
-	bgt $4 $24 func__win_1_loop_loop_branch_then
-
-func__win_1_loop_loop_branch_else:
-	b func__win_4
-
-func__win_1_loop_loop_branch_then:
-	mul $25 $t5 4
-	add $14 $t4 $25
-	lw $15 0($14)
-	la $30 0($14)
-	move $7 $15
-	mul $5 $t2 4
-	add $6 $t4 $5
-	lw $4 0($6)
-	la $30 0($6)
-	mul $24 $t5 4
-	add $25 $t4 $24
-	lw $14 0($25)
-	la $30 0($25)
-	move $14 $4
-	sw $14 0($30)
-	mul $15 $t2 4
-	add $5 $t4 $15
-	lw $6 0($5)
-	la $30 0($5)
-	move $6 $7
+	move $6 $25
 	sw $6 0($30)
 
-func__win_4:
+main_0_loop_loopTail:
+	lw $22 60($23)
+	add $22 $22 1
+	sw $22 60($23)
+	lw $22 60($23)
+	lw $15 0($23)
+	blt $22 $15 main_0_loop_loop
 
-func__win_1_loop_loopTail:
-	add $t2 $t2 1
-	lw $t1 8($23)
-	blt $t2 $t1 func__win_1_loop_loop
+main_0_loop_next:
 
-func__win_3:
+main_0_loopTail:
+	lw $20 56($23)
+	add $20 $20 1
+	sw $20 56($23)
+	lw $20 56($23)
+	lw $15 0($23)
+	blt $20 $15 main_0_loop
 
-func__win_1_loopTail:
-	add $t5 $t5 1
-	lw $t1 8($23)
-	sub $24 $t1 1
-	blt $t5 $24 func__win_1_loop
+main_0_next:
+	lw $t1 4($23)
+	lw $4 40($23)
+	bgt $t1 $4 main_0_next_next
 
-func__win_2:
-	li $t5 0
-	lw $t1 8($23)
-	bge $t5 $t1 func__win_5
+main_0_next_loop:
+	lw $5 32($23)
+	lw $t1 4($23)
+	mul $21 $t1 4
+	add $24 $5 $21
+	lw $11 0($24)
+	la $30 0($24)
+	lw $12 24($23)
+	la $30 24($23)
+	move $12 $11
+	sw $12 24($23)
+	lw $13 36($23)
+	lw $t1 4($23)
+	mul $14 $t1 4
+	add $7 $13 $14
+	lw $25 0($7)
+	la $30 0($7)
+	lw $6 28($23)
+	la $30 28($23)
+	move $6 $25
+	sw $6 28($23)
+	lw $10 52($23)
+	lw $22 24($23)
+	mul $20 $22 4
+	add $15 $10 $20
+	lw $5 0($15)
+	lw $21 28($23)
+	mul $24 $21 4
+	add $11 $5 $24
+	lw $12 0($11)
+	la $30 0($11)
+	lw $13 48($23)
+	la $30 48($23)
+	move $13 $12
+	sw $13 48($23)
+	lw $22 24($23)
+	sub $14 $22 1
+	move $4 $14
+	lw $21 28($23)
+	sub $7 $21 2
+	move $5 $7
+	jal func__addList
+	lw $22 24($23)
+	sub $25 $22 1
+	move $4 $25
+	lw $21 28($23)
+	add $6 $21 2
+	move $5 $6
+	jal func__addList
+	lw $22 24($23)
+	add $20 $22 1
+	move $4 $20
+	lw $21 28($23)
+	sub $15 $21 2
+	move $5 $15
+	jal func__addList
+	lw $22 24($23)
+	add $5 $22 1
+	move $4 $5
+	lw $21 28($23)
+	add $24 $21 2
+	move $5 $24
+	jal func__addList
+	lw $22 24($23)
+	sub $11 $22 2
+	move $4 $11
+	lw $21 28($23)
+	sub $12 $21 1
+	move $5 $12
+	jal func__addList
+	lw $22 24($23)
+	sub $13 $22 2
+	move $4 $13
+	lw $21 28($23)
+	add $14 $21 1
+	move $5 $14
+	jal func__addList
+	lw $22 24($23)
+	add $7 $22 2
+	move $4 $7
+	lw $21 28($23)
+	sub $25 $21 1
+	move $5 $25
+	jal func__addList
+	lw $22 24($23)
+	add $6 $22 2
+	move $4 $6
+	lw $21 28($23)
+	add $20 $21 1
+	move $5 $20
+	jal func__addList
+	lw $15 44($23)
+	beq $15 1 main_0_next_loop_branch_then
 
-func__win_2_loop:
-	mul $25 $t5 4
-	add $4 $t4 $25
-	lw $14 0($4)
-	la $30 0($4)
-	add $15 $t5 1
-	bne $14 $15 func__win_2_loop_branch_then
+main_0_next_loop_branch_else:
+	b main_0_next_loop_next
 
-func__win_2_loop_branch_else:
-	b func__win_6
+main_0_next_loop_branch_then:
+	b main_0_next_next
 
-func__win_2_loop_branch_then:
+main_0_next_loop_next:
+	lw $t1 4($23)
+	add $5 $t1 1
+	lw $t1 4($23)
+	la $30 4($23)
+	move $t1 $5
+	sw $t1 4($23)
+
+main_0_next_loopTail:
+	lw $24 4($23)
+	lw $4 40($23)
+	ble $24 $4 main_0_next_loop
+
+main_0_next_next:
+	lw $15 44($23)
+	beq $15 1 main_0_next_next_branch_then
+
+main_0_next_next_branch_else:
+	la $4 String0
+	jal func__print
+	b main_0_next_next_next
+
+main_0_next_next_branch_then:
+	lw $10 52($23)
+	lw $11 16($23)
+	mul $12 $11 4
+	add $13 $10 $12
+	lw $14 0($13)
+	lw $7 20($23)
+	mul $25 $7 4
+	add $22 $14 $25
+	lw $6 0($22)
+	la $30 0($22)
+	move $4 $6
+	jal func__toString
+	move $4 $2
+	jal func__println
+
+main_0_next_next_next:
 	li $2 0
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
+	move $31 $s0
+	jr $ra
+	move $31 $s0
 	jr $ra
 
-func__win_6:
+func__origin:
+	move $t5 $31
+	move $t1 $4
+	li $4 4
+	li $2 9
+	syscall
+	sw $t1 0($2)
+	mul $4 $t1 8
+	li $2 9
+	syscall
+	move $24 $2
+	lw $25 52($23)
+	la $30 52($23)
+	move $25 $24
+	sw $25 52($23)
+	lw $14 56($23)
+	la $30 56($23)
+	li $14 0
+	sw $14 56($23)
+	lw $t2 56($23)
+	bge $t2 $t1 func__origin_next
 
-func__win_2_loopTail:
-	add $t5 $t5 1
-	lw $t1 8($23)
-	blt $t5 $t1 func__win_2_loop
+func__origin_loop:
+	li $4 4
+	li $2 9
+	syscall
+	sw $t1 0($2)
+	mul $4 $t1 8
+	li $2 9
+	syscall
+	move $15 $2
+	lw $t3 52($23)
+	lw $t2 56($23)
+	mul $7 $t2 4
+	add $6 $t3 $7
+	lw $4 0($6)
+	la $30 0($6)
+	move $4 $15
+	sw $4 0($30)
+	lw $5 60($23)
+	la $30 60($23)
+	li $5 0
+	sw $5 60($23)
+	lw $t4 60($23)
+	bge $t4 $t1 func__origin_loop_next
 
-func__win_5:
-	li $2 1
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
-	jr $ra
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
-	jr $ra
-
-func__merge:
-	sub $29 $29 4
-	move $31 $31
-	sw $31 0($29)
-	li $s4 0
-	lw $t1 8($23)
-	bge $s4 $t1 func__merge_0
-
-func__merge_loop:
-	lw $t2 12($23)
-	mul $24 $s4 4
-	add $25 $t2 $24
-	lw $12 0($25)
+func__origin_loop_loop:
+	lw $t3 52($23)
+	lw $t2 56($23)
+	mul $20 $t2 4
+	add $21 $t3 $20
+	lw $22 0($21)
+	lw $t4 60($23)
+	mul $24 $t4 4
+	add $25 $22 $24
+	lw $14 0($25)
 	la $30 0($25)
-	beq $12 0 func__merge_loop_branch_then
+	li $14 0
+	sw $14 0($30)
 
-func__merge_loop_branch_else:
-	b func__merge_1
+func__origin_loop_loopTail:
+	lw $t4 60($23)
+	add $t4 $t4 1
+	sw $t4 60($23)
+	lw $t4 60($23)
+	blt $t4 $t1 func__origin_loop_loop
 
-func__merge_loop_branch_then:
-	add $13 $s4 1
-	move $s5 $13
-	lw $t1 8($23)
-	bge $s5 $t1 func__merge_2
+func__origin_loop_next:
 
-func__merge_loop_branch_then_loop:
-	lw $t2 12($23)
-	mul $14 $s5 4
-	add $15 $t2 $14
-	lw $7 0($15)
-	la $30 0($15)
-	bne $7 0 func__merge_loop_branch_then_loop_branch_then
+func__origin_loopTail:
+	lw $t2 56($23)
+	add $t2 $t2 1
+	sw $t2 56($23)
+	lw $t2 56($23)
+	blt $t2 $t1 func__origin_loop
 
-func__merge_loop_branch_then_loop_branch_else:
-	b func__merge_3
-
-func__merge_loop_branch_then_loop_branch_then:
-	move $4 $s4
-	move $5 $s5
-	jal func__swap
-	b func__merge_2
-
-func__merge_3:
-
-func__merge_loop_branch_then_loopTail:
-	add $s5 $s5 1
-	lw $t1 8($23)
-	blt $s5 $t1 func__merge_loop_branch_then_loop
-
-func__merge_2:
-
-func__merge_1:
-
-func__merge_loopTail:
-	add $s4 $s4 1
-	lw $t1 8($23)
-	blt $s4 $t1 func__merge_loop
-
-func__merge_0:
-	li $s4 0
-	lw $t1 8($23)
-	bge $s4 $t1 func__merge_4
-
-func__merge_0_loop:
-	lw $t2 12($23)
-	mul $6 $s4 4
-	add $4 $t2 $6
-	lw $5 0($4)
-	la $30 0($4)
-	beq $5 0 func__merge_0_loop_branch_then
-
-func__merge_0_loop_branch_else:
-	b func__merge_5
-
-func__merge_0_loop_branch_then:
-	lw $t1 8($23)
-	la $30 8($23)
-	move $t1 $s4
-	sw $t1 8($23)
-	b func__merge_0
-
-func__merge_5:
-
-func__merge_0_loopTail:
-	add $s4 $s4 1
-	lw $t3 8($23)
-	blt $s4 $t3 func__merge_0_loop
-
-func__merge_4:
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
+func__origin_next:
+	move $31 $t5
 	jr $ra
 
-func__move:
-	sub $29 $29 4
-	move $31 $31
-	sw $31 0($29)
-	li $s6 0
-	lw $t1 8($23)
-	bge $s6 $t1 func__move_0
+func__check:
+	move $24 $31
+	move $25 $4
+	move $9 $5
+	slt $10 $25 $9
+	sge $11 $25 0
+	and $12 $10 $11
+	move $2 $12
+	move $31 $24
+	jr $ra
+	move $31 $24
+	jr $ra
 
-func__move_loop:
-	lw $t2 12($23)
-	mul $24 $s6 4
-	add $25 $t2 $24
-	lw $11 0($25)
-	la $30 0($25)
-	sub $11 $11 1
-	sw $11 0($30)
-	add $12 $s6 1
-	move $s6 $12
-
-func__move_loopTail:
-	lw $t1 8($23)
-	blt $s6 $t1 func__move_loop
-
-func__move_0:
-	lw $t1 8($23)
-	lw $t2 12($23)
-	lw $t1 8($23)
-	mul $13 $t1 4
-	add $14 $t2 $13
+func__addList:
+	move $s3 $31
+	move $s1 $4
+	move $s2 $5
+	move $4 $s1
+	lw $24 0($23)
+	move $5 $24
+	jal func__check
+	move $4 $s2
+	lw $24 0($23)
+	move $5 $24
+	jal func__check
+	and $25 $2 $2
+	lw $t1 52($23)
+	mul $10 $s1 4
+	add $11 $t1 $10
+	lw $12 0($11)
+	mul $13 $s2 4
+	add $14 $12 $13
 	lw $15 0($14)
 	la $30 0($14)
-	move $15 $t1
+	li $7 1
+	neg $6 $7
+	seq $4 $15 $6
+	and $5 $25 $4
+	bne $5 0 func__addList_branch_then
+
+func__addList_branch_else:
+	b func__addList_next
+
+func__addList_branch_then:
+	lw $20 40($23)
+	add $21 $20 1
+	lw $20 40($23)
+	la $30 40($23)
+	move $20 $21
+	sw $20 40($23)
+	lw $22 32($23)
+	lw $24 40($23)
+	mul $10 $24 4
+	add $11 $22 $10
+	lw $12 0($11)
+	la $30 0($11)
+	move $12 $s1
+	sw $12 0($30)
+	lw $13 36($23)
+	lw $24 40($23)
+	mul $14 $24 4
+	add $7 $13 $14
+	lw $15 0($7)
+	la $30 0($7)
+	move $15 $s2
 	sw $15 0($30)
-	lw $t1 8($23)
-	add $t1 $t1 1
-	sw $t1 8($23)
-	lw $3 0($29)
-	move $31 $3
-	add $29 $29 4
+	lw $6 48($23)
+	add $25 $6 1
+	lw $t1 52($23)
+	mul $4 $s1 4
+	add $5 $t1 $4
+	lw $21 0($5)
+	mul $20 $s2 4
+	add $22 $21 $20
+	lw $10 0($22)
+	la $30 0($22)
+	move $10 $25
+	sw $10 0($30)
+	lw $11 16($23)
+	seq $12 $s1 $11
+	lw $24 20($23)
+	seq $13 $s2 $24
+	and $14 $12 $13
+	bne $14 0 func__addList_branch_then_branch_then
+
+func__addList_branch_then_branch_else:
+	b func__addList_branch_then_next
+
+func__addList_branch_then_branch_then:
+	lw $7 44($23)
+	la $30 44($23)
+	li $7 1
+	sw $7 44($23)
+
+func__addList_branch_then_next:
+
+func__addList_next:
+	move $31 $s3
 	jr $ra
 

@@ -32,11 +32,8 @@ public class LoopStatment extends SpecialStatment {
         block2 = getBlock();
         addBlock(block1,"loopTail");
         block3 = getBlock();
-        addBlock();
+        addBlock(block1,"next");
         block4 = getBlock();
-
-        getCurrentScope().looper = block3;
-        getCurrentScope().nextblock = block4;
 
         visitBlock(block1);
         if (control != null) {

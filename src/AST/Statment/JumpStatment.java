@@ -8,8 +8,10 @@ import MIPS.Instruction.RegBinInstruction;
 import SymbolContainer.Scope;
 
 import static AST.ASTControler.getCurrentScope;
+import static AST.ASTControler.getFunc;
 import static AST.ASTControler.getVar;
 import static MIPS.IRControler.addInstruction;
+import static MIPS.IRControler.getFunction;
 import static RegisterControler.RegisterName.*;
 
 /**
@@ -86,13 +88,11 @@ public class JumpStatment extends ActionNodeBase{
         }
 
         if (operator.equals("continue")){
-            BasicBlock block = getCurrentScope().breakTo().looper;
-            addInstruction(new JumpInstruction("b",block.getLabel()));
+            addInstruction(new JumpInstruction("b",getFunction().nextLoop()));
         }
 
         if (operator.equals("break")){
-            BasicBlock block = getCurrentScope().breakTo().nextblock;
-            addInstruction(new JumpInstruction("b",block.getLabel()));
+            addInstruction(new JumpInstruction("b",getFunction().breakTo()));
         }
     }
 

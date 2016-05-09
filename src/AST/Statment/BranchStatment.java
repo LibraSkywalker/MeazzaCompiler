@@ -59,7 +59,7 @@ public class BranchStatment extends SpecialStatment {
         addBlock(block1,"branch_then");
         BasicBlock block3 = getBlock();
 
-        addBlock();
+        addBlock(block1,"next");
         BasicBlock block4 = getBlock();
 
         visitBlock(block1);
