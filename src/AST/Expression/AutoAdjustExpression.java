@@ -50,7 +50,7 @@ public class AutoAdjustExpression extends UnaryExpression {
 
         if (!isReg) rSrc = ((Literal)childAction).Reg();
 
-        if (isPre){
+        if (!isPre){
             getBlock().add(new RegBinInstruction("move", rDest , rSrc,true));
         }
         else rDest = rSrc;
