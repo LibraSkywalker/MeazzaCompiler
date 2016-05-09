@@ -5,6 +5,8 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
+	length0: 	.word 	1
+	String0: 	.asciiz 	"\n"
 
 
 .text
@@ -498,87 +500,113 @@ main:
 	syscall
 
 main_0:
-	move $s0 $31
-	li $4 60
+	move $s2 $31
+	li $s0 10000
+	li $t1 0
+	li $t2 2800
+	li $s1 0
+	li $t5 0
+	li $4 4
 	li $2 9
 	syscall
-	move $4 $2
-	li $24 1
-	sw $24 0($4)
-	li $25 2
-	sw $25 4($4)
-	li $9 3
-	sw $9 8($4)
-	li $10 4
-	sw $10 12($4)
-	li $11 5
-	sw $11 16($4)
-	li $12 6
-	sw $12 20($4)
-	li $13 7
-	sw $13 24($4)
-	li $14 8
-	sw $14 28($4)
-	li $15 9
-	sw $15 32($4)
-	li $7 10
-	sw $7 36($4)
-	li $6 11
-	sw $6 40($4)
-	li $17 12
-	sw $17 44($4)
-	li $18 13
-	sw $18 48($4)
-	li $19 14
-	sw $19 52($4)
-	li $20 15
-	sw $20 56($4)
-	jal func__a
-	move $4 $2
+	li $24 2801
+	sw $24 0($2)
+	mul $4 $24 8
+	li $2 9
+	syscall
+	move $25 $2
+	move $t3 $25
+	li $t4 0
+	sub $14 $t1 $t2
+	beq $14 0 main_0_afterLoop
+
+main_0_loop:
+	div $15 $s0 5
+	add $t1 $t1 1
+	mul $7 $t1 4
+	add $6 $t3 $7
+	lw $19 0($6)
+	la $30 0($6)
+	move $19 $15
+	sw $19 0($30)
+
+main_0_loopTail:
+	sub $20 $t1 $t2
+	bne $20 0 main_0_loop
+
+main_0_afterLoop:
+
+main_0_afterLoop_loop:
+	li $s1 0
+	mul $21 $t2 2
+	move $t4 $21
+	beq $t4 0 main_0_afterLoop_loop_branch_then
+
+main_0_afterLoop_loop_branch_else:
+	b main_0_afterLoop_loop_afterBranch
+
+main_0_afterLoop_loop_branch_then:
+	b main_0_afterLoop_afterLoop
+
+main_0_afterLoop_loop_afterBranch:
+	move $t1 $t2
+
+main_0_afterLoop_loop_afterBranch_loop:
+	mul $22 $t1 4
+	add $24 $t3 $22
+	lw $25 0($24)
+	la $30 0($24)
+	mul $14 $25 $s0
+	add $7 $s1 $14
+	move $s1 $7
+	sub $t4 $t4 1
+	rem $6 $s1 $t4
+	mul $15 $t1 4
+	add $19 $t3 $15
+	lw $20 0($19)
+	la $30 0($19)
+	move $20 $6
+	sw $20 0($30)
+	sub $t4 $t4 1
+	div $21 $s1 $t4
+	move $s1 $21
+	sub $t1 $t1 1
+	beq $t1 0 main_0_afterLoop_loop_afterBranch_loop_branch_then
+
+main_0_afterLoop_loop_afterBranch_loop_branch_else:
+	b main_0_afterLoop_loop_afterBranch_loop_afterBranch
+
+main_0_afterLoop_loop_afterBranch_loop_branch_then:
+	b main_0_afterLoop_loop_afterBranch_afterLoop
+
+main_0_afterLoop_loop_afterBranch_loop_afterBranch:
+
+main_0_afterLoop_loop_afterBranch_loopTail:
+	mul $22 $s1 $t1
+	move $s1 $22
+	b main_0_afterLoop_loop_afterBranch_loop
+
+main_0_afterLoop_loop_afterBranch_afterLoop:
+	sub $24 $t2 14
+	move $t2 $24
+	div $25 $s1 $s0
+	add $14 $t5 $25
+	move $4 $14
 	jal func__toString
 	move $4 $2
-	jal func__println
-	li $2 0
-	move $31 $s0
-	jr $ra
-	move $31 $s0
-	jr $ra
+	jal func__print
 
-func__a:
-	move $24 $31
-	move $25 $4
-	lw $9 0($25)
-	lw $10 4($25)
-	add $11 $9 $10
-	lw $12 8($25)
-	add $13 $11 $12
-	lw $14 12($25)
-	add $15 $13 $14
-	lw $7 16($25)
-	add $6 $15 $7
-	lw $17 20($25)
-	add $18 $6 $17
-	lw $19 24($25)
-	add $20 $18 $19
-	lw $21 28($25)
-	add $22 $20 $21
-	lw $9 32($25)
-	add $10 $22 $9
-	lw $11 36($25)
-	add $12 $10 $11
-	lw $13 40($25)
-	add $14 $12 $13
-	lw $15 44($25)
-	add $7 $14 $15
-	lw $6 48($25)
-	add $17 $7 $6
-	lw $18 52($25)
-	add $19 $17 $18
-	lw $20 56($25)
-	add $21 $19 $20
-	move $2 $21
-	move $31 $24
+main_0_afterLoop_loopTail:
+	rem $7 $s1 $s0
+	move $t5 $7
+	b main_0_afterLoop_loop
+
+main_0_afterLoop_afterLoop:
+	la $4 String0
+	jal func__print
+	li $2 0
+	move $31 $s2
 	jr $ra
-	move $31 $24
+	move $31 $s2
 	jr $ra
 

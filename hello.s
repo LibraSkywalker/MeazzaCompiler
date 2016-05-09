@@ -5,6 +5,8 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
+	length0: 	.word 	1
+	String0: 	.asciiz 	"\n"
 
 
 .text
@@ -502,94 +504,147 @@ main:
 # Write:
 main_0:
 	move $32 $31
-	li $4 60
+	li $34 10000
+	li $36 0
+	li $38 2800
+	li $40 0
+	li $42 0
+	li $4 4
 	li $2 9
 	syscall
-	move $4 $2
-	li $33 1
-	sw $33 0($4)
-	li $34 2
-	sw $34 4($4)
-	li $35 3
-	sw $35 8($4)
-	li $36 4
-	sw $36 12($4)
-	li $37 5
-	sw $37 16($4)
-	li $38 6
-	sw $38 20($4)
-	li $39 7
-	sw $39 24($4)
-	li $40 8
-	sw $40 28($4)
-	li $41 9
-	sw $41 32($4)
-	li $42 10
-	sw $42 36($4)
-	li $43 11
-	sw $43 40($4)
-	li $44 12
-	sw $44 44($4)
-	li $45 13
-	sw $45 48($4)
-	li $46 14
-	sw $46 52($4)
-	li $47 15
-	sw $47 56($4)
-	jal func__a
-	move $4 $2
+	li $43 2801
+	sw $43 0($2)
+	mul $4 $43 8
+	li $2 9
+	syscall
+	move $44 $2
+	move $46 $44
+	li $48 0
+	sub $49 $36 $38
+	sne $50 $49 0
+	beq $50 0 main_0_afterLoop
+
+# Read:
+# Write:
+main_0_loop:
+	div $51 $34 5
+	add $36 $36 1
+	mul $54 $36 4
+	add $55 $46 $54
+	lw $53 0($55)
+	la $30 0($55)
+	move $53 $51
+	sw $53 0($30)
+
+# Read:
+# Write:
+main_0_loopTail:
+	sub $56 $36 $38
+	sne $57 $56 0
+	bne $57 0 main_0_loop
+
+# Read:
+# Write:
+main_0_afterLoop:
+
+# Read:
+# Write:
+main_0_afterLoop_loop:
+	li $40 0
+	mul $58 $38 2
+	move $48 $58
+	seq $59 $48 0
+	bne $59 0 main_0_afterLoop_loop_branch_then
+
+# Read:
+# Write:
+main_0_afterLoop_loop_branch_else:
+	b main_0_afterLoop_loop_afterBranch
+
+# Read:
+# Write:
+main_0_afterLoop_loop_branch_then:
+	b main_0_afterLoop_afterLoop
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch:
+	move $36 $38
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_loop:
+	mul $61 $36 4
+	add $62 $46 $61
+	lw $60 0($62)
+	la $30 0($62)
+	mul $63 $60 $34
+	add $64 $40 $63
+	move $40 $64
+	sub $48 $48 1
+	rem $66 $40 $48
+	mul $68 $36 4
+	add $69 $46 $68
+	lw $67 0($69)
+	la $30 0($69)
+	move $67 $66
+	sw $67 0($30)
+	sub $48 $48 1
+	div $71 $40 $48
+	move $40 $71
+	sub $36 $36 1
+	seq $73 $36 0
+	bne $73 0 main_0_afterLoop_loop_afterBranch_loop_branch_then
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_loop_branch_else:
+	b main_0_afterLoop_loop_afterBranch_loop_afterBranch
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_loop_branch_then:
+	b main_0_afterLoop_loop_afterBranch_afterLoop
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_loop_afterBranch:
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_loopTail:
+	mul $74 $40 $36
+	move $40 $74
+	b main_0_afterLoop_loop_afterBranch_loop
+
+# Read:
+# Write:
+main_0_afterLoop_loop_afterBranch_afterLoop:
+	sub $75 $38 14
+	move $38 $75
+	div $76 $40 $34
+	add $77 $42 $76
+	move $4 $77
 	jal func__toString
 	move $4 $2
-	jal func__println
+	jal func__print
+
+# Read:
+# Write:
+main_0_afterLoop_loopTail:
+	rem $78 $40 $34
+	move $42 $78
+	b main_0_afterLoop_loop
+
+# Read:
+# Write:
+main_0_afterLoop_afterLoop:
+	la $4 String0
+	jal func__print
 	li $2 0
 	move $31 $32
 	jr $ra
 	move $31 $32
-	jr $ra
-
-# local:
-# localSaved:
-# global:
-# Save in address:
-# times:
-# Read:
-# Write:
-func__a:
-	move $48 $31
-	move $49 $4
-	lw $50 0($49)
-	lw $51 4($49)
-	add $52 $50 $51
-	lw $53 8($49)
-	add $54 $52 $53
-	lw $55 12($49)
-	add $56 $54 $55
-	lw $57 16($49)
-	add $58 $56 $57
-	lw $59 20($49)
-	add $60 $58 $59
-	lw $61 24($49)
-	add $62 $60 $61
-	lw $63 28($49)
-	add $64 $62 $63
-	lw $65 32($49)
-	add $66 $64 $65
-	lw $67 36($49)
-	add $68 $66 $67
-	lw $69 40($49)
-	add $70 $68 $69
-	lw $71 44($49)
-	add $72 $70 $71
-	lw $73 48($49)
-	add $74 $72 $73
-	lw $75 52($49)
-	add $76 $74 $75
-	lw $77 56($49)
-	add $78 $76 $77
-	move $2 $78
-	move $31 $48
-	jr $ra
-	move $31 $48
 	jr $ra
 
 # local:

@@ -47,7 +47,7 @@ public class Function {
     public String breakTo(){
         String tmp = currentBasicBlock.label;
         tmp = tmp.substring(0,tmp.lastIndexOf("loop") - 1);
-        return tmp + "_next";
+        return tmp + "_afterLoop";
     }
 
     BasicBlock addBasicBlock(){

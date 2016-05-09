@@ -32,7 +32,7 @@ public class LoopStatment extends SpecialStatment {
         block2 = getBlock();
         addBlock(block1,"loopTail");
         block3 = getBlock();
-        addBlock(block1,"next");
+        addBlock(block1,"afterLoop");
         block4 = getBlock();
 
         visitBlock(block1);
@@ -56,6 +56,7 @@ public class LoopStatment extends SpecialStatment {
             if (control.isLiteral()) rSrc2 = ((Literal) control).Reg();
             addInstruction(new BranchInstruction("bne",rSrc2,0,block2.getLabel(),false)); // block3 -> block2 or block4
         }
+        else addInstruction(new JumpInstruction("b",block2.getLabel()));
 
         visitBlock(block4);
     }
