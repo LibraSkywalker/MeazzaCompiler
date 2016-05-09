@@ -46,6 +46,7 @@ public class BasicBlock {
     void eliminate(){
         for (Instruction now : BlockStat){
             if (now instanceof BranchInstruction){
+                if (BlockStat.indexOf(now) == 0) continue;
                 Instruction pre = BlockStat.get(BlockStat.indexOf(now) - 1);
                 if (pre instanceof CompareInstruction){
                     Instruction next = new BranchInstruction((CompareInstruction) pre,(BranchInstruction) now);

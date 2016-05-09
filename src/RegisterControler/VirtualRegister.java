@@ -106,8 +106,8 @@ public class VirtualRegister {
         if (map[virtualRegister] == null){
             map[virtualRegister] = ForceOrder(last);
             map[virtualRegister].set(getFunction().localState.times(virtualRegister));
-            System.err.println(virtualRegister);
-            System.err.println(GlobalState.times(virtualRegister));
+            //System.err.println(virtualRegister);
+            //System.err.println(GlobalState.times(virtualRegister));
             map[virtualRegister].use();
         }else {
             if (InMemory.contains(map[virtualRegister])){
@@ -134,16 +134,6 @@ public class VirtualRegister {
             newRegister.add(now);
             usedRegister.remove(now);
             InMemory.remove(now);
-        }
-
-
-        if (virtualRegister == 33){
-            System.err.println(last.virtualPrint());
-            System.err.println(virtualRegister);
-            System.err.println(newRegister);
-            System.err.println(usedRegister);
-            System.err.println(now);
-            System.err.println(now.clean());
         }
 
         return now.name;

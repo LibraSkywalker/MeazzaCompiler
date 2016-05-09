@@ -1,11 +1,9 @@
 package AST.Expression;
 
 import MIPS.BasicBlock;
-import MIPS.Instruction.ArithmeticInstruction;
+import MIPS.Instruction.*;
 
-import static MIPS.IRControler.addBlock;
-import static MIPS.IRControler.addInstruction;
-import static MIPS.IRControler.getBlock;
+import static MIPS.IRControler.*;
 import static RegisterControler.VirtualRegister.newVReg;
 
 /**
@@ -30,19 +28,57 @@ public class LogicExpression extends BinaryExpression{
 
     public void Translate(){
         leftAction.Translate();
-        rightAction.Translate();
 
-        rDest = newVReg();
+        String op = operator.equals("||") ? "bne" : "beq";
+        String op2 = operator.equals("||") ? "beq" : "bne";
+        int res1 = operator.equals("||") ? 1 : 0;
+        int res2 = operator.equals("&&") ? 1 : 0;
+
+
         int rSrc1 = leftAction.src();
         if (leftAction.isLiteral())
             rSrc1 = ((Literal) leftAction).Reg();
-        int Src2 = rightAction.src();
-        boolean isReg = !rightAction.isLiteral();
 
-        switch (operator){
-            case "&&": getBlock().add(new ArithmeticInstruction("and", rDest, rSrc1, Src2, isReg));
-                return;
-            case "||": getBlock().add(new ArithmeticInstruction("or", rDest, rSrc1, Src2, isReg));
+        rDest = newVReg();
+
+        BasicBlock block1 = getBlock();
+        String Name = block1.getLabel();
+        if (Name.substring(Name.length() - 6).equals("normal")){
+            while (Name.substring(Name.length() - 6).equals("normal"))
+                Name = Name.substring(0, Name.length() - 7);
+            addInstruction(new BranchInstruction(op,rSrc1,0,Name + "_shortcut",false));
+            addBlock(block1,"normal");
+            rightAction.Translate();
+
+
+            int rSrc2 = leftAction.src();
+            if (leftAction.isLiteral())
+                rSrc2 = ((Literal) leftAction).Reg();
+
+            if (!(rightAction instanceof LogicExpression))
+                addInstruction(new BranchInstruction(op2, rSrc2, 0, Name + "_normalEnd", false));
+        } else {
+            addInstruction(new BranchInstruction(op, rSrc1, 0, Name + "_shortcut", false));
+            addBlock(block1, "normal");
+            rightAction.Translate();
+
+            int rSrc2 = leftAction.src();
+            if (leftAction.isLiteral())
+                rSrc2 = ((Literal) leftAction).Reg();
+
+            if (!(rightAction instanceof LogicExpression))
+                addInstruction(new BranchInstruction(op2, rSrc2, 0, Name + "_normalEnd", false));
+
+            addBlock(block1, "shortcut");
+
+            addInstruction(new RegBinInstruction("li", rDest, res1, false));
+            addInstruction(new JumpInstruction("b", Name + "_next"));
+
+            addBlock(block1, "normalEnd");
+
+            addInstruction(new RegBinInstruction("li", rDest, res2, false));
+
+            addBlock(block1, "next");
         }
     }
 }

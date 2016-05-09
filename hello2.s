@@ -5,8 +5,6 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
-	length0: 	.word 	13
-	String0: 	.asciiz 	"no solution!\n"
 
 
 .text
@@ -486,530 +484,1180 @@ func__stringNeq:
 	addu $sp, $sp, 4
 	jr $ra
 
-# Read: 2 32 23 33 34 36 37 38
-# Write: 4 2 23 32 33 34 30 36 37 38
+# Read: 2 23 32 34 36 38 40
+# Write: 4 2 23 32 30 34 36 38 40
 main:
+	sub $29 $29 156
 	li $4 4
 	li $2 9
 	syscall
-	li $4 64
+	li $4 24
 	li $2 9
 	syscall
 	move $23 $2
-	li $4 4
-	li $2 9
-	syscall
-	li $32 12000
-	sw $32 0($2)
-	mul $4 $32 8
-	li $2 9
-	syscall
-	move $33 $2
-	lw $34 32($23)
-	la $30 32($23)
-	move $34 $33
-	sw $34 32($23)
-	li $4 4
-	li $2 9
-	syscall
-	li $36 12000
-	sw $36 0($2)
-	mul $4 $36 8
-	li $2 9
-	syscall
-	move $37 $2
-	lw $38 36($23)
-	la $30 36($23)
-	move $38 $37
-	sw $38 36($23)
+	lw $32 4($23)
+	la $30 4($23)
+	li $32 99
+	sw $32 4($23)
+	lw $34 8($23)
+	la $30 8($23)
+	li $34 100
+	sw $34 8($23)
+	lw $36 12($23)
+	la $30 12($23)
+	li $36 101
+	sw $36 12($23)
+	lw $38 16($23)
+	la $30 16($23)
+	li $38 102
+	sw $38 16($23)
+	lw $40 20($23)
+	la $30 20($23)
+	li $40 0
+	sw $40 20($23)
 	jal main_0
 	li $2 10
 	syscall
 
-# Read: 31 23 2 41 42 43 44 46 48 49
-# Write: 40 4 41 30 42 43 44 46 48 49
+# Read: 31 23 2 43 46 44
+# Write: 42 43 30 46 44
 main_0:
-	move $40 $31
-	li $4 106
-	jal func__origin
+	move $42 $31
 	jal func__getInt
-	lw $41 0($23)
+	lw $43 0($23)
 	la $30 0($23)
-	move $41 $2
-	sw $41 0($23)
-	lw $42 0($23)
-	sub $43 $42 1
-	lw $44 20($23)
-	la $30 20($23)
-	move $44 $43
-	sw $44 20($23)
-	lw $46 16($23)
-	la $30 16($23)
-	move $46 $44
-	sw $46 16($23)
-	lw $48 56($23)
-	la $30 56($23)
-	li $48 0
-	sw $48 56($23)
-	lw $49 56($23)
-	lw $42 0($23)
-	bge $49 $42 main_0_next
+	move $43 $2
+	sw $43 0($23)
+	li $46 1
+	lw $44 0($23)
+	bgt $46 $44 main_0_next
 
-# Read: 23 51 52 42
-# Write: 51 30 52 42
+# Read: 23 48 44
+# Write: 48 44
 main_0_loop:
-	lw $51 60($23)
-	la $30 60($23)
-	li $51 0
-	sw $51 60($23)
-	lw $52 60($23)
-	lw $42 0($23)
-	bge $52 $42 main_0_loop_next
+	li $48 1
+	lw $44 0($23)
+	bgt $48 $44 main_0_loop_next
 
-# Read: 55 23 49 56 58 59 52 57 61 62 54 30 60
-# Write: 55 54 56 49 58 59 57 52 61 62 60 30
+# Read: 23 50 44
+# Write: 50 44
 main_0_loop_loop:
-	li $55 1
-	neg $54 $55
-	lw $56 52($23)
-	lw $49 56($23)
-	mul $58 $49 4
-	add $59 $56 $58
-	lw $57 0($59)
-	lw $52 60($23)
-	mul $61 $52 4
-	add $62 $57 $61
-	lw $60 0($62)
-	la $30 0($62)
-	move $60 $54
-	sw $60 0($30)
+	li $50 1
+	lw $44 0($23)
+	bgt $50 $44 main_0_loop_loop_next
 
-# Read: 23 52 42
-# Write: 52 42
-main_0_loop_loopTail:
-	lw $52 60($23)
+# Read: 23 52 44
+# Write: 52 44
+main_0_loop_loop_loop:
+	li $52 1
+	lw $44 0($23)
+	bgt $52 $44 main_0_loop_loop_loop_next
+
+# Read: 23 54 44
+# Write: 54 44
+main_0_loop_loop_loop_loop:
+	li $54 1
+	lw $44 0($23)
+	bgt $54 $44 main_0_loop_loop_loop_loop_next
+
+# Read: 23 56 44
+# Write: 56 44
+main_0_loop_loop_loop_loop_loop:
+	li $56 1
+	lw $44 0($23)
+	bgt $56 $44 main_0_loop_loop_loop_loop_loop_next
+
+# Read: 46 48
+# Write:
+main_0_loop_loop_loop_loop_loop_loop:
+	beq $46 $48 main_0_loop_loop_loop_loop_loop_loop_shortcut
+
+# Read: 46 50
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_normal:
+	bne $46 $50 main_0_loop_loop_loop_loop_loop_loop_normalEnd
+
+# Read:
+# Write: 59
+main_0_loop_loop_loop_loop_loop_loop_shortcut:
+	li $59 0
+	sw $31 0($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next
+
+# Read:
+# Write: 59
+main_0_loop_loop_loop_loop_loop_loop_normalEnd:
+	li $59 1
+	sw $31 0($29)
+
+# Read: 59
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next:
+	lw $3 0($29)
+	beq $59 0 main_0_loop_loop_loop_loop_loop_loop_next_shortcut
+
+# Read: 46 52
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_normal:
+	bne $46 $52 main_0_loop_loop_loop_loop_loop_loop_next_normalEnd
+
+# Read:
+# Write: 61
+main_0_loop_loop_loop_loop_loop_loop_next_shortcut:
+	li $61 0
+	sw $31 4($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next
+
+# Read:
+# Write: 61
+main_0_loop_loop_loop_loop_loop_loop_next_normalEnd:
+	li $61 1
+	sw $31 4($29)
+
+# Read: 61
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next:
+	lw $3 4($29)
+	beq $61 0 main_0_loop_loop_loop_loop_loop_loop_next_next_shortcut
+
+# Read: 46 54
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_normal:
+	bne $46 $54 main_0_loop_loop_loop_loop_loop_loop_next_next_normalEnd
+
+# Read:
+# Write: 63
+main_0_loop_loop_loop_loop_loop_loop_next_next_shortcut:
+	li $63 0
+	sw $31 8($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next
+
+# Read:
+# Write: 63
+main_0_loop_loop_loop_loop_loop_loop_next_next_normalEnd:
+	li $63 1
+	sw $31 8($29)
+
+# Read: 63
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next:
+	lw $3 8($29)
+	beq $63 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_shortcut
+
+# Read: 46 56
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_normal:
+	bne $46 $56 main_0_loop_loop_loop_loop_loop_loop_next_next_next_normalEnd
+
+# Read:
+# Write: 65
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_shortcut:
+	li $65 0
+	sw $31 12($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next
+
+# Read:
+# Write: 65
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_normalEnd:
+	li $65 1
+	sw $31 12($29)
+
+# Read: 65
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next:
+	lw $3 12($29)
+	beq $65 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_shortcut
+
+# Read: 23 46 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $46 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_normalEnd
+
+# Read:
+# Write: 67
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_shortcut:
+	li $67 0
+	sw $31 16($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next
+
+# Read:
+# Write: 67
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_normalEnd:
+	li $67 1
+	sw $31 16($29)
+
+# Read: 67
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next:
+	lw $3 16($29)
+	beq $67 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_shortcut
+
+# Read: 23 46 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $46 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 69
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_shortcut:
+	li $69 0
+	sw $31 20($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next
+
+# Read:
+# Write: 69
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_normalEnd:
+	li $69 1
+	sw $31 20($29)
+
+# Read: 69
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next:
+	lw $3 20($29)
+	beq $69 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_shortcut
+
+# Read: 23 46 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $46 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 71
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_shortcut:
+	li $71 0
+	sw $31 24($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next
+
+# Read:
+# Write: 71
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_normalEnd:
+	li $71 1
+	sw $31 24($29)
+
+# Read: 71
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next:
+	lw $3 24($29)
+	beq $71 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 46 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $46 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 73
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_shortcut:
+	li $73 0
+	sw $31 28($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 73
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_normalEnd:
+	li $73 1
+	sw $31 28($29)
+
+# Read: 73
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next:
+	lw $3 28($29)
+	beq $73 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 48 50
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_normal:
+	bne $48 $50 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 75
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_shortcut:
+	li $75 0
+	sw $31 32($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 75
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_normalEnd:
+	li $75 1
+	sw $31 32($29)
+
+# Read: 75
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next:
+	lw $3 32($29)
+	beq $75 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 48 52
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_normal:
+	bne $48 $52 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 77
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_shortcut:
+	li $77 0
+	sw $31 36($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 77
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $77 1
+	sw $31 36($29)
+
+# Read: 77
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next:
+	lw $3 36($29)
+	beq $77 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 48 54
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $48 $54 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 79
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $79 0
+	sw $31 40($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 79
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $79 1
+	sw $31 40($29)
+
+# Read: 79
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 40($29)
+	beq $79 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 48 56
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $48 $56 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 81
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $81 0
+	sw $31 44($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 81
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $81 1
+	sw $31 44($29)
+
+# Read: 81
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 44($29)
+	beq $81 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 48 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $48 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 83
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $83 0
+	sw $31 48($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 83
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $83 1
+	sw $31 48($29)
+
+# Read: 83
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 48($29)
+	beq $83 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 48 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $48 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 85
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $85 0
+	sw $31 52($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 85
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $85 1
+	sw $31 52($29)
+
+# Read: 85
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 52($29)
+	beq $85 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 48 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $48 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 87
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $87 0
+	sw $31 56($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 87
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $87 1
+	sw $31 56($29)
+
+# Read: 87
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 56($29)
+	beq $87 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 48 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $48 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 89
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $89 0
+	sw $31 60($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 89
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $89 1
+	sw $31 60($29)
+
+# Read: 89
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 60($29)
+	beq $89 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 50 52
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $50 $52 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 91
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $91 0
+	sw $31 64($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 91
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $91 1
+	sw $31 64($29)
+
+# Read: 91
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 64($29)
+	beq $91 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 50 54
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $50 $54 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 93
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $93 0
+	sw $31 68($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 93
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $93 1
+	sw $31 68($29)
+
+# Read: 93
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 68($29)
+	beq $93 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 50 56
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $50 $56 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 95
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $95 0
+	sw $31 72($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 95
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $95 1
+	sw $31 72($29)
+
+# Read: 95
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 72($29)
+	beq $95 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 50 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $50 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 97
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $97 0
+	sw $31 76($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 97
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $97 1
+	sw $31 76($29)
+
+# Read: 97
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 76($29)
+	beq $97 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 50 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $50 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 99
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $99 0
+	sw $31 80($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 99
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $99 1
+	sw $31 80($29)
+
+# Read: 99
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 80($29)
+	beq $99 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 50 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $50 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 101
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $101 0
+	sw $31 84($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 101
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $101 1
+	sw $31 84($29)
+
+# Read: 101
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 84($29)
+	beq $101 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 50 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $50 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 103
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $103 0
+	sw $31 88($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 103
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $103 1
+	sw $31 88($29)
+
+# Read: 103
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 88($29)
+	beq $103 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 52 54
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $52 $54 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 105
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $105 0
+	sw $31 92($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 105
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $105 1
+	sw $31 92($29)
+
+# Read: 105
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 92($29)
+	beq $105 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 52 56
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $52 $56 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 107
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $107 0
+	sw $31 96($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 107
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $107 1
+	sw $31 96($29)
+
+# Read: 107
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 96($29)
+	beq $107 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 52 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $52 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 109
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $109 0
+	sw $31 100($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 109
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $109 1
+	sw $31 100($29)
+
+# Read: 109
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 100($29)
+	beq $109 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 52 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $52 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 111
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $111 0
+	sw $31 104($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 111
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $111 1
+	sw $31 104($29)
+
+# Read: 111
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 104($29)
+	beq $111 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 52 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $52 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 113
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $113 0
+	sw $31 108($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 113
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $113 1
+	sw $31 108($29)
+
+# Read: 113
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 108($29)
+	beq $113 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 52 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $52 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 115
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $115 0
+	sw $31 112($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 115
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $115 1
+	sw $31 112($29)
+
+# Read: 115
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 112($29)
+	beq $115 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 54 56
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	bne $54 $56 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 117
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $117 0
+	sw $31 116($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 117
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $117 1
+	sw $31 116($29)
+
+# Read: 117
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 116($29)
+	beq $117 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 54 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $54 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 119
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $119 0
+	sw $31 120($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 119
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $119 1
+	sw $31 120($29)
+
+# Read: 119
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 120($29)
+	beq $119 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 54 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $54 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 121
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $121 0
+	sw $31 124($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 121
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $121 1
+	sw $31 124($29)
+
+# Read: 121
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 124($29)
+	beq $121 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 54 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $54 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 123
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $123 0
+	sw $31 128($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 123
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $123 1
+	sw $31 128($29)
+
+# Read: 123
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 128($29)
+	beq $123 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 54 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $54 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 125
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $125 0
+	sw $31 132($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 125
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $125 1
+	sw $31 132($29)
+
+# Read: 125
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 132($29)
+	beq $125 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 56 33
+# Write: 33
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	bne $56 $33 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 127
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $127 0
+	sw $31 136($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 127
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $127 1
+	sw $31 136($29)
+
+# Read: 127
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 136($29)
+	beq $127 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 56 35
+# Write: 35
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	bne $56 $35 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 129
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $129 0
+	sw $31 140($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 129
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $129 1
+	sw $31 140($29)
+
+# Read: 129
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 140($29)
+	beq $129 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 56 37
+# Write: 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $37 12($23)
+	bne $56 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 131
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $131 0
+	sw $31 144($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 131
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $131 1
+	sw $31 144($29)
+
+# Read: 131
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 144($29)
+	beq $131 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 56 39
+# Write: 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $39 16($23)
+	bne $56 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 133
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $133 0
+	sw $31 148($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 133
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $133 1
+	sw $31 148($29)
+
+# Read: 133
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 148($29)
+	beq $133 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 35 37
+# Write: 35 37
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $35 8($23)
+	lw $37 12($23)
+	bne $35 $37 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 135
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $135 0
+	sw $31 152($29)
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 135
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $135 1
+	sw $31 152($29)
+
+# Read: 135
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	lw $3 152($29)
+	beq $135 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut
+
+# Read: 23 33 39
+# Write: 33 39
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normal:
+	lw $33 4($23)
+	lw $39 16($23)
+	bne $33 $39 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd
+
+# Read:
+# Write: 137
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_shortcut:
+	li $137 0
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read:
+# Write: 137
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_normalEnd:
+	li $137 1
+
+# Read: 137
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+	bne $137 0 main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_branch_then
+
+# Read:
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_branch_else:
+	b main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next
+
+# Read: 23 41
+# Write: 41
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_branch_then:
+	lw $41 20($23)
+	add $41 $41 1
+	sw $41 20($23)
+
+# Read:
+# Write:
+main_0_loop_loop_loop_loop_loop_loop_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next_next:
+
+# Read: 56 23 44
+# Write: 56 44
+main_0_loop_loop_loop_loop_loop_loopTail:
+	add $56 $56 1
+	lw $44 0($23)
+	ble $56 $44 main_0_loop_loop_loop_loop_loop_loop
+
+# Read:
+# Write:
+main_0_loop_loop_loop_loop_loop_next:
+
+# Read: 54 23 44
+# Write: 54 44
+main_0_loop_loop_loop_loop_loopTail:
+	add $54 $54 1
+	lw $44 0($23)
+	ble $54 $44 main_0_loop_loop_loop_loop_loop
+
+# Read:
+# Write:
+main_0_loop_loop_loop_loop_next:
+
+# Read: 52 23 44
+# Write: 52 44
+main_0_loop_loop_loop_loopTail:
 	add $52 $52 1
-	sw $52 60($23)
-	lw $52 60($23)
-	lw $42 0($23)
-	blt $52 $42 main_0_loop_loop
+	lw $44 0($23)
+	ble $52 $44 main_0_loop_loop_loop_loop
+
+# Read:
+# Write:
+main_0_loop_loop_loop_next:
+
+# Read: 50 23 44
+# Write: 50 44
+main_0_loop_loop_loopTail:
+	add $50 $50 1
+	lw $44 0($23)
+	ble $50 $44 main_0_loop_loop_loop
+
+# Read:
+# Write:
+main_0_loop_loop_next:
+
+# Read: 48 23 44
+# Write: 48 44
+main_0_loop_loopTail:
+	add $48 $48 1
+	lw $44 0($23)
+	ble $48 $44 main_0_loop_loop
 
 # Read:
 # Write:
 main_0_loop_next:
 
-# Read: 23 49 42
-# Write: 49 42
+# Read: 46 23 44
+# Write: 46 44
 main_0_loopTail:
-	lw $49 56($23)
-	add $49 $49 1
-	sw $49 56($23)
-	lw $49 56($23)
-	lw $42 0($23)
-	blt $49 $42 main_0_loop
+	add $46 $46 1
+	lw $44 0($23)
+	ble $46 $44 main_0_loop
 
-# Read: 23 67 68
-# Write: 67 68
+# Read: 23 41 2 42
+# Write: 41 4 2 31
 main_0_next:
-	lw $67 4($23)
-	lw $68 40($23)
-	bgt $67 $68 main_0_next_next
-
-# Read: 23 67 35 71 72 70 73 39 76 77 75 78 74 56 81 82 79 80 84 85 83 86 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104
-# Write: 35 67 71 72 70 30 73 39 76 77 75 78 56 74 81 82 80 79 84 85 83 86 88 4 89 5 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104
-main_0_next_loop:
-	lw $35 32($23)
-	lw $67 4($23)
-	mul $71 $67 4
-	add $72 $35 $71
-	lw $70 0($72)
-	la $30 0($72)
-	lw $73 24($23)
-	la $30 24($23)
-	move $73 $70
-	sw $73 24($23)
-	lw $39 36($23)
-	lw $67 4($23)
-	mul $76 $67 4
-	add $77 $39 $76
-	lw $75 0($77)
-	la $30 0($77)
-	lw $78 28($23)
-	la $30 28($23)
-	move $78 $75
-	sw $78 28($23)
-	lw $56 52($23)
-	lw $74 24($23)
-	mul $81 $74 4
-	add $82 $56 $81
-	lw $80 0($82)
-	lw $79 28($23)
-	mul $84 $79 4
-	add $85 $80 $84
-	lw $83 0($85)
-	la $30 0($85)
-	lw $86 48($23)
-	la $30 48($23)
-	move $86 $83
-	sw $86 48($23)
-	lw $74 24($23)
-	sub $88 $74 1
-	move $4 $88
-	lw $79 28($23)
-	sub $89 $79 2
-	move $5 $89
-	jal func__addList
-	lw $74 24($23)
-	sub $90 $74 1
-	move $4 $90
-	lw $79 28($23)
-	add $91 $79 2
-	move $5 $91
-	jal func__addList
-	lw $74 24($23)
-	add $92 $74 1
-	move $4 $92
-	lw $79 28($23)
-	sub $93 $79 2
-	move $5 $93
-	jal func__addList
-	lw $74 24($23)
-	add $94 $74 1
-	move $4 $94
-	lw $79 28($23)
-	add $95 $79 2
-	move $5 $95
-	jal func__addList
-	lw $74 24($23)
-	sub $96 $74 2
-	move $4 $96
-	lw $79 28($23)
-	sub $97 $79 1
-	move $5 $97
-	jal func__addList
-	lw $74 24($23)
-	sub $98 $74 2
-	move $4 $98
-	lw $79 28($23)
-	add $99 $79 1
-	move $5 $99
-	jal func__addList
-	lw $74 24($23)
-	add $100 $74 2
-	move $4 $100
-	lw $79 28($23)
-	sub $101 $79 1
-	move $5 $101
-	jal func__addList
-	lw $74 24($23)
-	add $102 $74 2
-	move $4 $102
-	lw $79 28($23)
-	add $103 $79 1
-	move $5 $103
-	jal func__addList
-	lw $104 44($23)
-	beq $104 1 main_0_next_loop_branch_then
-
-# Read:
-# Write:
-main_0_next_loop_branch_else:
-	b main_0_next_loop_next
-
-# Read:
-# Write:
-main_0_next_loop_branch_then:
-	b main_0_next_next
-
-# Read: 23 67 106
-# Write: 67 106 30
-main_0_next_loop_next:
-	lw $67 4($23)
-	add $106 $67 1
-	lw $67 4($23)
-	la $30 4($23)
-	move $67 $106
-	sw $67 4($23)
-
-# Read: 23 107 68
-# Write: 107 68
-main_0_next_loopTail:
-	lw $107 4($23)
-	lw $68 40($23)
-	ble $107 $68 main_0_next_loop
-
-# Read: 23 104
-# Write: 104
-main_0_next_next:
-	lw $104 44($23)
-	beq $104 1 main_0_next_next_branch_then
-
-# Read:
-# Write: 4
-main_0_next_next_branch_else:
-	la $4 String0
-	jal func__print
-	b main_0_next_next_next
-
-# Read: 23 47 56 111 112 45 110 114 115 113 2
-# Write: 56 47 111 112 110 45 114 115 113 30 4
-main_0_next_next_branch_then:
-	lw $56 52($23)
-	lw $47 16($23)
-	mul $111 $47 4
-	add $112 $56 $111
-	lw $110 0($112)
-	lw $45 20($23)
-	mul $114 $45 4
-	add $115 $110 $114
-	lw $113 0($115)
-	la $30 0($115)
-	move $4 $113
+	lw $41 20($23)
+	move $4 $41
 	jal func__toString
 	move $4 $2
 	jal func__println
-
-# Read: 40
-# Write: 2 31
-main_0_next_next_next:
 	li $2 0
-	move $31 $40
+	move $31 $42
+	add $29 $29 156
 	jr $ra
-	move $31 $40
-	jr $ra
-
-# local: 2 32 23 33 34 36 37 38 31 41 42 43 44 46 48 49 51 52 55 56 58 59 57 61 62 54 30 60 68 35 71 72 70 73 39 76 77 75 78 74 81 82 79 80 84 85 83 86 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 106 107 47 111 112 45 110 114 115 113
-# localSaved: 67
-# global: 40
-# Save in address:
-# times: $4: 18  $2: 15  $23: 83  $32: 3  $33: 2  $34: 3  $30: 17  $36: 3  $37: 2  $38: 3  $31: 3  $40: 3  $41: 3  $42: 10  $43: 2  $44: 4  $46: 3  $48: 3  $49: 10  $51: 3  $52: 10  $55: 2  $54: 2  $56: 6  $58: 2  $59: 2  $57: 2  $61: 2  $62: 3  $60: 3  $67: 11  $68: 4  $35: 2  $71: 2  $72: 3  $70: 2  $73: 3  $39: 2  $76: 2  $77: 3  $75: 2  $78: 3  $74: 18  $81: 2  $82: 2  $80: 2  $79: 18  $84: 2  $85: 3  $83: 2  $86: 3  $88: 2  $89: 2  $5: 8  $90: 2  $91: 2  $92: 2  $93: 2  $94: 2  $95: 2  $96: 2  $97: 2  $98: 2  $99: 2  $100: 2  $101: 2  $102: 2  $103: 2  $104: 4  $106: 2  $107: 2  $47: 2  $111: 2  $112: 2  $110: 2  $45: 2  $114: 2  $115: 3  $113: 2 
-# Read: 31 4 2 117 23 118 56 49 120
-# Write: 116 117 4 2 118 56 30 49 120
-func__origin:
-	move $116 $31
-	move $117 $4
-	li $4 4
-	li $2 9
-	syscall
-	sw $117 0($2)
-	mul $4 $117 8
-	li $2 9
-	syscall
-	move $118 $2
-	lw $56 52($23)
-	la $30 52($23)
-	move $56 $118
-	sw $56 52($23)
-	lw $49 56($23)
-	la $30 56($23)
-	li $49 0
-	sw $49 56($23)
-	lw $120 56($23)
-	bge $120 $117 func__origin_next
-
-# Read: 2 117 23 120 119 124 125 122 30 123 52 126
-# Write: 4 2 122 119 120 124 125 123 30 52 126
-func__origin_loop:
-	li $4 4
-	li $2 9
-	syscall
-	sw $117 0($2)
-	mul $4 $117 8
-	li $2 9
-	syscall
-	move $122 $2
-	lw $119 52($23)
-	lw $120 56($23)
-	mul $124 $120 4
-	add $125 $119 $124
-	lw $123 0($125)
-	la $30 0($125)
-	move $123 $122
-	sw $123 0($30)
-	lw $52 60($23)
-	la $30 60($23)
-	li $52 0
-	sw $52 60($23)
-	lw $126 60($23)
-	bge $126 $117 func__origin_loop_next
-
-# Read: 23 120 119 129 130 126 128 132 133 30 131
-# Write: 119 120 129 130 128 126 132 133 131 30
-func__origin_loop_loop:
-	lw $119 52($23)
-	lw $120 56($23)
-	mul $129 $120 4
-	add $130 $119 $129
-	lw $128 0($130)
-	lw $126 60($23)
-	mul $132 $126 4
-	add $133 $128 $132
-	lw $131 0($133)
-	la $30 0($133)
-	li $131 0
-	sw $131 0($30)
-
-# Read: 23 126 117
-# Write: 126
-func__origin_loop_loopTail:
-	lw $126 60($23)
-	add $126 $126 1
-	sw $126 60($23)
-	lw $126 60($23)
-	blt $126 $117 func__origin_loop_loop
-
-# Read:
-# Write:
-func__origin_loop_next:
-
-# Read: 23 120 117
-# Write: 120
-func__origin_loopTail:
-	lw $120 56($23)
-	add $120 $120 1
-	sw $120 56($23)
-	lw $120 56($23)
-	blt $120 $117 func__origin_loop
-
-# Read: 116
-# Write: 31
-func__origin_next:
-	move $31 $116
+	move $31 $42
+	add $29 $29 156
 	jr $ra
 
-# local: 31 4 2 23 118 56 49 124 125 122 30 123 52 129 130 128 132 133 131
-# localSaved: 117 120 119 126 116
-# global:
-# Save in address:
-# times: $31: 2  $116: 2  $4: 5  $117: 9  $2: 8  $118: 2  $23: 22  $56: 3  $30: 7  $49: 3  $120: 12  $122: 2  $119: 4  $124: 2  $125: 3  $123: 3  $52: 3  $126: 10  $129: 2  $130: 2  $128: 2  $132: 2  $133: 3  $131: 3 
-# Read: 31 4 5 139 140 141 142 143 138
-# Write: 138 139 140 141 142 143 2 31
-func__check:
-	move $138 $31
-	move $139 $4
-	move $140 $5
-	slt $141 $139 $140
-	sge $142 $139 0
-	and $143 $141 $142
-	move $2 $143
-	move $31 $138
-	jr $ra
-	move $31 $138
-	jr $ra
-
-# local: 31 4 5 139 140 141 142 143 138
-# localSaved:
-# global:
-# Save in address:
-# times: $31: 3  $138: 3  $4: 1  $139: 3  $5: 1  $140: 2  $141: 2  $142: 2  $143: 2  $2: 1 
-# Read: 31 4 5 145 23 42 146 2 119 149 150 148 152 153 155 151 154 147 156 157
-# Write: 144 145 146 4 42 5 147 119 149 150 148 152 153 151 30 155 154 156 157
-func__addList:
-	move $144 $31
-	move $145 $4
-	move $146 $5
-	move $4 $145
-	lw $42 0($23)
-	move $5 $42
-	jal func__check
-	move $4 $146
-	lw $42 0($23)
-	move $5 $42
-	jal func__check
-	and $147 $2 $2
-	lw $119 52($23)
-	mul $149 $145 4
-	add $150 $119 $149
-	lw $148 0($150)
-	mul $152 $146 4
-	add $153 $148 $152
-	lw $151 0($153)
-	la $30 0($153)
-	li $155 1
-	neg $154 $155
-	seq $156 $151 $154
-	and $157 $147 $156
-	bne $157 0 func__addList_branch_then
-
-# Read:
-# Write:
-func__addList_branch_else:
-	b func__addList_next
-
-# Read: 23 68 158 159 35 161 162 145 30 160 39 164 165 146 163 87 119 168 169 167 171 172 166 170 47 45 173 174 175
-# Write: 68 158 30 35 159 161 162 160 39 164 165 163 87 166 119 168 169 167 171 172 170 47 173 45 174 175
-func__addList_branch_then:
-	lw $68 40($23)
-	add $158 $68 1
-	lw $68 40($23)
-	la $30 40($23)
-	move $68 $158
-	sw $68 40($23)
-	lw $35 32($23)
-	lw $159 40($23)
-	mul $161 $159 4
-	add $162 $35 $161
-	lw $160 0($162)
-	la $30 0($162)
-	move $160 $145
-	sw $160 0($30)
-	lw $39 36($23)
-	lw $159 40($23)
-	mul $164 $159 4
-	add $165 $39 $164
-	lw $163 0($165)
-	la $30 0($165)
-	move $163 $146
-	sw $163 0($30)
-	lw $87 48($23)
-	add $166 $87 1
-	lw $119 52($23)
-	mul $168 $145 4
-	add $169 $119 $168
-	lw $167 0($169)
-	mul $171 $146 4
-	add $172 $167 $171
-	lw $170 0($172)
-	la $30 0($172)
-	move $170 $166
-	sw $170 0($30)
-	lw $47 16($23)
-	seq $173 $145 $47
-	lw $45 20($23)
-	seq $174 $146 $45
-	and $175 $173 $174
-	bne $175 0 func__addList_branch_then_branch_then
-
-# Read:
-# Write:
-func__addList_branch_then_branch_else:
-	b func__addList_branch_then_next
-
-# Read: 23 104
-# Write: 104 30
-func__addList_branch_then_branch_then:
-	lw $104 44($23)
-	la $30 44($23)
-	li $104 1
-	sw $104 44($23)
-
-# Read:
-# Write:
-func__addList_branch_then_next:
-
-# Read: 144
-# Write: 31
-func__addList_next:
-	move $31 $144
-	jr $ra
-
-# local: 31 4 5 23 42 2 149 150 148 152 153 155 151 154 147 156 157 68 158 159 35 161 162 30 160 39 164 165 163 87 168 169 167 171 172 166 170 47 45 173 174 175 104
-# localSaved: 119
-# global: 145 146 144
-# Save in address:
-# times: $31: 2  $144: 2  $4: 3  $145: 6  $5: 3  $146: 6  $23: 18  $42: 4  $2: 2  $147: 2  $119: 4  $149: 2  $150: 2  $148: 2  $152: 2  $153: 3  $151: 2  $30: 9  $155: 2  $154: 2  $156: 2  $157: 2  $68: 5  $158: 2  $35: 2  $159: 4  $161: 2  $162: 3  $160: 3  $39: 2  $164: 2  $165: 3  $163: 3  $87: 2  $166: 2  $168: 2  $169: 2  $167: 2  $171: 2  $172: 3  $170: 3  $47: 2  $173: 2  $45: 2  $174: 2  $175: 2  $104: 3 
-# local: 2 32 23 33 34 36 37 38 31 41 42 43 44 46 48 49 51 52 55 56 58 59 57 61 62 54 30 60 68 35 71 72 70 73 39 76 77 75 78 74 81 82 79 80 84 85 83 86 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 106 107 47 111 112 45 110 114 115 113 4 118 124 125 122 123 129 130 128 132 133 131 5 139 140 141 142 143 138 149 150 148 152 153 155 151 154 147 156 157 158 159 161 162 160 164 165 163 87 168 169 167 171 172 166 170 173 174 175
-# localSaved: 67 117 120 119 126 116
-# global: 40 145 146 144
-# Save in address:
-# times: $4: 27  $2: 26  $23: 123  $32: 3  $33: 2  $34: 3  $30: 33  $36: 3  $37: 2  $38: 3  $31: 10  $40: 3  $41: 3  $42: 14  $43: 2  $44: 4  $46: 3  $48: 3  $49: 13  $51: 3  $52: 13  $55: 2  $54: 2  $56: 9  $58: 2  $59: 2  $57: 2  $61: 2  $62: 3  $60: 3  $67: 11  $68: 9  $35: 4  $71: 2  $72: 3  $70: 2  $73: 3  $39: 4  $76: 2  $77: 3  $75: 2  $78: 3  $74: 18  $81: 2  $82: 2  $80: 2  $79: 18  $84: 2  $85: 3  $83: 2  $86: 3  $88: 2  $89: 2  $5: 12  $90: 2  $91: 2  $92: 2  $93: 2  $94: 2  $95: 2  $96: 2  $97: 2  $98: 2  $99: 2  $100: 2  $101: 2  $102: 2  $103: 2  $104: 7  $106: 2  $107: 2  $47: 4  $111: 2  $112: 2  $110: 2  $45: 4  $114: 2  $115: 3  $113: 2  $116: 2  $117: 9  $118: 2  $120: 12  $122: 2  $119: 8  $124: 2  $125: 3  $123: 3  $126: 10  $129: 2  $130: 2  $128: 2  $132: 2  $133: 3  $131: 3  $138: 3  $139: 3  $140: 2  $141: 2  $142: 2  $143: 2  $144: 2  $145: 6  $146: 6  $147: 2  $149: 2  $150: 2  $148: 2  $152: 2  $153: 3  $151: 2  $155: 2  $154: 2  $156: 2  $157: 2  $158: 2  $159: 4  $161: 2  $162: 3  $160: 3  $164: 2  $165: 3  $163: 3  $87: 2  $166: 2  $168: 2  $169: 2  $167: 2  $171: 2  $172: 3  $170: 3  $173: 2  $174: 2  $175: 2 
+# local: 2 23 32 34 36 38 40 31 43
+# localSaved: 44 54 56 33 35 37 39
+# global: 46 48 50 52 137 41 42
+# Save in address: 59 61 63 65 67 69 71 73 75 77 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113 115 117 119 121 123 125 127 129 131 133 135
+# times: $4: 4  $2: 7  $23: 62  $32: 3  $30: 6  $34: 3  $36: 3  $38: 3  $40: 3  $31: 3  $42: 3  $43: 3  $46: 14  $44: 24  $48: 14  $50: 14  $52: 14  $54: 14  $56: 14  $59: 3  $61: 3  $63: 3  $65: 3  $33: 14  $67: 3  $35: 14  $69: 3  $37: 14  $71: 3  $39: 14  $73: 3  $75: 3  $77: 3  $79: 3  $81: 3  $83: 3  $85: 3  $87: 3  $89: 3  $91: 3  $93: 3  $95: 3  $97: 3  $99: 3  $101: 3  $103: 3  $105: 3  $107: 3  $109: 3  $111: 3  $113: 3  $115: 3  $117: 3  $119: 3  $121: 3  $123: 3  $125: 3  $127: 3  $129: 3  $131: 3  $133: 3  $135: 3  $137: 3  $41: 6 
+# local: 2 23 32 34 36 38 40 31 43
+# localSaved: 44 54 56 33 35 37 39
+# global: 46 48 50 52 137 41 42
+# Save in address: 59 61 63 65 67 69 71 73 75 77 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113 115 117 119 121 123 125 127 129 131 133 135
+# times: $4: 4  $2: 7  $23: 62  $32: 3  $30: 6  $34: 3  $36: 3  $38: 3  $40: 3  $31: 3  $42: 3  $43: 3  $46: 14  $44: 24  $48: 14  $50: 14  $52: 14  $54: 14  $56: 14  $59: 3  $61: 3  $63: 3  $65: 3  $33: 14  $67: 3  $35: 14  $69: 3  $37: 14  $71: 3  $39: 14  $73: 3  $75: 3  $77: 3  $79: 3  $81: 3  $83: 3  $85: 3  $87: 3  $89: 3  $91: 3  $93: 3  $95: 3  $97: 3  $99: 3  $101: 3  $103: 3  $105: 3  $107: 3  $109: 3  $111: 3  $113: 3  $115: 3  $117: 3  $119: 3  $121: 3  $123: 3  $125: 3  $127: 3  $129: 3  $131: 3  $133: 3  $135: 3  $137: 3  $41: 6 
