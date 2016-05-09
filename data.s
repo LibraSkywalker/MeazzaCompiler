@@ -5,10 +5,6 @@ _end: .asciiz "\n"
 _buffer: .space 256
 	.align 2
 VReg: .space 3600
-	length0: 	.word 	1
-	String0: 	.asciiz 	" "
-	length1: 	.word 	7
-	String1: 	.asciiz 	"Total: "
 
 
 .text
@@ -493,160 +489,96 @@ main:
 	li $4 4
 	li $2 9
 	syscall
-	li $4 12
+	li $4 0
 	li $2 9
 	syscall
 	move $23 $2
-	lw $24 0($23)
-	la $30 0($23)
-	li $24 15000
-	sw $24 0($23)
-	li $4 4
-	li $2 9
-	syscall
-	li $25 15001
-	sw $25 0($2)
-	mul $4 $25 8
-	li $2 9
-	syscall
-	move $13 $2
-	lw $14 4($23)
-	la $30 4($23)
-	move $14 $13
-	sw $14 4($23)
-	lw $15 8($23)
-	la $30 8($23)
-	li $15 0
-	sw $15 8($23)
 	jal main_0
 	li $2 10
 	syscall
 
 main_0:
-	move $s3 $31
-	li $s0 1
-	lw $t1 0($23)
-	bgt $s0 $t1 main_0_next
-
-main_0_loop:
-	lw $t2 4($23)
-	mul $7 $s0 4
-	add $6 $t2 $7
-	lw $4 0($6)
-	la $30 0($6)
-	li $4 1
-	sw $4 0($30)
-
-main_0_loopTail:
-	add $s0 $s0 1
-	lw $t1 0($23)
-	ble $s0 $t1 main_0_loop
-
-main_0_next:
-	li $s0 2
-	lw $t1 0($23)
-	bgt $s0 $t1 main_0_next_next
-
-main_0_next_loop:
-	lw $t2 4($23)
-	mul $5 $s0 4
-	add $20 $t2 $5
-	lw $21 0($20)
-	la $30 0($20)
-	bne $21 0 main_0_next_loop_branch_then
-
-main_0_next_loop_branch_else:
-	b main_0_next_loop_next
-
-main_0_next_loop_branch_then:
-	li $s2 2
-	ble $s0 3 main_0_next_loop_branch_then_shortcut
-
-main_0_next_loop_branch_then_normal:
-	lw $t2 4($23)
-	sub $22 $s0 2
-	mul $24 $22 4
-	add $25 $t2 $24
-	lw $13 0($25)
-	la $30 0($25)
-	bne $13 0 main_0_next_loop_branch_then_normalEnd
-
-main_0_next_loop_branch_then_shortcut:
-	li $t3 0
-	b main_0_next_loop_branch_then_next
-
-main_0_next_loop_branch_then_normalEnd:
-	li $t3 1
-
-main_0_next_loop_branch_then_next:
-	bne $t3 0 main_0_next_loop_branch_then_next_branch_then
-
-main_0_next_loop_branch_then_next_branch_else:
-	b main_0_next_loop_branch_then_next_next
-
-main_0_next_loop_branch_then_next_branch_then:
-	lw $t4 8($23)
-	add $t4 $t4 1
-	sw $t4 8($23)
-	sub $14 $s0 2
-	move $4 $14
+	move $s0 $31
+	li $4 60
+	li $2 9
+	syscall
+	move $4 $2
+	li $24 1
+	sw $24 0($4)
+	li $25 2
+	sw $25 4($4)
+	li $9 3
+	sw $9 8($4)
+	li $10 4
+	sw $10 12($4)
+	li $11 5
+	sw $11 16($4)
+	li $12 6
+	sw $12 20($4)
+	li $13 7
+	sw $13 24($4)
+	li $14 8
+	sw $14 28($4)
+	li $15 9
+	sw $15 32($4)
+	li $7 10
+	sw $7 36($4)
+	li $6 11
+	sw $6 40($4)
+	li $17 12
+	sw $17 44($4)
+	li $18 13
+	sw $18 48($4)
+	li $19 14
+	sw $19 52($4)
+	li $20 15
+	sw $20 56($4)
+	jal func__a
+	move $4 $2
 	jal func__toString
 	move $4 $2
-	la $5 String0
-	jal func__stringConcatenate
-	move $s1 $2
-	move $4 $s0
-	jal func__toString
-	move $4 $s1
-	move $5 $2
-	jal func__stringConcatenate
-	move $15 $2
-	move $4 $15
-	jal func__println
-
-main_0_next_loop_branch_then_next_next:
-	mul $7 $s0 $s2
-	lw $t1 0($23)
-	bgt $7 $t1 main_0_next_loop_branch_then_next_next_next
-
-main_0_next_loop_branch_then_next_next_loop:
-	lw $t2 4($23)
-	mul $6 $s0 $s2
-	mul $4 $6 4
-	add $5 $t2 $4
-	lw $20 0($5)
-	la $30 0($5)
-	li $20 0
-	sw $20 0($30)
-	add $s2 $s2 1
-
-main_0_next_loop_branch_then_next_next_loopTail:
-	mul $21 $s0 $s2
-	lw $t1 0($23)
-	ble $21 $t1 main_0_next_loop_branch_then_next_next_loop
-
-main_0_next_loop_branch_then_next_next_next:
-
-main_0_next_loop_next:
-
-main_0_next_loopTail:
-	add $s0 $s0 1
-	lw $t1 0($23)
-	ble $s0 $t1 main_0_next_loop
-
-main_0_next_next:
-	lw $t4 8($23)
-	move $4 $t4
-	jal func__toString
-	la $4 String1
-	move $5 $2
-	jal func__stringConcatenate
-	move $22 $2
-	move $4 $22
 	jal func__println
 	li $2 0
-	move $31 $s3
+	move $31 $s0
 	jr $ra
-	move $31 $s3
+	move $31 $s0
+	jr $ra
+
+func__a:
+	move $24 $31
+	move $25 $4
+	lw $9 0($25)
+	lw $10 4($25)
+	add $11 $9 $10
+	lw $12 8($25)
+	add $13 $11 $12
+	lw $14 12($25)
+	add $15 $13 $14
+	lw $7 16($25)
+	add $6 $15 $7
+	lw $17 20($25)
+	add $18 $6 $17
+	lw $19 24($25)
+	add $20 $18 $19
+	lw $21 28($25)
+	add $22 $20 $21
+	lw $9 32($25)
+	add $10 $22 $9
+	lw $11 36($25)
+	add $12 $10 $11
+	lw $13 40($25)
+	add $14 $12 $13
+	lw $15 44($25)
+	add $7 $14 $15
+	lw $6 48($25)
+	add $17 $7 $6
+	lw $18 52($25)
+	add $19 $17 $18
+	lw $20 56($25)
+	add $21 $19 $20
+	move $2 $21
+	move $31 $24
+	jr $ra
+	move $31 $24
 	jr $ra
 

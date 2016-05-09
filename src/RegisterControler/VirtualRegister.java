@@ -67,8 +67,8 @@ public class VirtualRegister {
 
         newRegister.add(new RegisterState(7));
         newRegister.add(new RegisterState(6));
-        newRegister.add(new RegisterState(4));
-        newRegister.add(new RegisterState(5));
+        //newRegister.add(new RegisterState(4));
+        //newRegister.add(new RegisterState(5));
 
         for (int i = GlobalState.Dic[global].size();i < 7;i++)
             newRegister.add(new RegisterState(16 + i)); //s0 + i  unused global
