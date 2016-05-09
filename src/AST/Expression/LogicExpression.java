@@ -51,9 +51,9 @@ public class LogicExpression extends BinaryExpression{
             rightAction.Translate();
 
 
-            int rSrc2 = leftAction.src();
-            if (leftAction.isLiteral())
-                rSrc2 = ((Literal) leftAction).Reg();
+            int rSrc2 = rightAction.src();
+            if (rightAction.isLiteral())
+                rSrc2 = ((Literal) rightAction).Reg();
 
             if (!(rightAction instanceof LogicExpression))
                 addInstruction(new BranchInstruction(op2, rSrc2, 0, Name + "_normalEnd", false));
@@ -62,9 +62,9 @@ public class LogicExpression extends BinaryExpression{
             addBlock(block1, "normal");
             rightAction.Translate();
 
-            int rSrc2 = leftAction.src();
-            if (leftAction.isLiteral())
-                rSrc2 = ((Literal) leftAction).Reg();
+            int rSrc2 = rightAction.src();
+            if (rightAction.isLiteral())
+                rSrc2 = ((Literal) rightAction).Reg();
 
             if (!(rightAction instanceof LogicExpression))
                 addInstruction(new BranchInstruction(op2, rSrc2, 0, Name + "_normalEnd", false));
