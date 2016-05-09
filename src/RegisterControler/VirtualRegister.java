@@ -4,7 +4,6 @@ import MIPS.BasicBlock;
 import MIPS.Function;
 import MIPS.Instruction.AddBinInstruction;
 import MIPS.Instruction.Instruction;
-import com.sun.deploy.cache.InMemoryLocalApplicationProperties;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
