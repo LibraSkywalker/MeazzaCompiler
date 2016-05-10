@@ -61,7 +61,7 @@ public class AutoAdjustExpression extends UnaryExpression {
             getBlock().add(new ArithmeticInstruction("sub",rSrc ,rSrc ,1 ,false));
         }
 
-        if ((childAction instanceof SymbolElement) && ((SymbolElement) childAction).element.getScope().equals(getGlobeScope())){
+        if ((childAction instanceof SymbolElement) && ((SymbolElement) childAction).element.getScope().equals(getGlobeScope()) && getGlobeScope().dict3.size() > 7){
             addInstruction(new AddBinInstruction("sw",rSrc ,globalVariable, 4 * getGlobeScope().indexOfMember(((SymbolElement) childAction).element)));
         } //global
 

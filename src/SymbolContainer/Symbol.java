@@ -32,7 +32,7 @@ public abstract class Symbol {
                 virtualRegister = a_0;
                 return virtualRegister;
             }
-            if (scope.dict2.indexOf(this) < scope.dict2.indexOf(getVar("_arg_before_it","NoOutPut"))) {
+            if (getVar("_arg_before_it","NoOutPut") != null && scope.dict2.indexOf(this) < scope.dict2.indexOf(getVar("_arg_before_it","NoOutPut"))) {
                 if (scope.dict2.indexOf(getVar("_arg_before_it","NoOutPut")) > 5) {
                     update();
                     int delta = scope.dict2.indexOf(this) * 4;

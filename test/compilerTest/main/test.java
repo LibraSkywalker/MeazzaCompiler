@@ -1,9 +1,5 @@
 import AST.ASTControler;
-import AST.Builder;
-import AST.FirstVisitor;
-import AST.SecondVisitor;
 import MIPS.IRControler;
-import SymbolContainer.Scope;
 import antlr.MeazzaLexer;
 import antlr.MeazzaParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -11,7 +7,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.omg.CORBA.SystemException;
 
 import java.io.*;
 import java.util.ArrayList;

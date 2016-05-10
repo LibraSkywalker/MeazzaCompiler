@@ -1,5 +1,5 @@
-// Generated from C:/Users/Bill/OneDrive/Ideaprojects/Meazzacompiler\Meazza.g4 by ANTLR 4.5.1
 package antlr;
+// Generated from D:/OneDrive/Ideaprojects/compiler2016\Meazza.g4 by ANTLR 4.5.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**

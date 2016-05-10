@@ -1,7 +1,8 @@
 package main;
 import MIPS.IRControler;
-import antlr.*;
 import AST.* ;
+import antlr.MeazzaLexer;
+import antlr.MeazzaParser;
 import org.antlr.v4.runtime.* ;
 
 import java.io.*;

@@ -43,6 +43,7 @@ public class LogicExpression extends BinaryExpression{
 
         BasicBlock block1 = getBlock();
         String Name = block1.getLabel();
+       // System.err.println(Name.substring(Name.length() - 6));
         if (Name.substring(Name.length() - 6).equals("normal")){
             while (Name.substring(Name.length() - 6).equals("normal"))
                 Name = Name.substring(0, Name.length() - 7);
@@ -79,6 +80,7 @@ public class LogicExpression extends BinaryExpression{
             addInstruction(new RegBinInstruction("li", rDest, res2, false));
 
             addBlock(block1, "next");
+
         }
     }
 }

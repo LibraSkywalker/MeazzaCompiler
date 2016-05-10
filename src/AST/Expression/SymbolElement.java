@@ -82,7 +82,7 @@ public class SymbolElement extends ExpressionAction{
         }
 
         rDest = element.getVirtualRegister();
-        if (element.getScope().equals(getGlobeScope()))
+        if (element.getScope().equals(getGlobeScope()) && getGlobeScope().dict3.size() > 7)
             addInstruction(new AddBinInstruction("lw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(element)));
     }
 
@@ -131,7 +131,7 @@ public class SymbolElement extends ExpressionAction{
         rDest = v_0;
     }
     void update(){
-        if (element.getScope().equals(getGlobeScope())){
+        if (element.getScope().equals(getGlobeScope()) && getGlobeScope().dict3.size() > 7){
             element.update();
             getBlock().add(new AddBinInstruction("la",globalAddress, globalVariable, 4 * getGlobeScope().indexOfMember(element)));
         }

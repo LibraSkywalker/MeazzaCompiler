@@ -39,7 +39,7 @@ public class AssignExpression extends BinaryExpression{
         else
             getBlock().add(new RegBinInstruction("move", rDest, Src, true));
 
-        if ((leftAction instanceof SymbolElement) && ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope())){
+        if ((leftAction instanceof SymbolElement) && ((SymbolElement) leftAction).element.getScope().equals(getGlobeScope()) && getGlobeScope().dict3.size() > 7){
             addInstruction(new AddBinInstruction("sw",rDest ,globalVariable, 4 * getGlobeScope().indexOfMember(((SymbolElement) leftAction).element)));
         } //global
 
