@@ -5,6 +5,7 @@ import MIPS.Instruction.*;
 import RegisterControler.RegisterStatic;
 import SymbolContainer.FuncSymbol;
 import SymbolContainer.Scope;
+import SymbolContainer.VariableSymbol;
 
 import java.util.ArrayList;
 

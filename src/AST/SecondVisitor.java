@@ -7,6 +7,7 @@ import AST.Statment.LoopStatment;
 import SymbolContainer.*;
 import antlr.MeazzaBaseVisitor;
 import antlr.MeazzaParser;
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 import java.lang.String;
 
@@ -154,7 +155,7 @@ public class SecondVisitor extends MeazzaBaseVisitor<Object>{
             }
             else if(now.equals("++") || now.equals("--")){
                 AutoAdjustExpression nowAction = new AutoAdjustExpression();
-                if (ctx.getChild(0).equals(ctx.uop)) nowAction.setPre();
+                if (ctx.getChild(0) instanceof TerminalNodeImpl) nowAction.setPre();
                 nowAction.setChild(visitExpression(ctx.expression(0)));
                 nowAction.setOpertaor(now);
                 return nowAction.check() ? nowAction : null;

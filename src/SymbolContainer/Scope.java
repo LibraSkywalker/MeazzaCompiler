@@ -54,16 +54,16 @@ public class Scope extends ActionNodeBase{
     }
 
     public boolean isParameter(VariableSymbol now){
-        if (dict2.indexOf(now) >= dict2.indexOf(getVar("_arg_before_it"))) return false;
-        if (dict2.indexOf(now) != 0 && dict2.indexOf(getVar("_arg_before_it")) > 5) return false;
+        if (dict2.indexOf(now) >= dict2.indexOf(getVar("_arg_before_it","NoOutPut"))) return false;
+        if (dict2.indexOf(now) != 0 && dict2.indexOf(getVar("_arg_before_it","NoOutPut")) > 5) return false;
         return true;
     }
 
     public int update(int now){
-        if (getVar("_arg_before_it") == null) return 0;
-        if (dict2.indexOf(getVar("_arg_before_it")) <= now) return 0;
-        if (dict2.indexOf(getVar("_arg_before_it")) > 5){
-            if (now == 0) return getVar("_arg_before_it").update();
+        if (getVar("_arg_before_it","NoOutPut") == null) return 0;
+        if (dict2.indexOf(getVar("_arg_before_it","NoOutPut")) <= now) return 0;
+        if (dict2.indexOf(getVar("_arg_before_it","NoOutPut")) > 5){
+            if (now == 0) return getVar("_arg_before_it","NoOutPut").update();
             else return 0;
         }
         if (dict2.get(now).getVirtualRegister() != a_0 + now) return 0;

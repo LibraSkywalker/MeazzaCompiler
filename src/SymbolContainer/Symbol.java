@@ -28,15 +28,15 @@ public abstract class Symbol {
 
     public int getVirtualRegister(){
         if (virtualRegister == 0) {
-            if (this == getVar("_arg_before_it")) {
+            if (this == getVar("_arg_before_it","NoOutPut")) {
                 virtualRegister = a_0;
                 return virtualRegister;
             }
-            if (scope.dict2.indexOf(this) < scope.dict2.indexOf(getVar("_arg_before_it"))) {
-                if (scope.dict2.indexOf(getVar("_arg_before_it")) > 5) {
+            if (scope.dict2.indexOf(this) < scope.dict2.indexOf(getVar("_arg_before_it","NoOutPut"))) {
+                if (scope.dict2.indexOf(getVar("_arg_before_it","NoOutPut")) > 5) {
                     update();
                     int delta = scope.dict2.indexOf(this) * 4;
-                    int rSrc = getVar("_arg_before_it").getVirtualRegister();
+                    int rSrc = getVar("_arg_before_it","NoOutPut").getVirtualRegister();
                     addInstruction(new AddBinInstruction("lw", virtualRegister, rSrc, delta));
                     return virtualRegister;
                 }
